@@ -7,7 +7,7 @@ from typing import List
 
 # sim4 imports
 from sims4.tuning.tunable import AutoFactoryInit, TunableEnumEntry, HasTunableSingletonFactory, TunableEnumSet
-from sims4.tuning.tunable import TunableList, TunablePackSafeReference
+from sims4.tuning.tunable import TunableList, TunablePackSafeReference, Tunable
 from sims4.localization import TunableLocalizedStringFactory
 from sims4.utils import constproperty
 from sims4.resources import Types
@@ -115,6 +115,26 @@ class IsWorldAvailableTest(_WorldsTestsBase):
                               self.source_world.name, reason, self.target_home_world.name)
 
 
+class SoftFilterToggleValueTest(_WorldsTestsBase):
+    FACTORY_TUNABLES = {
+        'invert': Tunable(tunable_type=bool, default=False),
+    }
+
+    @property
+    def world_value_source(self):
+        return self.target_home_world
+
+    @property
+    def toggle_value(self) -> bool:
+        return self.world_settings['Soft']
+
+    def __call__(self):
+        result = self.toggle_value != self.invert
+
+        return TestResult(result, 'World {} does not have the required soft filter value of {}',
+                          self.target_home_world.name, not self.invert, tooltip=self.tooltip)
+
+
 #######################################################################################################################
 #  Test Set Mixin                                                                                                     #
 #######################################################################################################################
@@ -126,6 +146,16 @@ class _TestSetMixin:
     BLACKLIST_TRAIT_TYPES = TunableEnumSet(enum_type=TraitType, allow_empty_set=True)
     TRAIT_BLACKLIST = TunableList(tunable=Trait.TunablePackSafeReference(), allow_none=False)
     VENUE_FILTER = TunableWhiteBlackList(tunable=TunablePackSafeReference(manager=get_instance_manager(Types.VENUE)))
+
+    @staticmethod
+    def get_soft_filter_toggle_test(source_world: HomeWorldIds, invert: bool = False, disabled_tooltip=None):
+        args = dict()
+        args['target_home_world'] = source_world
+        args['invert'] = invert
+        if disabled_tooltip:
+            args['tooltip'] = lambda *tokens: disabled_tooltip(source_world.region_name(), *tokens)
+
+        return construct_auto_init_factory(SoftFilterToggleValueTest, **args)
 
     @staticmethod
     def get_is_world_available_test(

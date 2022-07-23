@@ -7,7 +7,7 @@ import services
 
 # sim4 imports
 from sims4.utils import classproperty
-from sims4.tuning.tunable import OptionalTunable, TunableEnumEntry
+from sims4.tuning.tunable import OptionalTunable, TunableEnumEntry, Tunable
 from sims4.tuning.instances import lock_instance_tunables
 from sims4.localization import LocalizationHelperTuning
 from sims4.commands import execute as execute_command
@@ -110,6 +110,17 @@ class WorldListPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixi
         return self.on_multi_choice_selected((choice, ), **kwargs)
 
 
+class SoftTogglePickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, InteractionPickerSuperInteraction):
+    REMOVE_INSTANCE_TUNABLES = ('possible_actions',)
+
+    def on_choice_selected(self, choice, **kwargs):
+        value = super().on_choice_selected(choice, **kwargs)
+
+        if choice is not None:
+            self.display_notification(notification_type=NotificationType.SETTINGS_CHANGED)
+        return value
+
+
 #######################################################################################################################
 # Immediate Interactions                                                                                              #
 #######################################################################################################################
@@ -165,6 +176,31 @@ class AlterWorldListImmediateSuperInteraction(_TargetHomeWorldMixin, ImmediateSu
         return (cls.do_command,)
 
 
+class ToggleSettingImmediateSuperInteraction(_TargetHomeWorldMixin, ImmediateSuperInteraction):
+    REMOVE_INSTANCE_TUNABLES = ('basic_extras',)
+    INSTANCE_TUNABLES = {
+        'toggle_value': Tunable(tunable_type=bool, default=True),
+    }
+
+    @classproperty
+    def command_name(cls) -> str:
+        from kuttoe_home_regions.settings import Settings
+
+        return Settings.COMMAND_NAME_BASES.soft(cls.target_home_world)[0]
+
+    @classproperty
+    def command_arguments(cls):
+        return CommandsList().add_boolean(cls.toggle_value)
+
+    @classproperty
+    def do_command(cls):
+        return make_do_command(cls.command_name, *cls.command_arguments)
+
+    @classproperty
+    def basic_extras(cls):
+        return (cls.do_command, )
+
+
 #######################################################################################################################
 # Tuning Locking                                                                                                      #
 #######################################################################################################################
@@ -173,3 +209,4 @@ class AlterWorldListImmediateSuperInteraction(_TargetHomeWorldMixin, ImmediateSu
 lock_instance_tunables(HomeWorldPickerInteraction, interaction_type=InteractionType.PICKER)
 lock_instance_tunables(CommandImmediateSuperInteraction, interaction_type=InteractionType.COMMAND)
 lock_instance_tunables(WorldListPickerInteraction, interaction_type=InteractionType.SETTING_WORLD_PICKER)
+lock_instance_tunables(SoftTogglePickerInteraction, interaction_type=InteractionType.SOFT_FILTER)

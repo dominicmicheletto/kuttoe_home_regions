@@ -10,10 +10,13 @@ import enum
 
 # sims4 imports
 from sims4.utils import classproperty, constproperty, exception_protected
+from sims4.tuning.tunable import TunableFactory
 from sims4.collections import make_immutable_slots_class as make_immutable_slots, _ImmutableSlotsBase
 from sims4.resources import Types
+from sims4.tuning.dynamic_enum import DynamicEnum
 
 # miscellaneous
+import services
 from services import get_instance_manager
 from element_utils import CleanupType
 from tag import Tag
@@ -22,6 +25,58 @@ from tag import Tag
 from interactions.utils.tunable import DoCommand
 from interactions.utils.success_chance import SuccessChance
 from interactions import ParticipantType
+
+# objects
+from objects.definition_manager import DefinitionManager
+from objects.game_object import GameObject
+
+
+#######################################################################################################################
+# Enumerations                                                                                                        #
+#######################################################################################################################
+
+
+class InteractionTargetType(DynamicEnum):
+    INVALID = 0
+
+    @classmethod
+    def get_tuning_cls(cls, tuning_id: int) -> GameObject:
+        definition_manager = services.definition_manager()
+
+        return super(DefinitionManager, definition_manager).get(tuning_id)
+
+    @classmethod
+    def verify_all_values(cls):
+        for entry in cls:
+            if entry is cls.INVALID:
+                continue
+
+            if entry.tuning_cls is None:
+                raise AttributeError('Unable to load tuning class for {} ({})'.format(entry, hex(entry.value)))
+
+    @property
+    def tuning_cls(self):
+        return self.get_tuning_cls(self.value)
+
+    def update_affordance_list(self, *affordances):
+        if not self.tuning_cls:
+            return 0
+
+        self.tuning_cls._super_affordances += affordances
+        return len(self.tuning_cls._super_affordances)
+
+    def update_and_register_affordances(self, *affordances):
+        affordance_manager = services.get_instance_manager(Types.INTERACTION)
+
+        collected_affordances = []
+        for affordance in affordances:
+            interaction = affordance.interaction
+            resource_key = affordance.resource_key
+
+            affordance_manager.register_tuned_class(interaction, resource_key)
+            collected_affordances.append(interaction)
+
+        return self.update_affordance_list(*collected_affordances)
 
 
 #######################################################################################################################
@@ -139,4 +194,10 @@ def make_do_command(command_name: str, *additional_arguments):
             super().__init__(interaction, timing=self._timing, sequence=sequence, **kwargs)
 
     return _RunCommand
+
+
+def create_tunable_factory_with_overrides(factory_cls, **overrides):
+    tuned_values = factory_cls._tuned_values.clone_with_overrides(**overrides)
+
+    return TunableFactory.TunableFactoryWrapper(tuned_values, factory_cls._name, factory_cls.factory)
 

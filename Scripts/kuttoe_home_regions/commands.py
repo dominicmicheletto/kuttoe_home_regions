@@ -9,11 +9,13 @@ from sims4.commands import Command, CommandType, Output
 from server_commands.argument_helpers import OptionalSimInfoParam, get_optional_target
 from sims.sim_info_manager import SimInfoManager
 from kuttoe_home_regions.home_worlds import HomeWorldIds
+from kuttoe_home_regions.ui import NotificationType
 
 
 #######################################################################################################################
 #  Enumerations                                                                                                       #
 #######################################################################################################################
+
 
 class AlterType(enum.Int):
     ALLOW_WORLD = 0
@@ -44,13 +46,35 @@ def kuttoe_set_world_id(home_world_id: HomeWorldIds, sim_info, _connection=None)
 
 
 def get_home_world_from_name(*home_world_name, _connection=None) -> Optional[HomeWorldIds]:
+    output = Output(_connection)
     world_key = ' '.join(home_world_name).upper().replace(' ', '_')
 
+    if len(home_world_name) == 0:
+        output('Missing World name!')
+        return None
+
     if world_key not in HomeWorldIds:
-        Output(_connection)('Invalid world name: {}'.format(world_key))
+        world_list = HomeWorldIds.world_list
+        output('Invalid World name: {}\n\nValid World names: {}'.format(world_key, world_list))
+
         return None
 
     return HomeWorldIds[world_key]
+
+
+def get_notification_type_from_name(*notification_type_name, _connection=None) -> Optional[NotificationType]:
+    output = Output(_connection)
+    notif_key = ' '.join(notification_type_name).upper().replace(' ', '_')
+
+    if len(notif_key) == 0:
+        output('Missing notification name!')
+        return None
+
+    if notif_key not in NotificationType:
+        output('Invalid notification setting name: {}'.format(notif_key))
+        return None
+
+    return NotificationType[notif_key]
 
 
 #######################################################################################################################
@@ -58,12 +82,12 @@ def get_home_world_from_name(*home_world_name, _connection=None) -> Optional[Hom
 #######################################################################################################################
 
 
-def kuttoe_settings_soft_setting_toggle(home_world_id: HomeWorldIds, _connection=None):
+def kuttoe_settings_soft_setting_toggle(home_world_id: HomeWorldIds, new_value: bool = None, _connection=None):
     from kuttoe_home_regions.settings import Settings
 
-    new_value = not Settings.get_world_settings(home_world_id)['Soft']
+    new_value = new_value if new_value is not None else not Settings.get_world_settings(home_world_id)['Soft']
     Settings.update_setting('{}_Soft'.format(home_world_id.settings_name_base), new_value)
-    Output(_connection)('Soft filter setting for world {} set to {}'.format(home_world_id.desc, new_value))
+    Output(_connection)('Soft filter setting for World {} set to {}'.format(home_world_id.desc, new_value))
 
     return True
 
@@ -80,7 +104,9 @@ def kuttoe_settings_alter_worlds_list(source_world: HomeWorldIds,
         return False
 
     if home_world == source_world:
-        output('Cannot {} a world from its own list'.format('add' if alter_type == AlterType.ALLOW_WORLD else 'remove'))
+        words = {alter_type.ALLOW_WORLD: ('add', 'to'), alter_type.DISALLOW_WORLD: ('remove', 'from')}
+        output('Cannot {} a World {} its own list'.format(*words[alter_type]))
+
         return False
 
     world_list: List[str] = Settings.get_world_settings(source_world)['Worlds']
@@ -108,12 +134,12 @@ def kuttoe_settings_alter_worlds_list(source_world: HomeWorldIds,
 
 
 @Command('kuttoe.settings.toggle_soft', command_type=CommandType.Live)
-def kuttoe_settings_toggle_soft(*home_world_name, _connection=None):
+def kuttoe_settings_toggle_soft(*home_world_name, new_value: bool = None, _connection=None):
     home_world = get_home_world_from_name(*home_world_name, _connection=_connection)
 
     if home_world is None:
         return False
-    return kuttoe_settings_soft_setting_toggle(home_world, _connection=_connection)
+    return kuttoe_settings_soft_setting_toggle(home_world, new_value=new_value, _connection=_connection)
 
 
 @Command('kuttoe.set_world_id', command_type=CommandType.Live)
@@ -132,7 +158,7 @@ def set_world_id_by_sim_name(first_name: str, last_name: str = '', *home_world_n
     sim_info = manager.get_sim_info_by_name(first_name, last_name)
 
     if not sim_info:
-        full_name = ' '.join(*(first_name, last_name, ))
+        full_name = ' '.join(*(first_name, last_name,))
         Output(_connection)('No Sim found with name {}'.format(full_name))
         return False
 

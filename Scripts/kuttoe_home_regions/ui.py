@@ -12,13 +12,56 @@ import enum
 from interactions import ParticipantType
 from interactions.base.immediate_interaction import ImmediateSuperInteraction
 from interactions.utils.tunable_icon import TunableIconVariant
-from sims4.localization import TunableLocalizedStringFactory, LocalizationHelperTuning
 
 # sim4 imports
 from sims4.tuning.tunable import AutoFactoryInit, HasTunableFactory, OptionalTunable, Tunable, TunableEnumEntry
+from sims4.localization import TunableLocalizedStringFactory, LocalizationHelperTuning
+from sims4.utils import classproperty
 
 # ui imports
 from ui.ui_dialog_notification import UiDialogNotification
+
+# local imports
+from kuttoe_home_regions.enum import DynamicFactoryEnumMetaclass, EnumItemFactory, EnumItem
+
+#######################################################################################################################
+#  Notification Colour Code                                                                                           #
+#######################################################################################################################
+
+
+_NotificationInfo = namedtuple('_NotificationInfo', ['information_level', 'urgency', 'visual_type'])
+
+
+class NotificationInfo(EnumItemFactory):
+    FACTORY_TYPE = _NotificationInfo
+    _VALUE_MAPPING = {
+        'information_level': UiDialogNotification.UiDialogNotificationLevel,
+        'urgency': UiDialogNotification.UiDialogNotificationUrgency,
+        'visual_type': UiDialogNotification.UiDialogNotificationVisualType,
+    }
+
+    def __init__(self, *args, **kwargs):
+        _base = Tunable(tunable_type=str, default='', allow_empty=False, needs_tuning=True)
+
+        kwargs['information_level'] = _base
+        kwargs['urgency'] = _base
+        kwargs['visual_type'] = _base
+        super().__init__(*args, **kwargs)
+
+    def load_etree_node(self, node, source, expect_error):
+        value = super().load_etree_node(node, source, expect_error)
+        enum_info_raw = {name: self._VALUE_MAPPING[name][value] for (name, value) in value.enum_info._asdict().items()}
+        enum_info = self.FACTORY_TYPE(**enum_info_raw)
+
+        return EnumItem(enum_name=value.enum_name, enum_value=value.enum_value, enum_info=enum_info)
+
+
+class NotificationColour(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=NotificationInfo):
+    INVALID = -1
+
+    @property
+    def as_dict(self):
+        return self.factory_value._asdict()
 
 
 #######################################################################################################################
@@ -31,57 +74,24 @@ class InteractionType(enum.Int):
     COMMAND = 1
     PICKER = 2
     SETTING_WORLD_PICKER = 3
+    SOFT_FILTER = 4
 
 
 class NotificationType(enum.Int):
     SUCCESS = 0
     SETTINGS_CHANGED = 1
 
+    @classproperty
+    def notifications(cls):
+        return ', '.join(notif.name for notif in cls)
+
     @property
     def setting_name(self) -> str:
         return 'Show{}Notification'.format(self.name.title().replace('_', ''))
 
-
-class NotificationColour(enum.Int):
-    NotificationInfo = namedtuple('NotificationInfo', ['information_level', 'urgency', 'visual_type'])
-    _VALUES_MAPPING = {
-        0: NotificationInfo('PLAYER', 'DEFAULT', 'INFORMATION'),
-        1: NotificationInfo('SIM', 'DEFAULT', 'INFORMATION'),
-        2: NotificationInfo('SIM', 'DEFAULT', 'SPECIAL_MOMENT'),
-        3: NotificationInfo('PLAYER', 'URGENT', 'INFORMATION'),
-    }
-
-    GREEN = 0
-    BLUE = 1
-    PURPLE = 2
-    ORANGE = 3
-
-    def _get_enum_value(self, enum_base, enum_key):
-        return enum_base[getattr(self._notification_info_value, enum_key)]
-
     @property
-    def _notification_info_value(self):
-        return self._VALUES_MAPPING[self.value]
-
-    @property
-    def information_level(self):
-        return self._get_enum_value(UiDialogNotification.UiDialogNotificationLevel, 'information_level')
-
-    @property
-    def urgency(self):
-        return self._get_enum_value(UiDialogNotification.UiDialogNotificationUrgency, 'urgency')
-
-    @property
-    def visual_type(self):
-        return self._get_enum_value(UiDialogNotification.UiDialogNotificationVisualType, 'visual_type')
-
-    @property
-    def notification_info(self):
-        return self.NotificationInfo(self.information_level, self.urgency, self.visual_type)
-
-    @property
-    def as_dict(self):
-        return self.notification_info._asdict()
+    def pretty_name(self) -> str:
+        return self.name.lower()
 
 
 #######################################################################################################################
@@ -95,7 +105,8 @@ class Notification(HasTunableFactory, AutoFactoryInit):
         'title': OptionalTunable(tunable=TunableLocalizedStringFactory()),
         'icon': OptionalTunable(tunable=TunableIconVariant()),
         'use_icon_from_interaction': Tunable(tunable_type=bool, default=False),
-        'colour': TunableEnumEntry(tunable_type=NotificationColour, default=NotificationColour.BLUE),
+        'colour': TunableEnumEntry(tunable_type=NotificationColour, default=NotificationColour.INVALID,
+                                   invalid_enums=(NotificationColour.INVALID, )),
     }
 
     def __init__(

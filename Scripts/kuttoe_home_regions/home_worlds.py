@@ -10,6 +10,7 @@ from sims4.tuning.tunable import TunablePackSafeReference, TunableMapping, Tunab
 from sims4.tuning.tunable import OptionalTunable, TunableTuple
 from sims4.localization import TunableLocalizedStringFactory
 from sims4.common import Pack, is_available_pack
+from sims4.utils import classproperty
 from interactions.utils.tunable_icon import TunableIconVariant
 
 
@@ -31,6 +32,10 @@ class PackDefinition(OptionalTunable):
 class HomeWorldIds(DynamicEnum):
     COMMAND_NAME_BASE = Tunable(tunable_type=str, allow_empty=False, needs_tuning=True, default='')
     DEFAULT = 0
+
+    @classproperty
+    def world_list(cls):
+        return ', '.join(world.name for world in cls if world.is_available and world is not HomeWorldIds.DEFAULT)
 
     @property
     def command_name_base(self):

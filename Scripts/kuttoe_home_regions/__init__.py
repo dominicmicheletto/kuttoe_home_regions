@@ -2,38 +2,36 @@
 #  Imports                                                                                                            #
 #######################################################################################################################
 
-# C-API game imports
-from _collections import defaultdict
-
 # python imports
+from typing import Dict
 from collections import namedtuple
-from typing import Dict, List
 
 # miscellaneous
-import services
 from services import get_instance_manager
-
-# objects
-from objects.definition_manager import DefinitionManager
-from objects.game_object import GameObject
 from server_commands.argument_helpers import OptionalSimInfoParam, get_optional_target
-from sims4.collections import frozendict
-from sims4.commands import Command, CommandType
 
 # sims4 imports
-from sims4.tuning.instance_manager import InstanceManager
 from sims4.tuning.tunable import AutoFactoryInit, HasTunableFactory, TunablePackSafeReference
 from sims4.tuning.tunable import TunableMapping, TunableEnumEntry, Tunable, TunableRange
 from sims4.resources import Types
-from sims4.utils import classproperty
+from sims4.collections import frozendict
+from sims4.commands import Command, CommandType
 
 # local imports
 from kuttoe_home_regions.home_worlds import HomeWorldIds
-from kuttoe_home_regions.tuning import InteractionType, TunableInteractionName, InteractionRegistryData, \
-    InteractionData
+from kuttoe_home_regions.tuning import InteractionType, TunableInteractionName, InteractionRegistryData
+from kuttoe_home_regions.tuning import InteractionData
 from kuttoe_home_regions.settings import Settings
 from kuttoe_home_regions.commands import kuttoe_set_world_id
-from kuttoe_home_regions.utils import on_load_complete
+from kuttoe_home_regions.utils import on_load_complete, InteractionTargetType
+
+
+#######################################################################################################################
+#  Named Tuples                                                                                                       #
+#######################################################################################################################
+
+
+ConsoleCommands = namedtuple('ConsoleCommands', ['sim', 'settings'])
 
 
 #######################################################################################################################
@@ -42,21 +40,15 @@ from kuttoe_home_regions.utils import on_load_complete
 
 
 class WorldData(HasTunableFactory, AutoFactoryInit):
+    SOFT_FILTER_VALUE = Tunable(tunable_type=float, default=0.1)
     FACTORY_TUNABLES = {
         'pie_menu_priority': TunableRange(tunable_type=int, default=2, maximum=10, minimum=0)
     }
 
-    def __init__(self, home_world: HomeWorldIds, interaction_data, *args, **kwargs):
+    def __init__(self, home_world: HomeWorldIds, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self._home_world = home_world
-        self._interaction_data: InteractionData = interaction_data(self)
-
-        for key in self.interaction_data.forwarded_properties:
-            prop_name = f'{key}_interaction_data'
-            prop = getattr(self.interaction_data, prop_name.replace('_world', ''), None)
-
-            setattr(self, prop_name, prop)
 
     @property
     def home_world(self):
@@ -83,10 +75,6 @@ class WorldData(HasTunableFactory, AutoFactoryInit):
         return self.home_world.command_name
 
     @property
-    def interaction_data(self):
-        return self._interaction_data
-
-    @property
     def user_has_required_pack(self):
         return self.home_world.is_available
 
@@ -99,7 +87,7 @@ class WorldData(HasTunableFactory, AutoFactoryInit):
 
             kuttoe_set_world_id(self.home_world, sim_info, _connection)
 
-        return _kuttoe_set_world_id
+        return ConsoleCommands(_kuttoe_set_world_id, Settings.create_console_commands(self.home_world))
 
     def inject_into_filter(self, sim_filter):
         new_dict = dict(sim_filter.value.region_to_filter_terms)
@@ -113,10 +101,13 @@ class WorldData(HasTunableFactory, AutoFactoryInit):
         new_data.region = tuple(regions)
 
         if settings_data['Soft']:
-            new_data.minimum_filter_score = 0.1
+            new_data.minimum_filter_score = self.SOFT_FILTER_VALUE
 
         new_dict[self.region] = (new_data, )
         sim_filter.value.region_to_filter_terms = frozendict(new_dict)
+
+    def register_and_inject_affordances(self, interaction_data: InteractionData) -> Dict[InteractionTargetType, int]:
+        return interaction_data(self).inject()
 
 
 #######################################################################################################################
@@ -135,70 +126,24 @@ class HomeWorldMapping(TunableMapping):
 
 
 class HomeRegionsCommandTuning:
-    SIM_OBJECT = Tunable(tunable_type=int, default=0, allow_empty=False, needs_tuning=True)
-    TERRAIN_OBJECT = Tunable(tunable_type=int, default=0, allow_empty=False, needs_tuning=True)
     HOME_WORLD_MAPPING = HomeWorldMapping()
     INTERACTION_DATA = InteractionData.TunableFactory()
     LOCATION_BASED_FILTER = TunablePackSafeReference(manager=get_instance_manager(Types.SNIPPET), allow_none=False,
                                                      class_restrictions=('LocationBasedFilterTerms', ))
 
-    @classproperty
-    def sim_object(cls) -> GameObject:
-        definition_manager = services.definition_manager()
-
-        return super(DefinitionManager, definition_manager).get(cls.SIM_OBJECT)
-
-    @classproperty
-    def terrain_object(cls) -> GameObject:
-        definition_manager = services.definition_manager()
-
-        return super(DefinitionManager, definition_manager).get(cls.TERRAIN_OBJECT)
-
-    @classproperty
-    def tuning_definitions(cls):
-        sim_object = cls.sim_object
-        if not sim_object:
-            raise AttributeError('Sim Object definition could not be found')
-
-        terrain_object = cls.terrain_object
-        if not terrain_object:
-            raise AttributeError('Terrain Object definition could not be found')
-
-        return namedtuple('TuningDefinitions', ['sim', 'terrain'])(sim_object, terrain_object)
-
     @staticmethod
     @on_load_complete(Types.TUNING, safe=False)
-    def _register_all_data(tuning_manager):
+    def _register_all_data(_):
         cls = HomeRegionsCommandTuning
         data: Dict[HomeWorldIds, WorldData] = cls.HOME_WORLD_MAPPING
-        tuning_defs = cls.tuning_definitions
-        sim_object = tuning_defs.sim
-        terrain_object = tuning_defs.terrain
 
-        interactions: Dict[GameObject, List[InteractionRegistryData]] = defaultdict(list)
+        InteractionTargetType.verify_all_values()
         for (home_world, world_data) in data.items():
-            command_data: WorldData = world_data(home_world, cls.INTERACTION_DATA)
+            command_data: WorldData = world_data(home_world)
 
             if not command_data.user_has_required_pack:
                 continue
 
             command_data.create_console_command()
             command_data.inject_into_filter(cls.LOCATION_BASED_FILTER)
-            interactions[sim_object].append(command_data.command_interaction_data)
-            interactions[terrain_object].append(command_data.allow_world_interaction_data)
-            interactions[terrain_object].append(command_data.disallow_world_interaction_data)
-            interactions[terrain_object].append(command_data.picker_interaction_data)
-
-            Settings.create_console_commands(home_world)
-
-        affordance_manager: InstanceManager = get_instance_manager(Types.INTERACTION)
-        for (obj, interactions_data) in interactions.items():
-            sa_list = list()
-            for interaction_data in interactions_data:
-                interaction = interaction_data.interaction
-                resource_key = interaction_data.resource_key
-
-                affordance_manager.register_tuned_class(interaction, resource_key)
-                sa_list.append(interaction)
-
-            obj._super_affordances += tuple(sa_list)
+            command_data.register_and_inject_affordances(cls.INTERACTION_DATA)

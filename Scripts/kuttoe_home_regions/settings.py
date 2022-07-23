@@ -94,10 +94,10 @@ class Settings:
         command_name = {key: value(home_world)[0] for (key, value) in cls.COMMAND_NAME_BASES}
 
         @Command(command_name['soft'], command_type=CommandType.Live)
-        def _kuttoe_soft_toggle(_connection=None):
+        def _kuttoe_soft_toggle(new_value: bool = None, _connection=None):
             from kuttoe_home_regions.commands import kuttoe_settings_soft_setting_toggle
 
-            kuttoe_settings_soft_setting_toggle(home_world, _connection=_connection)
+            kuttoe_settings_soft_setting_toggle(home_world, new_value=new_value, _connection=_connection)
 
         @Command(command_name['allow_world'], command_type=CommandType.Live)
         def _kuttoe_allow_world(*home_world_name, _connection=None):
@@ -272,6 +272,10 @@ class Settings:
         keys = ('Soft', 'Worlds', )
 
         return {key: cls.settings['{}_{}'.format(name_base, key)] for key in keys}
+
+    @classmethod
+    def get_notification_setting(cls, notification_type: NotificationType) -> bool:
+        return cls.settings[notification_type.setting_name]
 
     @classproperty
     def should_show_notification(cls) -> Dict[NotificationType, bool]:

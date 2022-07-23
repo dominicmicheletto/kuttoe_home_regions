@@ -38,7 +38,7 @@ from ui.ui_dialog_picker import UiSimPicker, UiItemPicker
 # local imports
 from kuttoe_home_regions.utils import construct_auto_init_factory, make_immutable_slots_class
 from kuttoe_home_regions.utils import create_tunable_factory_with_overrides, InteractionTargetType
-from kuttoe_home_regions.home_worlds import HomeWorldIds
+from kuttoe_home_regions.home_worlds import HomeWorldIds, TunableIconDefinition
 from kuttoe_home_regions.commands import AlterType
 from kuttoe_home_regions.ui import InteractionType
 from kuttoe_home_regions.tests import _TestSetMixin
@@ -379,7 +379,8 @@ class _WorldListInteractionTuningDataBase(PythonBasedInteractionData):
             disabled_name='do_not_show',
             enabled_name='show_interactions',
         ),
-        'no_worlds_available_tooltip': OptionalTunable(TunableLocalizedStringFactory())
+        'no_worlds_available_tooltip': OptionalTunable(TunableLocalizedStringFactory()),
+        'item_icon': TunableIconDefinition(),
     }
 
     def __init_subclass__(cls, **kwargs):
@@ -470,10 +471,13 @@ class _WorldListInteractionTuningDataBase(PythonBasedInteractionData):
 
         return make_immutable_slots_class(**args)
 
+    def _get_picker_item_icon(self, target_world: HomeWorldIds):
+        return self.item_icon(target_world).resource if self.item_icon else target_world.pie_menu_icon
+
     def _create_picker_item(self, target_world: HomeWorldIds):
         args = dict()
         args['continuation'] = (self._create_continuation(self.home_world, target_world),)
-        args['icon'] = target_world.pie_menu_icon
+        args['icon'] = self._get_picker_item_icon(target_world)
         args['item_description'] = None
         args['item_tooltip'] = None
         args['localization_tokens'] = None

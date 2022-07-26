@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<M n="kuttoe_home_regions.filters" s="12884297069496339741">
+  <C n="_DynamicFilterBase">
+    <T n="SOFT_FILTER_VALUE">0.1</T>
+  </C>
+</M>

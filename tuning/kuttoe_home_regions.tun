@@ -1,0 +1,321 @@
+<M n="kuttoe_home_regions" s="18396996985248726739">
+  <C n="HomeRegionsCommandTuning">
+    <T n="LOCATION_BASED_FILTER">17096304318503190874<!--SS:LocationBasedFilterTerms_KeepInHomeRegion--></T>
+    <L n="HOME_WORLD_MAPPING">
+      <U>
+        <E n="home_world">WILLOW_CREEK</E>
+        <U n="world_data">
+          <T n="pie_menu_priority">10</T>
+        </U>
+      </U>
+      <U>
+        <E n="home_world">OASIS_SPRINGS</E>
+        <U n="world_data">
+          <T n="pie_menu_priority">10</T>
+        </U>
+      </U>
+      <U>
+        <E n="home_world">NEWCREST</E>
+        <U n="world_data">
+          <T n="pie_menu_priority">10</T>
+        </U>
+      </U>
+      <U>
+        <E n="home_world">MAGNOLIA_PROMENADE</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">WINDENBURG</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">SAN_MYSHUNO</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">FORGOTTEN_HOLLOW</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">BRINDLETON_BAY</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">DEL_SOL_VALLEY</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">STRANGERVILLE</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">SULANI</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">GLIMMERBROOK</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">BRITECHESTER</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">EVERGREEN_HARBOUR</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">MT_KOMOREBI</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">HENFORD_ON_BAGLEY</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">TARTOSA</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">MOONWOOD_MILL</E>
+        <U n="world_data" />
+      </U>
+      <U>
+        <E n="home_world">SELVADORADA</E>
+        <U n="world_data" />
+      </U>
+    </L>
+    <U n="INTERACTION_DATA">
+      <U n="command">
+        <E n="injection_target">SIM_OBJECT</E>
+        <T n="interaction_category">11674182787679442620<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_AssignWorld--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_interaction_AssignWorld</T>
+        <V n="display_tooltip" t="enabled">
+          <T n="enabled">0xA7D9AF58</T>
+        </V>
+        <V n="notification" t="enabled">
+          <U n="enabled">
+            <E n="colour">BLUE</E>
+            <V n="title" t="enabled">
+              <T n="enabled">0xD419A218</T>
+            </V>
+            <V n="text" t="enabled">
+              <T n="enabled">0x23E5291F</T>
+            </V>
+            <V n="icon" t="enabled">
+              <V n="enabled" t="participant">
+                <U n="participant">
+                  <L n="participant_type">
+                    <E>TargetSim</E>
+                  </L>
+                </U>
+              </V>
+            </V>
+          </U>
+        </V>
+      </U>
+      <U n="picker">
+        <E n="injection_target">TERRAIN_OBJECT</E>
+        <T n="interaction_category">11883946411162872063<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_AssignWorld_Multiple--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_simpicker_AssignWorld</T>
+        <V n="display_tooltip" t="enabled">
+          <T n="enabled">0x54AEA217</T>
+        </V>
+        <V n="notification" t="enabled">
+          <U n="enabled">
+            <E n="colour">BLUE</E>
+            <V n="title" t="enabled">
+              <T n="enabled">0x12107DE4</T>
+            </V>
+            <V n="text" t="enabled">
+              <T n="enabled">0x22534F94</T>
+            </V>
+            <V n="icon" t="enabled">
+              <V n="enabled" t="participant">
+                <U n="participant">
+                  <L n="participant_type">
+                    <E>Actor</E>
+                  </L>
+                </U>
+              </V>
+            </V>
+          </U>
+        </V>
+        <U n="sim_picker">
+          <V n="max_selectable" t="static_count">
+            <U n="static_count">
+              <T n="number_selectable">100</T>
+            </U>
+          </V>
+          <T n="min_choices">1</T>
+          <V n="text" t="enabled">
+            <V n="enabled" t="single">
+              <T n="display_name">0x025DED97</T>
+            </V>
+          </V>
+        </U>
+        <V n="picker_icon" t="enabled">
+          <V n="enabled" t="participant">
+            <U n="participant">
+              <L n="participant_type">
+                <E>Actor</E>
+              </L>
+            </U>
+          </V>
+        </V>
+      </U>
+      <U n="allow_world">
+        <E n="injection_target">TERRAIN_OBJECT</E>
+        <T n="interaction_category">17707535405075195193<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_Settings_AllowWorlds--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_interaction_AllowWorld</T>
+        <T n="picker_interaction_name">0x1CF177A7</T>
+        <V n="item_icon" t="use_specific">
+          <U n="use_specific">
+            <E n="icon_size">LARGE</E>
+          </U>
+        </V>
+        <V n="no_worlds_available_tooltip" t="enabled">
+          <T n="enabled">0x6B983963</T>
+        </V>
+        <V n="disabled_interaction_behaviour" t="show_interactions">
+          <U n="show_interactions">
+            <V n="disable_tooltip" t="enabled">
+              <T n="enabled">0xC639056A</T>
+            </V>
+          </U>
+        </V>
+        <U n="picker_dialog">
+          <V n="max_selectable" t="unlimited" />
+          <T n="min_choices">1</T>
+          <V n="text" t="enabled">
+            <V n="enabled" t="single">
+              <T n="single">0x9DBD26B1</T>
+            </V>
+          </V>
+        </U>
+        <V n="notification" t="enabled">
+          <U n="enabled">
+            <V n="title" t="enabled">
+              <T n="enabled">0xADB3D60D</T>
+            </V>
+            <V n="text" t="enabled">
+              <T n="enabled">0xF86BCFB7</T>
+            </V>
+            <E n="colour">ORANGE</E>
+            <T n="use_icon_from_interaction">True</T>
+          </U>
+        </V>
+      </U>
+      <U n="disallow_world">
+        <E n="injection_target">TERRAIN_OBJECT</E>
+        <T n="interaction_category">16603715714581714131<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_Settings_DisallowWorlds--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_interaction_DisllowWorld</T>
+        <T n="picker_interaction_name">0x3E3AE693</T>
+        <V n="item_icon" t="use_specific">
+          <U n="use_specific">
+            <E n="icon_size">LARGE</E>
+          </U>
+        </V>
+        <V n="no_worlds_available_tooltip" t="enabled">
+          <T n="enabled">0x96A6E1E7</T>
+        </V>
+        <V n="disabled_interaction_behaviour" t="show_interactions">
+          <U n="show_interactions">
+            <V n="disable_tooltip" t="enabled">
+              <T n="enabled">0xDFFF9D02</T>
+            </V>
+          </U>
+        </V>
+        <U n="picker_dialog">
+          <V n="max_selectable" t="unlimited" />
+          <T n="min_choices">1</T>
+          <V n="text" t="enabled">
+            <V n="enabled" t="single">
+              <T n="single">0xC9B1750</T>
+            </V>
+          </V>
+        </U>
+        <V n="notification" t="enabled">
+          <U n="enabled">
+            <V n="title" t="enabled">
+              <T n="enabled">0xADB3D60D</T>
+            </V>
+            <V n="text" t="enabled">
+              <T n="enabled">0xF86BCFB7</T>
+            </V>
+            <E n="colour">ORANGE</E>
+            <T n="use_icon_from_interaction">True</T>
+          </U>
+        </V>
+      </U>
+      <U n="soft_filter">
+        <E n="injection_target">TERRAIN_OBJECT</E>
+        <T n="interaction_category">9873996288832809619<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_Settings_SoftToggle--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_interaction_SoftToggle</T>
+        <U n="picker_dialog">
+          <T n="min_choices">1</T>
+          <V n="text" t="enabled">
+            <V n="enabled" t="single">
+              <T n="single">0x342B134B</T>
+            </V>
+          </V>
+        </U>
+        <V n="disabled_interaction_behaviour" t="show_interactions">
+          <U n="show_interactions">
+            <T n="base">0xFC2671C4</T>
+            <L n="tooltip_reason_mapping">
+              <U>
+                <T n="toggle_value">True</T>
+                <T n="display_text">0x9E41F7CE</T>
+              </U>
+              <U>
+                <T n="toggle_value">False</T>
+                <T n="display_text">0xFE2589FB</T>
+              </U>
+            </L>
+          </U>
+        </V>
+        <L n="setting_value_mapping">
+          <U>
+            <T n="setting_value">True</T>
+            <U n="display_data">
+              <T n="text">0x25DF474D</T>
+              <V n="pie_menu_icon" t="enabled">
+                <V n="enabled" t="resource_key">
+                  <U n="resource_key">
+                    <T n="key" p="enabled">2f7d0004:00000000:947bfded5e43a9f0</T>
+                  </U>
+                </V>
+              </V>
+            </U>
+          </U>
+          <U>
+            <T n="setting_value">False</T>
+            <U n="display_data">
+              <T n="text">0x08886346</T>
+              <V n="pie_menu_icon" t="enabled">
+                <V n="enabled" t="resource_key">
+                  <U n="resource_key">
+                    <T n="key" p="disabled">2f7d0004:00000000:ddbe186c142d03d9</T>
+                  </U>
+                </V>
+              </V>
+            </U>
+          </U>
+        </L>
+        <V n="notification" t="enabled">
+          <U n="enabled">
+            <V n="title" t="enabled">
+              <T n="enabled">0xADB3D60D</T>
+            </V>
+            <V n="text" t="enabled">
+              <T n="enabled">0xF86BCFB7</T>
+            </V>
+            <E n="colour">ORANGE</E>
+            <T n="use_icon_from_interaction">True</T>
+          </U>
+        </V>
+      </U>
+    </U>
+  </C>
+</M>

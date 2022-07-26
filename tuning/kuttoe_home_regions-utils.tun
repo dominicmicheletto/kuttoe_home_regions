@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<M n="kuttoe_home_regions.utils" s="11940260506815134851">
+  <C n="InteractionTargetType">
+    <L n="_elements">
+      <T ev="14965">SIM_OBJECT<!--object_sim--></T>
+      <T ev="14982">TERRAIN_OBJECT<!--object_terrain--></T>
+    </L>
+  </C>
+</M>

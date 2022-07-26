@@ -1,0 +1,599 @@
+<M n="kuttoe_home_regions.injections" s="12409650502876873542">
+  <C n="VenueModifications">
+    <L n="VENUES_LIST">
+      <T>118135<!--venue_RelaxationCenter--></T>
+      <T>125223<!--venue_ChaletGardens--></T>
+      <T>122247<!--venue_cafe--></T>
+      <T>138380<!--venue_MyshunoMeadows--></T>
+      <T>144206<!--venue_artscenter--></T>
+      <T>137844<!--venue_karaoke--></T>
+      <T>25847<!--venue_park--></T>
+      <T>123794<!--venue_pool--></T>
+      <T>16873<!--venue_gym--></T>
+      <T>16869<!--venue_bar--></T>
+    </L>
+    <L n="INVITE_OVER_OVERRIDES">
+      <U>
+        <E n="key">CAT</E>
+        <V n="value" t="create_situation">
+          <U n="create_situation">
+            <T n="situation_to_create">101273<!--situation_NPCVisitAnyVenue--></T>
+          </U>
+        </V>
+      </U>
+      <U>
+        <E n="key">DOG</E>
+        <V n="value" t="create_situation">
+          <U n="create_situation">
+            <T n="situation_to_create">101273<!--situation_NPCVisitAnyVenue--></T>
+          </U>
+        </V>
+      </U>
+      <U>
+        <E n="key">HUMAN</E>
+        <V n="value" t="create_situation">
+          <U n="create_situation">
+            <T n="situation_to_create">101273<!--situation_NPCVisitAnyVenue--></T>
+          </U>
+        </V>
+      </U>
+    </L>
+  </C>
+  <C n="SituationJobModifications">
+    <V n="SOFT_FILTER" t="reference">
+      <T n="reference">9860968798496710023<!--Kuttoe:LocationBasedFilterTerms_KeepInHomeRegion_Soft--></T>
+    </V>
+    <V n="MAIN_FILTER" t="reference">
+      <T n="reference">17096304318503190874<!--SS:LocationBasedFilterTerms_KeepInHomeRegion--></T>
+    </V>
+    <U n="TEMPLATE">
+      <L n="location_based_filter_terms">
+        <V t="reference">
+          <T n="reference">260612<!--locationBasedFilterTerm_Village--></T>
+        </V>
+        <V t="reference">
+          <T n="reference">203033<!--Keep_Strangeville_Npcs_In_Strangerville--></T>
+        </V>
+      </L>
+      <E n="no_show_action">REPLACE_THEM</E>
+      <U n="sim_auto_invite">
+        <T n="lower_bound">1</T>
+        <T n="upper_bound">1</T>
+      </U>
+    </U>
+    <L n="SOFT_LIST">
+      <!--These are specific jobs/walkbys/guests that will ALWAYS have a soft filter (i.e. the game will use locals first before moving on to people from others worlds)
+        These will also be added to bypass list for the mod-->
+      <T>109044<!--situationJob_Retail_Customer_Wealthy--></T>
+      <T>109149<!--situationJob_Retail_Customer_BargainShopper--></T>
+      <T>109150<!--situationJob_Retail_Customer_Loiterer--></T>
+      <T>109151<!--situationJob_Retail_Customer_MidRange--></T>
+      <T>109152<!--situationJob_Retail_Customer_Socializer--></T>
+      <T>109248<!--situationJob_Retail_Employee--></T>
+      <T>112113<!--situationJob_Retail_NPCEmployee--></T>
+      <T>113917<!--jobs_open_streets_alien--></T>
+      <T>113924<!--walkby_jobs_alien--></T>
+      <T>118131<!--Job_yoga_classMember--></T>
+      <T>122605<!--job_barfly_alien--></T>
+      <T>122608<!--job_barfly_ghost--></T>
+      <T>122625<!--jobs_Venue_Bar_GhostNight--></T>
+      <T>122626<!--jobs_Venue_Bar_AlienNight--></T>
+      <T>126606<!--job_barfly_bear--></T>
+      <T>126612<!--jobs_Venue_Bar_BearNight--></T>
+      <T>129889<!--job_barfly_knight--></T>
+      <T>130283<!--jobs_Venue_Bar_KnightNight--></T>
+      <T>130418<!--jobs_Venue_Waiter--></T>
+      <T>130833<!--jobs_Venue_Chef--></T>
+      <T>131306<!--jobs_Venue_Host--></T>
+      <T>131937<!--jobs_NPCInvites_Restaurant_Actor_Target--></T>
+      <T>131938<!--jobs_NPCInvites_Restaurant_Invite_SimPicker--></T>
+      <T>131939<!--jobs_NPCInvites_Restaurant_NPC_Invite--></T>
+      <T>132458<!--jobs_RestaurantDiner_Sub_Standard--></T>
+      <T>132459<!--jobs_RestaurantDiner_Background_Standard--></T>
+      <T>132675<!--jobs_RestaurantDiner_Sub_NPC_HappyDate--></T>
+      <T>132676<!--jobs_RestaurantDiner_Background_HappyDate--></T>
+      <T>132756<!--jobs_RestaurantDiner_Sub_NPC_BadDate_FlirtySim--></T>
+      <T>132757<!--jobs_RestaurantDiner_Sub_NPC_BadDate_AngrySim--></T>
+      <T>132758<!--jobs_RestaurantDiner_Background_BadDate_AngrySim--></T>
+      <T>132759<!--jobs_RestaurantDiner_Background_BadDate_FlirtySim--></T>
+      <T>132778<!--jobs_RestaurantDiner_Sub_NPC_EarlyBirds--></T>
+      <T>132779<!--jobs_RestaurantDiner_Background_NPC_EarlyBirds--></T>
+      <T>132883<!--jobs_RestaurantDiner_Background_NPC_FamilyMeal_Child--></T>
+      <T>132884<!--jobs_RestaurantDiner_Background_NPC_FamilyMeal_Parent--></T>
+      <T>132885<!--jobs_RestaurantDiner_Sub_NPC_FamilyMeal_Child--></T>
+      <T>132886<!--jobs_RestaurantDiner_Sub_NPC_FamilyMeal_Parent--></T>
+      <T>133902<!--jobs_RestaurantDiner_Events_NPC_Cosplay--></T>
+      <T>133903<!--jobs_RestaurantDiner_Events_NPC_Ghosts--></T>
+      <T>133907<!--jobs_RestaurantDiner_Events_NPC_BusinessSuits--></T>
+      <T>133908<!--jobs_RestaurantDiner_Events_NPC_SpaceRace--></T>
+      <T>133909<!--jobs_RestaurantDiner_Events_NPC_NearlyNude--></T>
+      <T>134353<!--walker_Job_CityLife_Commuter--></T>
+      <T>291985<!--job_Bartender_WolfTown--></T>
+      <T>292028<!--job_librarian_WolfTown--></T>
+      <!--custom situation jobs-->
+      <!--TURBODRIVER-->
+      <T>15253418663393404728<!--TURBODRIVER:WickedWhims_Situation_StripClub_Customer_Basic--></T>
+    </L>
+    <L n="BYPASS_LIST">
+      <!--These are specific jobs/walkbys/guests that will be bypassed by the mod-->
+      <T>16167<!--job_guest_party--></T>
+      <T>16173<!--job_guest_wedding--></T>
+      <T>16180<!--job_GrimReaper--></T>
+      <T>24225<!--situationjob_leave_now--></T>
+      <T>24221<!--situationjob_leave_soon--></T>
+      <T>26053<!--job_party_Resident--></T>
+      <T>31633<!--job_guest_birthday_party--></T>
+      <T>33907<!--job_chef_family_meal--></T>
+      <T>33908<!--job_household_eater_family_meal--></T>
+      <T>34256<!--job_Date_Target--></T>
+      <T>34417<!--Job_UngreetedPlayerVisitingNPC--></T>
+      <T>34420<!--Job_GreetedPlayerVisitingNPC--></T>
+      <T>34258<!--job_Date_Actor--></T>
+      <T>35080<!--job_Guest_CostumeParty--></T>
+      <T>35084<!--job_Guest_BlackAndWhiteParty--></T>
+      <T>40350<!--Job_InvitedOver--></T>
+      <T>40429<!--Job_StayTheNight--></T>
+      <T>40531<!--job_voodoo_summoned--></T>
+      <T>40715<!--job_invite_to--></T>
+      <T>99352<!--job_Date_Target_Teen--></T>
+      <T>99709<!--job_generic--></T>
+      <T>101847<!--job_ghost--></T>
+      <T>103719<!--job_guest_weenie_roast--></T>
+      <T>107969<!--situationJob_Detective_ApbCriminal--></T>
+      <T>108028<!--situationJob_Detective_ApbDecoy--></T>
+      <T>108029<!--situationJob_Detective_ApbDetective--></T>
+      <T>109056<!--situationJob_Detective_CrimeScenePlayer--></T>
+      <T>109091<!--situationJob_Detective_ApbNeutral--></T>
+      <T>109134<!--situationJob_Detective_PoliceStationArrested--></T>
+      <T>109168<!--situationJob_Detective_CrimeSceneOfficer--></T>
+      <T>110742<!--situationJob_Detective_PatrolPlayer--></T>
+      <T>117102<!--job_Date_NPC_Inviter--></T>
+      <T>117124<!--job_Date_Actor_Target--></T>
+      <T>117173<!--job_PlayDate_NPC_Inviter--></T>
+      <T>117181<!--job_PlayDate_Actor_Target--></T>
+      <T>117184<!--job_PlayDate_NPC_Parent--></T>
+      <T>117383<!--job_guest_birthday_party_Actor_Target--></T>
+      <T>117396<!--job_birthday_celebrant_NPC_Inviter--></T>
+      <T>118873<!--jobs_NPC_SpaGuest_Annoying--></T>
+      <T>118872<!--jobs_NPC_SpaGuest_BullInChinaShop--></T>
+      <T>118874<!--jobs_NPC_SpaGuest_Normal--></T>
+      <T>119687<!--jobs_NPC_SpaGuest_Normal_Couple--></T>
+      <T>118875<!--jobs_NPC_SpaGuest_Prankster--></T>
+      <T>118876<!--jobs_NPC_SpaGuest_Snob--></T>
+      <T>119810<!--job_meditation_teleport_to--></T>
+      <T>118867<!--job_SpaGuest_Player--></T>
+      <T>118130<!--job_yoga_instructor--></T>
+      <T>118373<!--job_yoga_instructor_idle--></T>
+      <T>122316<!--job_club_gathering--></T>
+      <T>122809<!--jobs_openStreets_Europe_tourist--></T>
+      <T>123013<!--situationJob_ClubGoDancing_PartyGoer--></T>
+      <T>125415<!--job_Guest_SpookyParty--></T>
+      <T>125472<!--jobs_OpenStreets_ChaletGardens_GhostPainter--></T>
+      <T>125473<!--jobs_OpenStreets_ChaletGardens_GhostGardener--></T>
+      <T>125926<!--job_Coworker_PromotionParty--></T>
+      <T>125959<!--job_PlayHooky_NPCHost--></T>
+      <T>126238<!--jobs_OpenStreets_ChaletGardens_GenericTourist--></T>
+      <T>126243<!--jobs_OpenStreets_ChaletGardens_LonelyTourist--></T>
+      <T>126278<!--job_Coworker_PromotionParty_NPC_Invite--></T>
+      <T>126351<!--jobs_OpenStreets_ChaletGardens_FamilyTourist--></T>
+      <T>126353<!--jobs_OpenStreets_ChaletGardens_GenericTourist2--></T>
+      <T>126379<!--jobs_OpenStreets_ChaletGardens_FamilyTourist2--></T>
+      <T>126389<!--jobs_OpenStreets_ChaletGardens_FlirtyTourist--></T>
+      <T>126390<!--jobs_OpenStreets_ChaletGardens_FlirtyTourist2--></T>
+      <T>128966<!--jobs_NPCInvites_InviteOver_NPC_Invite--></T>
+      <T>133758<!--jobs_Open_Streets_Event_NPC_Challenge--></T>
+      <T>134261<!--jobs_OpenStreets_CityLife_Tourist--></T>
+      <T>134262<!--jobs_OpenStreets_CityLife_LivingStatueBusker--></T>
+      <T>135301<!--situationJob_Landlord--></T>
+      <T>136556<!--job_Protester--></T>
+      <T>138477<!--jobs_OpenStreets_CityLife_MyshunoMeadows_GenericTourist--></T>
+      <T>139603<!--jobs_tragicClown--></T>
+      <T>139825<!--jobs_Ghost_hauntedApartment--></T>
+      <T>139892<!--walkby_tragicClown--></T>
+      <T>139893<!--situation_Walkby_Ambient_TragicClown--></T>
+      <T>140124<!--jobs_Venue_HomeChef--></T>
+      <T>141387<!--jobs_RestaurantDiner_Background_NPC_Critic--></T>
+      <T>141389<!--jobs_RestaurantDiner_Sub_NPC_Critic--></T>
+      <T>143687<!--walker_job_RentDue_ApartmentLandlord--></T>
+      <T>145805<!--job_Butler--></T>
+      <T>149783<!--jobs_Event_NPC_CallOver--></T>
+      <T>153130<!--walkby_jobs_Event_FallChallenge_2016_DoTD_Celebrator--></T>
+      <T>156098<!--situationJob_Toddler_Caregiver--></T>
+      <T>164710<!--jobs_Vet_Pet--></T>
+      <T>164711<!--jobs_Vet_PetOwner--></T>
+      <T>165162<!--jobs_Vet_Employee--></T>
+      <T>168071<!--jobs_Vet_Player--></T>
+      <T>168875<!--jobs_generic_anySpecies--></T>
+      <T>170082<!--job_Toddler_PlayDate_Guest_Toddler--></T>
+      <T>170144<!--job_Toddler_PlayDate_Guest_Caregiver--></T>
+      <T>174920<!--jobs_Vet_Player_PetExam--></T>
+      <T>178230<!--jobs_Open_Streets_Jungle_Marketplace_Tourist_TakePhoto--></T>
+      <T>185021<!--job_Patron_Museum_Jungle_Tourist--></T>
+      <T>186903<!--jobs_HolidayTradition_FlowerBunny--></T>
+      <T>181420<!--jobs_HolidayTradition_FatherWinter--></T>
+      <T>189270<!--job_ActorCareer_Costar1--></T>
+      <T>189271<!--job_ActorCareer_CoStar2--></T>
+      <T>191066<!--job_ActorCareer_BackgroundActor--></T>
+      <T>191067<!--job_ActorCareer_BackgroundProducer--></T>
+      <T>192670<!--job_LoungeEvent_MeetACelebrity--></T>
+      <T>192672<!--job_LoungeEvent_AwardAttendee--></T>
+      <T>192673<!--job_LoungeEvent_AwardHost--></T>
+      <T>195425<!--jobs_RelaxationVenues_CelebrityHangOut_LowFame--></T>
+      <T>195426<!--jobs_RelaxationVenues_CelebrityHangOut_HighFame--></T>
+      <T>196885<!--job_visitor_Roommate--></T>
+      <T>197053<!--jobs_Open_Streets_FameWorld_Tourist--></T>
+      <T>197472<!--job_ActorCareer_Director_Commercial--></T>
+      <T>197473<!--job_ActorCareer_Director_LowBudgetTV--></T>
+      <T>197474<!--job_ActorCareer_Director_HighBudgetTV--></T>
+      <T>197475<!--job_ActorCareer_Director_Film--></T>
+      <T>197863<!--job_guest_GuestOfHonor--></T>
+      <T>198048<!--jobs_GreetedTutorialHousemate--></T>
+      <T>198849<!--jobs_Event_NPC_CallOver_MBB--></T>
+      <T>199570<!--situationJob_Celebrity_MeetAndGreet_Celebrity--></T>
+      <T>200793<!--guest_CharityBenefitParty--></T>
+      <T>201115<!--walkby_Job_FameWorld_Tourist--></T>
+      <T>201956<!--guest_LampoonParty--></T>
+      <T>202118<!--job_Entertainer_MicComedy_AtHome_Lampoon--></T>
+      <T>202446<!--job_Entertainer_MicComedy_AtHome_NPCHired--></T>
+      <T>206387<!--job_KavaParty_Guest--></T>
+      <T>206390<!--job_KavaParty_IslandGuest--></T>
+      <T>204555<!--jobs_WelcomeWagon_New_Neighbor_Actor_Strange--></T>
+      <T>204668<!--islandEvents_Jobs_FishingCompetition_Contestant--></T>
+      <T>207758<!--job_Venue_Beach_BeachComber--></T>
+      <T>207762<!--job_Venue_Beach_Tanner--></T>
+      <T>207763<!--job_Venue_Beach_WaterEnthusiast--></T>
+      <T>207760<!--job_Venue_Beach_Merfolk--></T>
+      <T>207761<!--job_Venue_Beach_SandArtist--></T>
+      <T>208466<!--jobs_IslanderCulture_Actor--></T>
+      <T>208843<!--Jobs_CollegeOrganizations_SchoolSpirit_Party_SchoolSpiritDay_Student--></T>
+      <T>208844<!--jobs_CollegeOrganizations_SchoolSpirit_Party_SchoolSpiritDay_Member--></T>
+      <T>209041<!--jobs_CollegeOrganizations_StudyGroup_Members--></T>
+      <T>216315<!--jobs_NightStalker--></T>
+      <T>219263<!--jobs_Venue_StudentCommons_Professor_Arts_Hip--></T>
+      <T>219264<!--jobs_Venue_StudentCommons_Professor_Arts_Grumpy--></T>
+      <T>219265<!--jobs_Venue_StudentCommons_Professor_Arts_Good--></T>
+      <T>219267<!--jobs_Venue_StudentCommons_Professor_Science_Good--></T>
+      <T>219268<!--jobs_Venue_StudentCommons_Professor_Science_Grumpy--></T>
+      <T>219269<!--jobs_Venue_StudentCommons_Professor_Science_Hip--></T>
+      <T>221500<!--jobs_CollegeOrganizations_SecretSociety_Ritual_Member--></T>
+      <T>221664<!--jobs_Venue_StudentCommons_Science_ESports_Contestant--></T>
+      <T>221720<!--situationJob_UniversityStudent--></T>
+      <T>221971<!--jobs_Venue_StudentCommons_Science_ESports_ExpertContestant--></T>
+      <T>222136<!--jobs_Venue_StudentCommons_Mixer_Professor--></T>
+      <T>222257<!--jobs_Debate_BarNight_MeetupParticipant--></T>
+      <T>222431<!--job_CollegeOrganization_SecretSociety_JoinVisit--></T>
+      <T>222511<!--job_UniversityWorld_Arts_Student--></T>
+      <T>222537<!--job_UniversityWorld_Science_Student--></T>
+      <T>222549<!--walkby_job_UniversityWorld_Arts_ToArena_Athlete_ESports--></T>
+      <T>222552<!--walkby_job_UniversityWorld_Arts_ToArena_Athlete_Soccer--></T>
+      <T>222568<!--walkby_job_UniversityWorld_Arts_FromArena_Athlete_ESports--></T>
+      <T>222569<!--walkby_job_UniversityWorld_Arts_FromArena_Athlete_Soccer--></T>
+      <T>222581<!--walkby_job_UniversityWorld_Arts_ToClass_Professor--></T>
+      <T>222616<!--walkby_job_UniversityWorld_Science_FromArena_Athlete_ESports--></T>
+      <T>222617<!--walkby_job_UniversityWorld_Science_FromArena_Athlete_Soccer--></T>
+      <T>222621<!--walkby_job_UniversityWorld_Science_FromClass_Professor--></T>
+      <T>222626<!--walkby_job_UniversityWorld_Science_ToArena_Athlete_ESports--></T>
+      <T>222627<!--walkby_job_UniversityWorld_Science_ToArena_Athlete_Soccer--></T>
+      <T>222631<!--walkby_job_UniversityWorld_Science_ToClass_Professor--></T>
+      <T>222664<!--walkby_job_UniversityWorld_General_Professor--></T>
+      <T>222727<!--Jobs_Debate_Debater--></T>
+      <T>222730<!--jobs_OrgEvent_DebateShowdown_Participant--></T>
+      <T>222729<!--jobs_OrgEvent_DebateShowdown_Judge--></T>
+      <T>222768<!--job_UniversityWorld_TouringTeen--></T>
+      <T>222866<!--job_UniversityWorld_Arts_Mascot--></T>
+      <T>222867<!--job_UniversityWorld_Science_Mascot--></T>
+      <T>223216<!--jobs_OrgEvent_PaintinInThePark_Members--></T>
+      <T>223233<!--jobs_CollegeOrganizations_SchoolSpirit_Prank_CreativityCelebration_Member--></T>
+      <T>223234<!--jobs_CollegeOrganizations_SchoolSpirit_Prank_CreativityCelebration_Student--></T>
+      <T>223246<!--jobs_CollegeOrganizations_SchoolSpirit_Prank_GameDayParty_Member--></T>
+      <T>223247<!--jobs_CollegeOrganizations_SchoolSpirit_Prank_GameDayParty_Rival--></T>
+      <T>223675<!--jobs_CollegeOrganizations_Robotics_RoboticsExhibition_Participant--></T>
+      <T>223676<!--jobs_CollegeOrganizations_Robotics_RoboticsExhibition_HumanoidBot--></T>
+      <T>223677<!--jobs_CollegeOrganizations_Robotics_RoboticsExhibition_Judge--></T>
+      <T>225090<!--jobs_CollegeOrganizations_SchoolSpirit_Party_GameDayParty_PartyGoer--></T>
+      <T>225089<!--jobs_CollegeOrganizations_SchoolSpirit_Party_GameDayParty_Member--></T>
+      <T>225325<!--jobs_CollegeOrganizations_Robotics_RobotBuildingSession_Participant--></T>
+      <T>225745<!--walkby_jobs_UniversityStudentHangout_Arts_Student--></T>
+      <T>225746<!--walkby_jobs_UniversityStudentHangout_Science_Student--></T>
+      <T>225747<!--walkby_jobs_UniversityStudentHangout_Professor--></T>
+      <T>226915<!--jobs_Venue_StudentCommons_Professor_Science_Smart--></T>
+      <T>226916<!--jobs_Venue_StudentCommons_Professor_Arts_Smart--></T>
+      <T>227001<!--situationJob_University_Graduation_Ceremony_Arts--></T>
+      <T>227003<!--situationJob_University_Graduation_Ceremony_Science--></T>
+      <T>227009<!--jobs_OrgEvent_PaintinInThePark_Model--></T>
+      <T>227362<!--situationJob_E-Sports_Teammate--></T>
+      <T>227912<!--situationJob_University_Graduation_Ceremony_Arts_Host--></T>
+      <T>227918<!--situationJob_University_Graduation_Ceremony_Science_Host--></T>
+      <T>228583<!--jobs_OrgEvent_DebateShowdown_PracticeParticipant--></T>
+      <T>229025<!--jobs_Party_BarNight_MeetupParticipant--></T>
+      <T>229026<!--jobs_Prank_BarNight_MeetupParticipant--></T>
+      <T>229042<!--jobs_Robotics_BarNight_MeetupParticipant--></T>
+      <T>229268<!--jobs_OrgEvent_DebateShowdown_JudgeDeclare--></T>
+      <T>229681<!--situationJob_E-Sports_Teammate_Arts--></T>
+      <T>229952<!--jobs_Venue_StudentCommons_Science_Mixer_Mascot--></T>
+      <T>229957<!--jobs_Venue_StudentCommons_Arts_Mixer_Mascot--></T>
+      <T>230077<!--jobs_OrgEvent_DebateShowdown_Player_Practice--></T>
+      <T>230450<!--jobs_CollegeOrganizations_SchoolSpirit_Prank_CreativityCelebration_Mascot--></T>
+      <T>230455<!--situationJob_University_Graduation_Ceremony_Science_Household--></T>
+      <T>230458<!--situationJob_University_Graduation_Ceremony_Arts_Household--></T>
+      <T>230611<!--walkby_jobs_UniversityStudentHangout_Science_Professor--></T>
+      <T>247230<!--jobs_Open_Streets_Summit_Tourist--></T>
+      <T>250086<!--job_Walkby_Sledder--></T>
+      <T>251327<!--job_Walkby_Sledder_Follower--></T>
+      <T>252861<!--jobs_Guidry--></T>
+      <T>253235<!--job_maid_Bonehilda--></T>
+      <T>253913<!--jobs_Guidry_visit--></T>
+      <T>254516<!--job_ghost_SeanceTable--></T>
+      <T>254786<!--walkby_job_SummitTourist--></T>
+      <T>256358<!--jobs_HauntedHouse_Temperance--></T>
+      <T>259318<!--situationJob_CottageWorld_NPC_AgnesCrumplebottom--></T>
+      <T>259452<!--situationJob_Festivals_VillageFair_Competitor--></T>
+      <T>260258<!--situationJob_CottageWorld_NPC_AgathaCrumplebottom--></T>
+      <T>260316<!--situationJob_CottageWorld_NPC_CritterTender--></T>
+      <T>260319<!--situationJob_CottageWorld_NPC_GroceryDelivery--></T>
+      <T>260318<!--situationJob_CottageWorld_NPC_GroceryOwner--></T>
+      <T>260317<!--situationJob_CottageWorld_NPC_Mayor--></T>
+      <T>260320<!--situationJob_CottageWorld_NPC_PubOwner--></T>
+      <T>261218<!--situationJob_MarketStalls_Vendor_VillageShops_Garden--></T>
+      <T>261219<!--situationJob_MarketStalls_Vendor_VillageShops_Grocery--></T>
+      <T>262353<!--job_Deliveries_GroceryDelivery--></T>
+      <T>262879<!--situationJob_BasicTrait_CottageWorld_NPC_AgnesCrumplebottom--></T>
+      <T>262880<!--situationJob_BasicTrait_CottageWorld_NPC_AgathaCrumplebottom--></T>
+      <T>262881<!--situationJob_BasicTrait_CottageWorld_NPC_Mayor--></T>
+      <T>262882<!--situationJob_BasicTrait_CottageWorld_NPC_GroceryOwner--></T>
+      <T>262883<!--situationJob_BasicTrait_CottageWorld_NPC_GroceryDelivery--></T>
+      <T>262884<!--situationJob_BasicTrait_CottageWorld_NPC_PubOwners--></T>
+      <T>262885<!--situationJob_BasicTrait_CottageWorld_NPC_CritterTender--></T>
+      <T>266137<!--walkby_jobs_CottageWorld_Fox--></T>
+      <T>270297<!--job_yoga_instructor_playerLed--></T> 
+      <T>270310<!--jobs_YogaInstructor_Service--></T>
+      <T>271675<!--job_GuidedMeditation_Instructor--></T>
+      <T>271676<!--job_GuidedMeditation_ClassMember--></T>
+      <T>272580<!--jobs_WellnessActivityPromoted--></T>
+      <T>283928<!--walkby_jobs_WeddingWorld_NPC_CamilleSoto--></T>
+      <T>283929<!--walkby_jobs_WeddingWorld_NPC_DominiqueSoto--></T>
+      <T>288976<!--job_WolfTown_WerewolfPackA--></T>
+      <T>288994<!--job_WolfTown_WerewolfPackB--></T>
+      <T>289068<!--walkby_Job_Werewolf_Greg--></T>
+      <T>289070<!--job_WolfTown_Greg--></T>
+      <T>291233<!--job_WolfTown_Spar_Actor--></T>
+      <T>291234<!--job_WolfTown_Spar_Target--></T>
+      <T>298694<!--job_WolfTown_WerewolfPackA_Invite--></T>
+      <T>298695<!--job_WolfTown_WerewolfPackB_Invite--></T>
+      <!--custom situation jobs-->
+      <!--Basemental-->
+      <T>9971053314695168986<!--Basemental:Police_SituationJob_ArrestDealer--></T>
+      <T>10102516385017488634<!--Basemental:job_DrugThug_CocaineEvent--></T>
+      <T>10319888806120431145<!--Basemental:Smuggling_Selvadorado_DrugDealer_SituationJob--></T>
+      <T>15829315150946424912<!--Basemental:Smuggling_Selvadorado_DrugThug_SituationJob--></T>
+      <T>16503767772181841657<!--Basemental:job_DrugDealer_CocaineEvent_NPC_Invite--></T>
+      <T>16864678529198169404<!--Basemental:Ayahuasca_Shaman_SituationJob--></T>
+      <T>16894894286806154434<!--Basemental:NPC_CocaineCompanion_Males_SituationJob--></T>
+      <T>17320809749640869139<!--Basemental:NPC_CocaineCompanion_SituationJob--></T>
+      <T>9297156309170374283<!--Basemental:FSG_Selvadorada_hookup_SimPicker_SituationJob--></T>
+      <T>9383226879214598303<!--Basemental:Simkuza_gangmember_SituationJob--></T>
+      <T>9433090545943122431<!--Basemental:Aspirations_PartyPlanner_YA_Raver_SituationJob--></T>
+      <T>9578431038036434079<!--Basemental:job_Raid_Actor--></T>
+      <T>9589046459346493481<!--Basemental:FSG_HQ_gangMember_SituationJob--></T>
+      <T>9787337620169220141<!--Basemental:Aspirations_PartyPlanner_FestivalGoer_SituationJob--></T>
+      <T>10051618801469661838<!--Basemental:CosaSimstra_HQ_gangMember_SituationJob--></T>
+      <T>10091210403343814125<!--Basemental:Simkuza_Selvadorada_hookup_SimPicker_SituationJob--></T>
+      <T>10101802333314583244<!--Basemental:Aspirations_PartyPlanning_Festival_DJ_CalvinLarynx_SituationJob--></T>
+      <T>10303709024284917079<!--Basemental:FSG_Selvadorada_hookup_actor_SituationJob--></T>
+      <T>10313974402449833195<!--Basemental:NCT_HQ_gangLeader_SituationJob--></T>
+      <T>10365850161357972829<!--Basemental:gangs_Selvadorada_hookup_SituationJob--></T>
+      <T>10835213405143696478<!--Basemental:gangs_unloadDrugs_buyer_SituationJob--></T>
+      <T>11720001997749039034<!--Basemental:CosaSimstra_Selvadorada_hookup_SimPicker_SituationJob--></T>
+      <T>11757757357893705359<!--Basemental:FSG_Rival_BodyGuards_SituationJob--></T>
+      <T>11816591969741040245<!--Basemental:FSG_gangmember_SituationJob--></T>
+      <T>11916501192024637620<!--Basemental:Simkuza_BodyGuards_SituationJob--></T>
+      <T>12160200090347624203<!--Basemental:Simkuza_HQ_gangMember_SituationJob--></T>
+      <T>12440867786326525783<!--Basemental:gangs_corruptPolitician_SituationJob--></T>
+      <T>12599333843549562706<!--Basemental:NCT_gangmember_SituationJob--></T>
+      <T>12773362947802263300<!--Basemental:Police_HideTheDrugs_Actor_SituationJob--></T>
+      <T>12820041604043700096<!--Basemental:Alcohol_BouncerLotTrait_Bouncer_SituationJob--></T>
+      <T>13060992993395870480<!--Basemental:Simkuza_unique_inspection_SituationJob--></T>
+      <T>13077216431557888608<!--Basemental:warsystem_gangmember_SituationJob--></T>
+      <T>13303209796995444344<!--Basemental:NCT_HQ_rightHandMan_SituationJob--></T>
+      <T>13316802974011142026<!--Basemental:Police_SituationJob_Raid--></T>
+      <T>13412862533240838802<!--Basemental:gangs_majorDrugDeal_second_SituationJob--></T>
+      <T>13661314154689470484<!--Basemental:NCT_Selvadorada_hookup_actor_SituationJob--></T>
+      <T>13789664638062035661<!--Basemental:Aspirations_PartyPlanning_Festival_DJ_MissT8_SituationJob--></T>
+      <T>13981611397820854145<!--Basemental:gangs_localBusiness_SituationJob--></T>
+      <T>14137884151071087443<!--Basemental:Aspirations_PartyPlanner_Rave_Security_1_SituationJob--></T>
+      <T>14256864845179844670<!--Basemental:gangs_asianGambler_SituationJob--></T>
+      <T>14305197978997563480<!--Basemental:Simkuza_HQ_gangLeader_SituationJob--></T>
+      <T>14348089846258481860<!--Basemental:Police_SituationJob_Raid_ArrestingOfficer--></T>
+      <T>14359791296933973925<!--Basemental:FSG_HQ_rightHandMan_SituationJob--></T>
+      <T>14389542999233578303<!--Basemental:gangs_majorDrugDeal_main_SituationJob--></T>
+      <T>14522701051797775449<!--Basemental:Clubber_Rave_Actor_SituationJob--></T>
+      <T>14662907361738817198<!--Basemental:CosaSimstra_RivalLeader_SituationJob--></T>
+      <T>14938951646327374443<!--Basemental:Simkuza_RivalLeader_SituationJob--></T>
+      <T>14963240239072828789<!--Basemental:FSG_RivalLeader_SituationJob--></T>
+      <T>15038551149901531682<!--Basemental:FSG_HQ_gangLeader_SituationJob--></T>
+      <T>15060163646340119069<!--Basemental:Simkuza_Rival_BodyGuards_SituationJob--></T>
+      <T>15131033459564658360<!--Basemental:Clubber_Rave_Friend_SituationJob--></T>
+      <T>15189415454273204043<!--Basemental:Simkuza_HQ_rightHandMan_SituationJob--></T>
+      <T>15454071718744389501<!--Basemental:CosaSimstra_unique_inspection_SituationJob--></T>
+      <T>15548970248748879794<!--Basemental:CosaSimstra_Selvadorada_hookup_actor_SituationJob--></T>
+      <T>15661568095173504744<!--Basemental:streetGangs_venue_customers_SituationJob--></T>
+      <T>15703862978887177840<!--Basemental:NCT_Selvadorada_hookup_SimPicker_SituationJob--></T>
+      <T>15717911868289807006<!--Basemental:Aspirations_PartyPlanner_Rave_Security_2_SituationJob--></T>
+      <T>15767815279251972708<!--Basemental:Cannabis_BenDRonkers_SituationJob--></T>
+      <T>16010154200101205817<!--Basemental:CosaSimstra_HQ_gangLeader_SituationJob--></T>
+      <T>16129470178292719838<!--Basemental:Aspirations_PartyPlanning_TeamDJ_SituationJob--></T>
+      <T>16439567279967068106<!--Basemental:FSG_unique_inspection_SituationJob--></T>
+      <T>16560336588836508037<!--Basemental:Simkuza_Selvadorada_hookup_actor_SituationJob--></T>
+      <T>16621960469425736642<!--Basemental:Aspirations_PartyPlanner_YA_FestivalGoer_SituationJob--></T>
+      <T>16698453944886014276<!--Basemental:NCT_HQ_gangMember_SituationJob--></T>
+      <T>16774519920731065696<!--Basemental:NCT_RivalLeader_SituationJob--></T>
+      <T>16935259102092817636<!--Basemental:CosaSimstra_gangmember_SituationJob--></T>
+      <T>17021221702077074758<!--Basemental:CosaSimstra_HQ_rightHandMan_SituationJob--></T>
+      <T>17147912585483812486<!--Basemental:Aspirations_PartyPlanner_Host_SituationJob--></T>
+      <T>17320869392280426426<!--Basemental:FSG_BodyGuards_SituationJob--></T>
+      <T>17354748346392908910<!--Basemental:Aspirations_PartyPlanning_Festival_DJ_DavidBuetta_SituationJob--></T>
+      <T>17548488004673195869<!--Basemental:Clubber_Rave_Dealer_SituationJob--></T>
+      <T>17840801319043314750<!--Basemental:Steroids_RoidDealer_SituationJob--></T>
+      <T>18142167514852905398<!--Basemental:gangs_Selvadorada_hookup_henchmen_SituationJob--></T>
+      <T>18149721720590760798<!--Basemental:Aspirations_PartyPlanner_Raver_SituationJob--></T>
+      <T>18368094164724531645<!--Basemental:Aspirations_PartyPlanning_TeamDealer_SituationJob--></T>
+      <T>14118156657151493121<!--Basemental:BuyDrugs_DebtCoolDown_Up_SituationJob--></T>
+      <!--Nisa-->
+      <T>11281000087800282410<!--NisaK:job_client_forced_in--></T>
+      <T>2085334638444986860<!--NisaK:job_escort_cc_client--></T>
+      <T>868163689751614319<!--NisaK:job_escort_cc_hoe--></T>
+      <T>15280697929587398045<!--NisaK:Job_Escort_NPC--></T>
+      <T>16600055650660784775<!--NisaK:Job_Escort_Player--></T>
+      <T>12139428509830852128<!--NisaK:job_forced_prostitute--></T>
+      <T>1337041488370216170<!--NisaK:Job_normal_client--></T>
+      <T>9041146196255553090<!--NisaK:job_normal_whore--></T>
+      <T>14462256185302350183<!--NisaK:job_stripper_lewding--></T>
+      <T>1986079395249448903<!--NisaK:job_stripper_sex_client--></T>
+      <!--SR-->
+      <T>16386915738531274165<!--SimRealist_RE_jobAppraiser--></T>
+      <T>17712320746656380989<!--SimRealist_RE_jobRealtor--></T>
+      <T>12989817279995428975<!--SimRealist_RE_jobSeller--></T>
+      <T>11870015427955870774<!--SimRealist_RE_jobSellerRealtor--></T>
+    </L>
+    <L n="SECOND_CHANCE_LIST">
+      <!--These are specific jobs that should be altered by the mod even if they are filtered by tags during the first pass.-->
+      <T>100054<!--walker_job_RingDoorbell_Neighbor--></T>
+      <T>117815<!--jobs_RelaxationVenue_MassageTherapist--></T>
+      <T>119519<!--jobs_RelaxationVenue_Reflexologist--></T>
+      <T>9400892077675073609<!--Kuttoe:FrontDesk_job_Receptionist--></T>
+      <T>263976<!--jobs_VillagerHelp_Gossipers--></T>
+    </L>
+    <L n="FORCED_REPLACEMENT_LIST">
+      <!--These are specific jobs that need to have their no show action set to REPLACE THEM in order for new locals to show up. This is agnostic to whether it was filtered or bypassed earlier.-->
+      <T>208843<!--Jobs_CollegeOrganizations_SchoolSpirit_Party_SchoolSpiritDay_Student--></T>
+      <T>222764<!--job_UniversityWorld_YASwimmer--></T>
+      <T>222840<!--job_UniversityWorld_CTYAESwimmer--></T>
+      <T>223246<!--jobs_CollegeOrganizations_SchoolSpirit_Prank_GameDayParty_Member--></T>
+      <T>223247<!--jobs_CollegeOrganizations_SchoolSpirit_Prank_GameDayParty_Rival--></T>
+    </L>
+    <L n="FILTER_REPLACEMENT_LIST">
+      <!--These are specific jobs that need to have their simfilter changed by the mod. This is agnostic to whether it was filtered or bypassed earlier.-->
+      <U>
+        <T n="new_filter">14710822158838601537<!--Kuttoe:KeepInHomeRegion_filter_PartyGoer--></T>
+        <L n="situation_jobs">
+          <T>225090<!--jobs_CollegeOrganizations_SchoolSpirit_Party_GameDayParty_PartyGoer--></T>
+        </L>
+      </U>
+    </L>
+    <L n="SITUATION_FILTER_FIXUP">
+      <!--These are very specific cases where the default filters are inappropriate or too permissive and must be replaced entirely.-->
+      <!--This differs from FILTER_REPLACEMENT_LIST in that these situations also get their tuning overriden, not just their filters.-->
+      <U>
+        <T n="new_filter">27405<!--filter_AdultIsNotBusy--></T>
+        <L n="situation_jobs">
+          <T>263976<!--jobs_VillagerHelp_Gossipers--></T>
+        </L>
+      </U>
+      <U>
+        <T n="new_filter">208143<!--Fiilter_RoommateNPC_Standard--></T>
+        <L n="situation_jobs">
+          <T>210614<!--job_RoommateNPC_StandardFriends--></T>
+          <T>212049<!--job_RoommateNPC_StandardParty--></T>
+        </L>
+      </U>
+    </L>
+    <L n="FILTERS_TO_BYPASS">
+      <!--Any situation job that uses one of these filters will automatically be bypassed-->
+      <T>40628<!--filter_NPC_InvitePCOver--></T>
+      <T>74294<!--filter_PartyHost--></T>
+      <T>74296<!--filter_PartyGuest--></T>
+      <T>99155<!--filter_InviteHiredRole--></T>
+      <T>111267<!--filter_VacationPicker--></T>
+      <T>117139<!--filter_HasRomanticRel_NPC_Invite_Date--></T>
+      <T>117265<!--filter_IsFriend_NPC_Invite_PlayDate--></T>
+      <T>127815<!--filter_IsFriend_NPC_Invite_Birthday_Party--></T>
+      <T>134369<!--filter_CityLife_Tourist--></T>
+      <T>136425<!--filter_Festivals_Overeater--></T>
+      <T>140936<!--filter_Festivals_Gamers--></T>
+      <T>141164<!--filter_Festivals_Hackers--></T>
+      <T>143378<!--filter_Festivals_Lamp_LightSider--></T>
+      <T>143379<!--filter_Festivals_Lamp_DarkSider--></T>
+      <T>154557<!--filter_CityLife_Tourist_TYAE--></T>
+      <T>178237<!--filter_Jungle_Tourist--></T>
+      <T>191258<!--filter_HasRomanticRel_NPC_Invite_Date_RomanticSprit--></T>
+      <T>196921<!--filter_Walker_FameWorld_Tourist--></T>
+      <T>197044<!--Filter_FameWorld_Tourist--></T>
+      <T>200966<!--filter_PartyGuest_HasNotMet--></T>
+      <T>201950<!--filter_PartyGuest_OfHonor--></T>
+      <T>201953<!--filter_PartyGuest_HasMet_Lampoon--></T>
+      <T>201954<!--filter_PartyGuest_HasMet_Charity--></T>
+      <T>202474<!--filter_PartyGuest_HasNotMet_Charity--></T>
+      <T>202476<!--filter_PartyGuest_HasNotMet_Lampoon--></T>
+      <T>251547<!--_SituationFilters_TandemSledders_Tourist_Leader--></T>
+      <T>253606<!--_SituationFilters_TandemSledders_Tourist_Follower--></T>
+    </L>
+    <L n="BYPASS_TAGS">
+      <E>Situation_PlayerFacing_CanHost</E>
+      <E>Situation_Criminal</E>
+      <E>Situation_Reaper</E>
+      <E>Situation_CookingInteractions</E>
+      <E>Situation_WelcomeWagon</E>
+      <E>Situation_PlayerVisiting_NPC</E>
+      <E>Situation_Event_NPC</E>
+      <E>Situation_TragicClown</E>
+      <E>Situation_NightTimeVisit</E>
+      <E>Situation_Tutorial_FTUE</E>
+      <E>Situation_VisitorNPCs</E>
+      <E>Situation_Vet_PlayerPetOwner</E>
+      <E>Situation_Vet_SickPet</E>
+      <E>Situation_Bear</E>
+      <E>Situation_ForestGhost</E>
+      <E>Situation_ForestRanger</E>
+      <E>Situation_Retail_Customer</E>
+      <E>Situation_Retail_Employee</E>
+      <E>Situation_ActiveCareer</E>
+      <E>Situation_ActiveCareer_Scientist</E>
+      <E>Situation_SpookyParty</E>
+      <E>Situation_Festival_Logic_RocketShipWoohooers</E>
+      <E>Situation_Festival_Blossom_RomanticCouple</E>
+      <E>Situation_Festival</E>
+      <E>Situation_Butler</E>
+      <E>Situation_PetObstacleCourse</E>
+      <E>Situation_Gnome_Normal</E>
+      <E>Situation_Gnome_Berserk</E>
+      <E>Situation_FlowerBunny</E>
+      <E>Situation_Squad</E>
+      <E>Situation_Possessed</E>
+      <E>Interaction_Situation_Photography</E>
+      <E>Situation_RoommateNPC_Potential</E>
+      <E>Situation_Sun_Ray</E>
+      <E>Situation_HikingTrail</E>
+      <E>Situation_Fox_OnLot</E>
+      <E>Situation_Wedding</E>
+    </L>
+  </C>
+  <C n="FilterModifications">
+    <L n="ADD_REGION_TEST_LIST">
+      <T>133610<!--filter_PetOwner_Dog_TYAE--></T>
+      <T>169505<!--filter_PetOwner_Dog_YAE--></T>
+      <T>170219<!--filter_PetOwner_Cat_TYAE--></T>
+      <T>170220<!--filter_PetOwner_Cat_YAE--></T>
+    </L>
+    <L n="AGGREGATE_FILTER_OVERRIDES">
+      <U>
+        <T n="filter">264711<!--filter_Aggregate_VillagerHelp_Gossipers--></T>
+        <U n="overrides">
+          <V n="leader_filter" t="override">
+            <U n="override">
+              <T n="filter">14360040507173405945<!--Kuttoe:KeepInHomeRegion_filter_ages_tyae_hasRelationship_InRegion--></T>
+            </U>
+          </V>
+          <U n="filters">
+            <E n="replacement_policy">REPLACE</E>
+            <L n="filters_list">
+              <U>
+                <T n="filter">14139671299622176089<!--Kuttoe:KeepInHomeRegion_filter_ages_tyae_hasRelationship_withSim_InRegion--></T>
+                <T n="optional">False</T>
+              </U>
+            </L>
+          </U>
+        </U>
+      </U>
+    </L>
+  </C>
+</M>

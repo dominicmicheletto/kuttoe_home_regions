@@ -12,7 +12,6 @@ from services import get_instance_manager
 
 # sim4 imports
 from sims4 import hash_util
-from sims4.reload import protected
 from sims4.resources import Types, get_resource_key
 from sims4.utils import classproperty, constproperty
 from sims4.tuning.tunable import AutoFactoryInit, HasTunableFactory, OptionalTunable, Tunable, TunableMapping
@@ -560,31 +559,42 @@ class DisallowWorldInteractionTuningData(_WorldListInteractionTuningDataBase):
         return AlterType.DISALLOW_WORLD
 
 
+class TooltipReasonMapping(TunableMapping):
+    def __init__(self, *args, **kwargs):
+        kwargs['key_name'] = 'toggle_value'
+        kwargs['key_type'] = Tunable(tunable_type=bool, default=False)
+        kwargs['value_name'] = 'display_text'
+        kwargs['value_type'] = TunableLocalizedStringFactory()
+
+        super().__init__(*args, **kwargs)
+
+
+class SettingValueMapping(TunableMapping):
+    def __init__(self, *args, **kwargs):
+        kwargs['key_name'] = 'setting_value'
+        kwargs['key_type'] = Tunable(tunable_type=bool, default=False)
+        kwargs['value_name'] = 'display_data'
+
+        tuple_args = dict()
+        tuple_args['text'] = TunableLocalizedStringFactory()
+        tuple_args['pie_menu_icon'] = OptionalTunable(TunableIconVariant())
+        kwargs['value_type'] = TunableTuple(**tuple_args)
+
+        super().__init__(*args, **kwargs)
+
+
 class SoftFilterInteractionTuningData(PythonBasedInteractionData):
     _SUB_INTERACTION_CACHE = defaultdict(dict)
     FACTORY_TUNABLES = {
         'disabled_interaction_behaviour': OptionalTunable(
             tunable=TunableTuple(
                 base=TunableLocalizedStringFactory(),
-                tooltip_reason_mapping=TunableMapping(
-                    key_name='toggle_value',
-                    key_type=Tunable(tunable_type=bool, default=False),
-                    value_name='display_text',
-                    value_type=TunableLocalizedStringFactory()
-                )
+                tooltip_reason_mapping=TooltipReasonMapping(),
             ),
             disabled_name='do_not_show',
             enabled_name='show_interactions',
         ),
-        'setting_value_mapping': TunableMapping(
-            key_type=Tunable(tunable_type=bool, default=False),
-            key_name='setting_value',
-            value_type=TunableTuple(
-                text=TunableLocalizedStringFactory(),
-                pie_menu_icon=OptionalTunable(TunableIconVariant())
-            ),
-            value_name='display_data',
-        ),
+        'setting_value_mapping': SettingValueMapping(),
         'picker_dialog': UiItemPicker.TunableFactory(),
     }
 

@@ -145,8 +145,12 @@ class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=
     DEFAULT = 0
 
     @classproperty
+    def available_worlds(cls):
+        return set(world for world in cls if world.is_available and world is not HomeWorldIds.DEFAULT)
+
+    @classproperty
     def world_list(cls):
-        return ', '.join(world.name for world in cls if world.is_available and world is not HomeWorldIds.DEFAULT)
+        return ', '.join(world.name for world in cls.available_worlds)
 
     @property
     def command_name_base(self):

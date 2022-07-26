@@ -209,3 +209,26 @@ def toggle_bidirectional(new_value: bool = None, _connection=None):
     Output(_connection)('Bidirectional toggle for Allow and Disallow World pickers is now turned {}'.format(response))
 
     return True
+
+
+@Command('kuttoe.dump_filters', command_type=CommandType.Live)
+def dump_filters(file_path: str = None, _connection=None):
+    from kuttoe_home_regions.injections import SituationJobModifications
+    from kuttoe_home_regions.settings import Settings
+    from os import path
+    from subprocess import Popen
+
+    filters = dict(soft=SituationJobModifications.SOFT_FILTER, main=SituationJobModifications.MAIN_FILTER)
+    output = Output(_connection)
+
+    gv_data = Settings.gv_directory
+    file_path = path.join(file_path or gv_data.directory_path, 'Kuttoe_Filter_Dump.txt')
+
+    with open(file_path, 'w+') as file:
+        for (name, filter_obj) in filters.items():
+            file.write(f'{name} ({filter_obj}):\n{getattr(filter_obj, "value")}\n\n')
+
+    output(f'Successfully wrote filters to file: {file_path}')
+    Popen(['notepad', file_path])
+    return True
+

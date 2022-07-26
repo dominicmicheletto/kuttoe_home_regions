@@ -41,7 +41,6 @@ ConsoleCommands = namedtuple('ConsoleCommands', ['sim', 'settings'])
 
 
 class WorldData(HasTunableFactory, AutoFactoryInit):
-    SOFT_FILTER_VALUE = Tunable(tunable_type=float, default=0.1)
     FACTORY_TUNABLES = {
         'pie_menu_priority': TunableRange(tunable_type=int, default=2, maximum=10, minimum=0)
     }
@@ -90,23 +89,6 @@ class WorldData(HasTunableFactory, AutoFactoryInit):
 
         return ConsoleCommands(_kuttoe_set_world_id, Settings.create_world_console_commands(self.home_world))
 
-    def inject_into_filter(self, sim_filter):
-        new_dict = dict(sim_filter.value.region_to_filter_terms)
-        settings_data = Settings.get_world_settings(self.home_world)
-        if self.region not in new_dict:
-            return
-        new_data = new_dict[self.region][0]
-
-        regions = set(new_dict[self.region][0].region)
-        regions.update(HomeWorldIds[region].region for region in settings_data['Worlds'])
-        new_data.region = tuple(regions)
-
-        if settings_data['Soft']:
-            new_data.minimum_filter_score = self.SOFT_FILTER_VALUE
-
-        new_dict[self.region] = (new_data, )
-        sim_filter.value.region_to_filter_terms = frozendict(new_dict)
-
     def register_and_inject_affordances(self, interaction_data: InteractionData) -> Dict[InteractionTargetType, int]:
         return interaction_data(self).inject()
 
@@ -129,8 +111,6 @@ class HomeWorldMapping(TunableMapping):
 class HomeRegionsCommandTuning:
     HOME_WORLD_MAPPING = HomeWorldMapping()
     INTERACTION_DATA = InteractionData.TunableFactory()
-    LOCATION_BASED_FILTER = TunablePackSafeReference(manager=get_instance_manager(Types.SNIPPET), allow_none=False,
-                                                     class_restrictions=('LocationBasedFilterTerms', ))
 
     @staticmethod
     @on_load_complete(Types.TUNING, safe=False)
@@ -148,5 +128,4 @@ class HomeRegionsCommandTuning:
                 continue
 
             command_data.create_console_commands()
-            command_data.inject_into_filter(cls.LOCATION_BASED_FILTER)
             command_data.register_and_inject_affordances(cls.INTERACTION_DATA)

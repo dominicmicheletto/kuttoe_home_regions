@@ -1,0 +1,473 @@
+<M n="kuttoe_home_regions.home_worlds" s="16730851913995983435">
+  <C n="HomeWorldIds">
+    <T n="COMMAND_NAME_BASE">kuttoe.set_world_id</T>
+    <L n="_elements">
+      <U ev="2363457107" n="WILLOW_CREEK">
+        <T n="region_id">104064<!--region_Residential_WillowCreek--></T>
+        <T n="name">0xAE8A4AE5<!--Willow Creek--></T>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_base_32">2f7d0004:00000000:e89ef5376c627d52</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_base_128">2f7d0004:00000000:a89f072d2b611ea4</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="711065386" n="OASIS_SPRINGS">
+        <T n="region_id">104065<!--region_Residential_OasisSprings--></T>
+        <T n="name">0x72841393<!--Oasis Springs--></T>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_base_32">2f7d0004:00000000:e89ef5376c627d52</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_base_128">2f7d0004:00000000:a89f072d2b611ea4</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="3942535331" n="NEWCREST">
+        <T n="region_id">119917<!--Region: region_Residential_Newcrest--></T>
+        <T n="name">0xCD2ADFEB<!--Newcrest--></T>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_base_32">2f7d0004:00000000:e89ef5376c627d52</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_base_128">2f7d0004:00000000:a89f072d2b611ea4</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="1704446400" n="MAGNOLIA_PROMENADE">
+        <T n="region_id">108704<!--Region: region_Career_Retail--></T>
+        <T n="name">0xDA89B479<!--Magnolia Promenade--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP01</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep01_32">2f7d0004:00000000:afc4db08385d71e1</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep01_128">2f7d0004:00000000:08f89ff7c6cde189</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="3691563516" n="WINDENBURG">
+        <T n="region_id">123129<!--Region: region_Residential_NorthEurope--></T>
+        <T n="name">0x0D10C688<!--Windenburg--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP02</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep02_32">2f7d0004:00000000:967278082a360da8</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep02_128">2f7d0004:00000000:da8895dfb9d3080a</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="1075237116" n="SAN_MYSHUNO">
+        <T n="region_id">134252<!--Region: region_Residential_CityLife--></T>
+        <T n="name">0x2B5BF587<!--San Myshuno--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP03</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep03_32">2f7d0004:00000000:9ce791082d3e5667</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep03_128">2f7d0004:00000000:dbcae7e4e0e6cdbf</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="3950992577" n="FORGOTTEN_HOLLOW">
+        <T n="region_id">152175<!--Region: region_Residential_VampireWorld--></T>
+        <T n="name">0x0376C71A<!--Forgotten Hollow--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">GP04</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp04_32">2f7d0004:00000000:0a0bb34697e16190</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp04_128">2f7d0004:00000000:f33c48f413f2d1f2</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="2893613071" n="BRINDLETON_BAY">
+        <T n="region_id">166547<!--Region: region_Residential_PetWorld--></T>
+        <T n="name">0x13AC8438<!--Brindleton Bay--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP04</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep04_32">2f7d0004:00000000:c83dde0845cc421e</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep04_128">2f7d0004:00000000:0d694e0e9a1a4ed8</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="2323227531" n="DEL_SOL_VALLEY">
+        <T n="region_id">195493<!--Region: region_Residential_FameWorld--></T>
+        <T n="name">0x1F963454<!--Del Sol Valley--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP06</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep06_32">2f7d0004:00000000:b71394083c1ebb1c</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep06_128">2f7d0004:00000000:34f91dfe28329df6</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="2018586480" n="STRANGERVILLE">
+        <T n="region_id">201699<!--Region: region_Residential_Strangetown--></T>
+        <T n="name">0xE416E1D7<!--StrangerVille--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">GP07</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp07_32">2f7d0004:00000000:2437b646a6c1c649</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp07_128">2f7d0004:00000000:4c77f30d5b49f1b1</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="1893347376" n="SULANI">
+        <T n="region_id">208308<!--Region: region_Residential_IslandWorld--></T>
+        <T n="name">0xF4E5A90D<!--Sulani--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP07</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep07_32">2f7d0004:00000000:c0ef2d08420b065b</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_base_128">2f7d0004:00000000:e169500838b66c7b</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="100140133" n="GLIMMERBROOK">
+        <T n="region_id">216626<!--Region: region_Residential_Magic--></T>
+        <T n="name">0x1BBB2C5D<!--Glimmerbrook--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">GP08</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp08_32">2f7d0004:00000000:e96a974685f8b43c</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp08_128">2f7d0004:00000000:98cc40d5a5941596</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="2371324614" n="BRITECHESTER">
+        <T n="region_id">208814<!--Region: region_Residential_UniversityWorld--></T>
+        <T n="name">0xB46076CF<!--Britechester--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP08</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep08_32">2f7d0004:00000000:ec44fa085a9818f2</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep08_128">2f7d0004:00000000:11545631f077b5c4</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="2496862430" n="EVERGREEN_HARBOUR">
+        <T n="region_id">228200<!--Region: region_Residential_EcoWorld--></T>
+        <T n="name">0x61121B22<!--Evergreen Harbor--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP09</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep09_32">2f7d0004:00000000:f39433085e5a3ba9</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep09_128">2f7d0004:00000000:3f15503853596391</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="3002294565" n="MT_KOMOREBI">
+        <T n="region_id">238454<!--Region: region_Residential_MountainWorld--></T>
+        <T n="name">0xA13C04D8<!--Mt. Komorebi--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP10</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep10_32">2f7d0004:00000000:5c89281126e45e6b</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep10_128">2f7d0004:00000000:21667025160635cb</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="2650041621" n="HENFORD_ON_BAGLEY">
+        <T n="region_id">257397<!--Region: region_Residential_CottageWorld--></T>
+        <T n="name">0x38949DB2<!--Henford-on-Bagley--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP11</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep11_32">2f7d0004:00000000:51d48f112040226c</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep11_128">2f7d0004:00000000:4c4a7e19ccf45106</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="3442073656" n="TARTOSA">
+        <T n="region_id">272129<!--Region: region_Residential_WeddingWorld--></T>
+        <T n="name">0x206F092C<!--Tartosa--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">GP11</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp11_32">2f7d0004:00000000:d924b44f99c392b6</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp11_128">2f7d0004:00000000:bcf7a14247579e30</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="1812713502" n="MOONWOOD_MILL">
+        <T n="region_id">285909<!--Region: region_Residential_WolfTown--></T>
+        <T n="name">0x42F5A65B<!--Moonwood Mill--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">GP12</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp12_32">2f7d0004:00000000:d0fc834f95498cb3</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp12_128">2f7d0004:00000000:6698e33aabf41093</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="1634851428" n="SELVADORADA">
+        <T n="region_id">173593<!--Region: region_Destination_Jungle--></T>
+        <T n="name">0xB82F60B6<!--Selvadorada--></T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">GP06</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp06_32">2f7d0004:00000000:1ce8fd46a3007d12</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_gp06_128">2f7d0004:00000000:206a7906f9dab1e4</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+    </L>
+  </C>
+</M>

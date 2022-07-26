@@ -85,33 +85,46 @@ class Settings:
         soft=TunableInteractionName(),
         allow_world=TunableInteractionName(),
         disallow_world=TunableInteractionName(),
+        notification=TunableInteractionName(),
     )
     NOTIFICATION_SETTINGS = NotificationSettingsMapping()
+    BIDIRECTIONAL_TOGGLE = Tunable(tunable_type=bool, default=False, allow_empty=False, needs_tuning=True)
     _SETTINGS = None
 
     @classmethod
-    def create_console_commands(cls, home_world: HomeWorldIds):
+    def create_settings_console_command(cls, notification_type: NotificationType):
+        notif_name_builder = cls.COMMAND_NAME_BASES.notification
+        command_name = notif_name_builder._get_hash_for_suffix(notification_type.pretty_name)[0]
+
+        @Command(command_name, command_type=CommandType.Live)
+        def _kuttoe_notification_toggle(new_value: bool = None, _connection=None):
+            from kuttoe_home_regions.commands import kuttoe_notifications_toggle
+
+            return kuttoe_notifications_toggle(notification_type, new_value=new_value, _connection=_connection)
+
+    @classmethod
+    def create_world_console_commands(cls, home_world: HomeWorldIds):
         command_name = {key: value(home_world)[0] for (key, value) in cls.COMMAND_NAME_BASES}
 
         @Command(command_name['soft'], command_type=CommandType.Live)
         def _kuttoe_soft_toggle(new_value: bool = None, _connection=None):
             from kuttoe_home_regions.commands import kuttoe_settings_soft_setting_toggle
 
-            kuttoe_settings_soft_setting_toggle(home_world, new_value=new_value, _connection=_connection)
+            return kuttoe_settings_soft_setting_toggle(home_world, new_value=new_value, _connection=_connection)
 
         @Command(command_name['allow_world'], command_type=CommandType.Live)
         def _kuttoe_allow_world(*home_world_name, _connection=None):
             from kuttoe_home_regions.commands import kuttoe_settings_alter_worlds_list, AlterType
 
-            kuttoe_settings_alter_worlds_list(home_world, *home_world_name, alter_type=AlterType.ALLOW_WORLD,
-                                              _connection=_connection)
+            return kuttoe_settings_alter_worlds_list(home_world, *home_world_name, alter_type=AlterType.ALLOW_WORLD,
+                                                     _connection=_connection)
 
         @Command(command_name['disallow_world'], command_type=CommandType.Live)
         def _kuttoe_disallow_world(*home_world_name, _connection=None):
             from kuttoe_home_regions.commands import kuttoe_settings_alter_worlds_list, AlterType
 
-            kuttoe_settings_alter_worlds_list(home_world, *home_world_name, alter_type=AlterType.DISALLOW_WORLD,
-                                              _connection=_connection)
+            return kuttoe_settings_alter_worlds_list(home_world, *home_world_name, alter_type=AlterType.DISALLOW_WORLD,
+                                                     _connection=_connection)
 
         return _kuttoe_soft_toggle, _kuttoe_allow_world, _kuttoe_disallow_world
 
@@ -210,10 +223,15 @@ class Settings:
         return {notif_type.setting_name: value for (notif_type, value) in cls.NOTIFICATION_SETTINGS.items()}
 
     @classproperty
+    def additional_settings(cls):
+        return dict(bidirectional_toggle=cls.BIDIRECTIONAL_TOGGLE)
+
+    @classproperty
     def default_settings(cls):
         dict_values = dict()
 
         dict_values.update(cls.notification_settings)
+        dict_values.update(cls.additional_settings)
         for home_world in HomeWorldIds:
             if home_world == HomeWorldIds.DEFAULT:
                 continue
@@ -280,6 +298,19 @@ class Settings:
     @classproperty
     def should_show_notification(cls) -> Dict[NotificationType, bool]:
         return {notif_type: cls.settings[notif_type.setting_name] for notif_type in NotificationType}
+
+    @classproperty
+    def bidirectional_toggle(cls) -> bool:
+        return cls.settings['bidirectional_toggle']
+
+    @classmethod
+    def get_token(cls, setting_key: str, enabled_token=None, disabled_token=None, *string_tokens):
+        value = cls.settings.get(setting_key, False)
+        token = enabled_token if value else disabled_token
+
+        if not token:
+            return token
+        return token(*string_tokens)
 
     @classmethod
     def update_setting(cls, setting_key: str, setting_value):

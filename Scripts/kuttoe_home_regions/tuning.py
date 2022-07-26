@@ -12,6 +12,7 @@ from services import get_instance_manager
 
 # sim4 imports
 from sims4 import hash_util
+from sims4.reload import protected
 from sims4.resources import Types, get_resource_key
 from sims4.utils import classproperty, constproperty
 from sims4.tuning.tunable import AutoFactoryInit, HasTunableFactory, OptionalTunable, Tunable, TunableMapping
@@ -85,6 +86,9 @@ class TunableInteractionName(Tunable):
 
         def __call__(self, home_world: HomeWorldIds):
             return self._get_hash_for_home_world(self.interaction_name_base, home_world)
+
+        def _get_hash_for_suffix(self, suffix: str):
+            return self._get_hash_for_name(self.interaction_name_base, suffix)
 
         @property
         def interaction_name_base(self):
@@ -370,6 +374,10 @@ class PickerInteractionTuningData(PythonBasedInteractionData):
 
 
 class _WorldListInteractionTuningDataBase(PythonBasedInteractionData):
+    BIDIRECTIONAL_TOGGLE_TOKEN = TunableLocalizedStringFactory()
+    ENABLED_TOKEN = TunableLocalizedStringFactory()
+    DISABLED_TOKEN = TunableLocalizedStringFactory()
+
     FACTORY_TUNABLES = {
         'picker_dialog': UiItemPicker.TunableFactory(),
         'picker_interaction_name': TunableLocalizedStringFactory(),
@@ -441,7 +449,11 @@ class _WorldListInteractionTuningDataBase(PythonBasedInteractionData):
         text = self.picker_dialog.text
 
         def new_text(*tokens):
-            return text(region_text, *tokens)
+            from kuttoe_home_regions.settings import Settings
+
+            base_text = text(region_text, *tokens)
+            state_text = Settings.get_token('bidirectional_toggle', self.ENABLED_TOKEN, self.DISABLED_TOKEN)
+            return self.BIDIRECTIONAL_TOGGLE_TOKEN(base_text, state_text)
 
         if not text:
             return self.picker_dialog

@@ -2,20 +2,32 @@
 #  Imports                                                                                                            #
 #######################################################################################################################
 
+# python imports
+from typing import Dict, Any
+
+# misc imports
 import enum
 from services import get_instance_manager
+from singletons import DEFAULT
+
+# sims 4 imports
 from sims4.resources import Types
-from sims4.tuning.dynamic_enum import DynamicEnum
-from sims4.tuning.tunable import TunablePackSafeReference, TunableMapping, TunableEnumEntry, Tunable
-from sims4.tuning.tunable import OptionalTunable, TunableTuple, HasTunableFactory, AutoFactoryInit
+from sims4.collections import frozendict
+from sims4.tuning.tunable import TunableMapping, TunableEnumEntry, Tunable, OptionalTunable, HasTunableFactory
+from sims4.tuning.tunable import AutoFactoryInit, TunablePackSafeReference
 from sims4.localization import TunableLocalizedStringFactory
 from sims4.common import Pack, is_available_pack
 from sims4.utils import classproperty
+
+# interaction imports
 from interactions.utils.tunable_icon import TunableIconVariant
+
+# local imports
+from kuttoe_home_regions.enum import DynamicFactoryEnumMetaclass, EnumItemFactory
 
 
 #######################################################################################################################
-#  Enumerations                                                                                                       #
+#  Helper Tuning                                                                                                      #
 #######################################################################################################################
 
 
@@ -70,7 +82,65 @@ class TunableIconDefinition(OptionalTunable):
         super().__init__(*args, **kwargs)
 
 
-class HomeWorldIds(DynamicEnum):
+#######################################################################################################################
+#  Enumerations                                                                                                       #
+#######################################################################################################################
+
+
+class RegionData:
+    def __init__(self, region_id: int = 0, name=None, pack: Pack = Pack.BASE_GAME, icon_mapping=frozendict()):
+        self._region_id = region_id
+        self._name = name
+        self._pack = pack
+        self._icon_mapping = icon_mapping
+
+    @property
+    def region_name(self):
+        name: TunableLocalizedStringFactory._Wrapper = self._name
+
+        return name
+
+    @property
+    def pack(self):
+        return self._pack
+
+    @property
+    def is_available(self) -> bool:
+        return is_available_pack(self.pack)
+
+    @property
+    def icon_mapping(self) -> Dict[IconSize, Any]:
+        return self._icon_mapping
+
+    @property
+    def pie_menu_icon(self):
+        return self.get_icon()
+
+    def get_icon(self, icon_size=IconSize.SMALL):
+        return self.icon_mapping.get(icon_size, None)
+
+
+@EnumItemFactory.ReprMixin(name='region_name', region_id=None, region=DEFAULT)
+@EnumItemFactory.TunableReferenceMixin(region=('region_id', True))
+class RegionDataFactory(EnumItemFactory):
+    FACTORY_TUNABLES = {
+        'region': TunablePackSafeReference(manager=get_instance_manager(Types.REGION)),
+        'name': TunableLocalizedStringFactory(),
+        'pack': PackDefinition(),
+        'icon_mapping': IconMapping(),
+    }
+    FACTORY_TYPE = RegionData
+
+    def __init__(self, *args, **kwargs):
+        kwargs.update(self.FACTORY_TUNABLES)
+        super().__init__(*args, **kwargs)
+
+    @staticmethod
+    def get_default(value):
+        return RegionData()
+
+
+class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=RegionDataFactory):
     COMMAND_NAME_BASE = Tunable(tunable_type=str, allow_empty=False, needs_tuning=True, default='')
     DEFAULT = 0
 
@@ -95,53 +165,5 @@ class HomeWorldIds(DynamicEnum):
         return '{}_{}'.format(self.command_name_base, self.pretty_name)
 
     @property
-    def region_data(self):
-        return self.REGION_MAPPING.get(self, None)
-
-    @property
-    def region(self):
-        return getattr(self.region_data, 'region', None)
-
-    @property
-    def pack(self) -> Pack:
-        return getattr(self.region_data, 'pack', Pack.BASE_GAME)
-
-    @property
-    def is_available(self) -> bool:
-        return is_available_pack(self.pack)
-
-    @property
-    def region_name(self):
-        return getattr(self.region_data, 'name', None)
-
-    @property
-    def pie_menu_icon(self):
-        return self.get_icon()
-
-    @property
     def settings_name_base(self):
         return self.desc.replace(' ', '')
-
-    def get_icon(self, icon_size=IconSize.SMALL):
-        return getattr(self.region_data, 'icon_mapping', dict()).get(icon_size, None)
-
-
-class RegionMapping(TunableMapping):
-    def __init__(self, *args, **kwargs):
-        kwargs['key_name'] = 'world_name'
-        kwargs['key_type'] = TunableEnumEntry(tunable_type=HomeWorldIds, default=HomeWorldIds.DEFAULT)
-        kwargs['value_name'] = 'region_data'
-
-        tuple_args = dict()
-        tuple_args['region'] = TunablePackSafeReference(manager=get_instance_manager(Types.REGION))
-        tuple_args['name'] = TunableLocalizedStringFactory()
-        tuple_args['pack'] = PackDefinition()
-        tuple_args['icon_mapping'] = IconMapping()
-        kwargs['value_type'] = TunableTuple(**tuple_args)
-
-        super().__init__(*args, **kwargs)
-
-
-with HomeWorldIds.make_mutable():
-    HomeWorldIds.REGION_MAPPING = RegionMapping()
-

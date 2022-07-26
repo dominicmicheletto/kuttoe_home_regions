@@ -23,6 +23,7 @@ from kuttoe_home_regions.tuning import InteractionType, TunableInteractionName, 
 from kuttoe_home_regions.tuning import InteractionData
 from kuttoe_home_regions.settings import Settings
 from kuttoe_home_regions.commands import kuttoe_set_world_id
+from kuttoe_home_regions.ui import NotificationType
 from kuttoe_home_regions.utils import on_load_complete, InteractionTargetType
 
 
@@ -78,7 +79,7 @@ class WorldData(HasTunableFactory, AutoFactoryInit):
     def user_has_required_pack(self):
         return self.home_world.is_available
 
-    def create_console_command(self):
+    def create_console_commands(self):
         command_name, value = self.command_name, self.home_world.value
 
         @Command(command_name, command_type=CommandType.Live)
@@ -87,14 +88,14 @@ class WorldData(HasTunableFactory, AutoFactoryInit):
 
             kuttoe_set_world_id(self.home_world, sim_info, _connection)
 
-        return ConsoleCommands(_kuttoe_set_world_id, Settings.create_console_commands(self.home_world))
+        return ConsoleCommands(_kuttoe_set_world_id, Settings.create_world_console_commands(self.home_world))
 
     def inject_into_filter(self, sim_filter):
         new_dict = dict(sim_filter.value.region_to_filter_terms)
         settings_data = Settings.get_world_settings(self.home_world)
-        new_data = new_dict[self.region][0]
         if self.region not in new_dict:
             return
+        new_data = new_dict[self.region][0]
 
         regions = set(new_dict[self.region][0].region)
         regions.update(HomeWorldIds[region].region for region in settings_data['Worlds'])
@@ -136,14 +137,16 @@ class HomeRegionsCommandTuning:
     def _register_all_data(_):
         cls = HomeRegionsCommandTuning
         data: Dict[HomeWorldIds, WorldData] = cls.HOME_WORLD_MAPPING
-
         InteractionTargetType.verify_all_values()
+
+        for notification_type in NotificationType:
+            Settings.create_settings_console_command(notification_type)
+
         for (home_world, world_data) in data.items():
             command_data: WorldData = world_data(home_world)
-
             if not command_data.user_has_required_pack:
                 continue
 
-            command_data.create_console_command()
+            command_data.create_console_commands()
             command_data.inject_into_filter(cls.LOCATION_BASED_FILTER)
             command_data.register_and_inject_affordances(cls.INTERACTION_DATA)

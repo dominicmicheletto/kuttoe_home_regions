@@ -92,18 +92,25 @@ def kuttoe_settings_soft_setting_toggle(home_world_id: HomeWorldIds, new_value: 
     return True
 
 
-def kuttoe_settings_alter_worlds_list(source_world: HomeWorldIds,
-                                      *home_world_name,
-                                      alter_type: AlterType,
-                                      _connection=None):
+def kuttoe_notifications_toggle(notification_type: NotificationType, new_value: bool = None, _connection=None):
+    from kuttoe_home_regions.settings import Settings
+
+    new_value = new_value if new_value is not None else not Settings.get_notification_setting(notification_type)
+    Settings.update_setting(notification_type.setting_name, new_value)
+    Output(_connection)('Notification settings for {} set to {}'.format(notification_type.name, new_value))
+
+    return True
+
+
+def _alter_worlds_list_helper(
+        source_world: HomeWorldIds,
+        target_world: HomeWorldIds,
+        alter_type: AlterType,
+        _connection=None):
     from kuttoe_home_regions.settings import Settings
 
     output = Output(_connection)
-    home_world = get_home_world_from_name(*home_world_name, _connection=_connection)
-    if home_world is None:
-        return False
-
-    if home_world == source_world:
+    if target_world == source_world:
         words = {alter_type.ALLOW_WORLD: ('add', 'to'), alter_type.DISALLOW_WORLD: ('remove', 'from')}
         output('Cannot {} a World {} its own list'.format(*words[alter_type]))
 
@@ -111,25 +118,43 @@ def kuttoe_settings_alter_worlds_list(source_world: HomeWorldIds,
 
     world_list: List[str] = Settings.get_world_settings(source_world)['Worlds']
     if alter_type == AlterType.ALLOW_WORLD:
-        if home_world.name in world_list:
-            output('{} is already in {}\'s allowed Worlds list!'.format(home_world.desc, source_world.desc))
+        if target_world.name in world_list:
+            output('{} is already in {}\'s allowed Worlds list!'.format(target_world.desc, source_world.desc))
             return False
 
-        world_list.append(home_world.name)
+        world_list.append(target_world.name)
         msg = 'added to'
     elif alter_type == AlterType.DISALLOW_WORLD:
-        if home_world.name not in world_list:
+        if target_world.name not in world_list:
             output('{} cannot be removed from {}\'s allowed Worlds list as it\'s not currently in it!'.format(
-                home_world.desc, source_world.desc))
+                target_world.desc, source_world.desc))
             return False
 
-        world_list.remove(home_world.name)
+        world_list.remove(target_world.name)
         msg = 'removed from'
 
     Settings.update_setting('{}_Worlds'.format(source_world.settings_name_base), world_list)
     output('World {} {} {}\'s list of Worlds Townies are allowed to come from'.format(
-        home_world.desc, msg, source_world.desc
+        target_world.desc, msg, source_world.desc
     ))
+
+    return True
+
+
+def kuttoe_settings_alter_worlds_list(source_world: HomeWorldIds,
+                                      *home_world_name,
+                                      alter_type: AlterType,
+                                      _connection=None):
+    from kuttoe_home_regions.settings import Settings
+
+    home_world = get_home_world_from_name(*home_world_name, _connection=_connection)
+    if home_world is None:
+        return False
+
+    _alter_worlds_list_helper(source_world, home_world, alter_type, _connection)
+    if Settings.bidirectional_toggle:
+        _alter_worlds_list_helper(home_world, source_world, alter_type, _connection)
+
     return True
 
 
@@ -165,3 +190,22 @@ def set_world_id_by_sim_name(first_name: str, last_name: str = '', *home_world_n
     opt_sim = OptionalSimInfoParam(str(sim_info.id))
     return set_world_id(*home_world_name, opt_sim=opt_sim, _connection=_connection)
 
+
+@Command('kuttoe.toggle_notification', command_type=CommandType.Live)
+def toggle_notification_setting(*setting_name, new_value: bool = None, _connection=None):
+    setting_name = get_notification_type_from_name(*setting_name, _connection=_connection)
+
+    if setting_name is None:
+        return False
+    return kuttoe_notifications_toggle(setting_name, new_value=new_value, _connection=_connection)
+
+
+@Command('kuttoe.toggle_bidirectional', command_type=CommandType.Live)
+def toggle_bidirectional(new_value: bool = None, _connection=None):
+    from kuttoe_home_regions.settings import Settings
+
+    new_value = new_value if new_value is not None else not Settings.bidirectional_toggle
+    response = 'on' if Settings.update_setting('bidirectional_toggle', new_value) else 'off'
+    Output(_connection)('Bidirectional toggle for Allow and Disallow World pickers is now turned {}'.format(response))
+
+    return True

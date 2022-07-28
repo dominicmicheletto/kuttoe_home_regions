@@ -191,6 +191,27 @@ def set_world_id_by_sim_name(first_name: str, last_name: str = '', *home_world_n
     return set_world_id(*home_world_name, opt_sim=opt_sim, _connection=_connection)
 
 
+@Command('kuttoe.get_world_id_by_sim_name')
+def get_world_id_by_sim_name(first_name: str, last_name: str = '', _connection=None):
+    manager: SimInfoManager = services.sim_info_manager()
+    sim_info = manager.get_sim_info_by_name(first_name, last_name)
+    output = Output(_connection)
+
+    if not sim_info:
+        full_name = ' '.join(*(first_name, last_name,))
+        output('No Sim found with name {}'.format(full_name))
+        return False
+
+    household = getattr(sim_info, 'household', None)
+    sim_name = '{} {}'.format(sim_info.first_name, sim_info.last_name)
+    if household is None:
+        output('Sim {} has no household object'.format(sim_name))
+        return False
+
+    output('Home world ID for {} ({}) is {}'.format(sim_name, sim_info.id, household._home_world_id))
+    return True
+
+
 @Command('kuttoe.toggle_notification', command_type=CommandType.Live)
 def toggle_notification_setting(*setting_name, new_value: bool = None, _connection=None):
     setting_name = get_notification_type_from_name(*setting_name, _connection=_connection)
@@ -231,4 +252,3 @@ def dump_filters(file_path: str = None, _connection=None):
     output(f'Successfully wrote filters to file: {file_path}')
     Popen(['notepad', file_path])
     return True
-

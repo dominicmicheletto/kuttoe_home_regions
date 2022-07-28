@@ -320,3 +320,4 @@ class Settings:
         cls.settings[setting_key] = setting_value
         cls.dump_settings(cls.settings_directory, cls.settings)
         return True
+

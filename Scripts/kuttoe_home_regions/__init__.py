@@ -41,6 +41,9 @@ ConsoleCommands = namedtuple('ConsoleCommands', ['sim', 'settings'])
 
 
 class WorldData(HasTunableFactory, AutoFactoryInit):
+    SOFT_FILTER_VALUE = Tunable(tunable_type=float, default=0.1)
+    LOCATION_BASED_FILTER = TunablePackSafeReference(manager=get_instance_manager(Types.SNIPPET), allow_none=False,
+                                                     class_restrictions=('LocationBasedFilterTerms',))
     FACTORY_TUNABLES = {
         'pie_menu_priority': TunableRange(tunable_type=int, default=2, maximum=10, minimum=0)
     }
@@ -89,6 +92,36 @@ class WorldData(HasTunableFactory, AutoFactoryInit):
 
         return ConsoleCommands(_kuttoe_set_world_id, Settings.create_world_console_commands(self.home_world))
 
+    @property
+    def settings_data(self):
+        return Settings.get_world_settings(self.home_world)
+
+    @property
+    def has_soft_filter(self) -> bool:
+        return self.settings_data['Soft']
+
+    @property
+    def regions_list(self):
+        regions_list = {self.region}
+        regions_list.update(HomeWorldIds[region].region for region in self.settings_data['Worlds'])
+
+        return tuple(regions_list)
+
+    def inject_into_filter(self):
+        sim_filter = self.LOCATION_BASED_FILTER
+        if self.region not in sim_filter.value.region_to_filter_terms:
+            return
+
+        new_dict: Dict[str, tuple] = dict(sim_filter.value.region_to_filter_terms)
+        new_data = new_dict[self.region][0]
+        new_data.region = self.regions_list
+
+        if self.has_soft_filter:
+            new_data.minimum_filter_score = self.SOFT_FILTER_VALUE
+
+        new_dict[self.region] = (new_data,)
+        sim_filter.value.region_to_filter_terms = frozendict(new_dict)
+
     def register_and_inject_affordances(self, interaction_data: InteractionData) -> Dict[InteractionTargetType, int]:
         return interaction_data(self).inject()
 
@@ -112,11 +145,20 @@ class HomeRegionsCommandTuning:
     HOME_WORLD_MAPPING = HomeWorldMapping()
     INTERACTION_DATA = InteractionData.TunableFactory()
 
+    @classmethod
+    def _get_home_world_mapping(cls):
+        data: Dict[HomeWorldIds, WorldData] = dict(cls.HOME_WORLD_MAPPING)
+
+        for world in HomeWorldIds.available_worlds:
+            data.setdefault(world, WorldData.TunableFactory()._default)
+
+        return data
+
     @staticmethod
     @on_load_complete(Types.TUNING, safe=False)
     def _register_all_data(_):
         cls = HomeRegionsCommandTuning
-        data: Dict[HomeWorldIds, WorldData] = cls.HOME_WORLD_MAPPING
+        data = cls._get_home_world_mapping()
         InteractionTargetType.verify_all_values()
 
         for notification_type in NotificationType:
@@ -128,4 +170,5 @@ class HomeRegionsCommandTuning:
                 continue
 
             command_data.create_console_commands()
+            # command_data.inject_into_filter()
             command_data.register_and_inject_affordances(cls.INTERACTION_DATA)

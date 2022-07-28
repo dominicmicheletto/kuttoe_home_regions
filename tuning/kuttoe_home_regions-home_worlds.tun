@@ -4,6 +4,7 @@
     <L n="_elements">
       <U ev="2363457107" n="WILLOW_CREEK">
         <T n="region_id">104064<!--region_Residential_WillowCreek--></T>
+        <T n="street_for_creation">20382</T>
         <T n="name">0xAE8A4AE5<!--Willow Creek--></T>
         <L n="icon_mapping">
           <U>
@@ -27,6 +28,7 @@
       <U ev="711065386" n="OASIS_SPRINGS">
         <T n="region_id">104065<!--region_Residential_OasisSprings--></T>
         <T n="name">0x72841393<!--Oasis Springs--></T>
+        <T n="street_for_creation">23280</T>
         <L n="icon_mapping">
           <U>
             <E n="icon_size">SMALL</E>
@@ -49,6 +51,7 @@
       <U ev="3942535331" n="NEWCREST">
         <T n="region_id">119917<!--Region: region_Residential_Newcrest--></T>
         <T n="name">0xCD2ADFEB<!--Newcrest--></T>
+        <T n="street_for_creation">93559</T>
         <L n="icon_mapping">
           <U>
             <E n="icon_size">SMALL</E>
@@ -71,6 +74,7 @@
       <U ev="1704446400" n="MAGNOLIA_PROMENADE">
         <T n="region_id">108704<!--Region: region_Career_Retail--></T>
         <T n="name">0xDA89B479<!--Magnolia Promenade--></T>
+        <T n="street_for_creation">72719</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP01</E>
         </V>
@@ -96,6 +100,7 @@
       <U ev="3691563516" n="WINDENBURG">
         <T n="region_id">123129<!--Region: region_Residential_NorthEurope--></T>
         <T n="name">0x0D10C688<!--Windenburg--></T>
+        <T n="street_for_creation">101536</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP02</E>
         </V>
@@ -121,6 +126,7 @@
       <U ev="1075237116" n="SAN_MYSHUNO">
         <T n="region_id">134252<!--Region: region_Residential_CityLife--></T>
         <T n="name">0x2B5BF587<!--San Myshuno--></T>
+        <T n="street_for_creation">121286</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP03</E>
         </V>
@@ -146,6 +152,7 @@
       <U ev="3950992577" n="FORGOTTEN_HOLLOW">
         <T n="region_id">152175<!--Region: region_Residential_VampireWorld--></T>
         <T n="name">0x0376C71A<!--Forgotten Hollow--></T>
+        <T n="street_for_creation">146194</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">GP04</E>
         </V>
@@ -171,6 +178,7 @@
       <U ev="2893613071" n="BRINDLETON_BAY">
         <T n="region_id">166547<!--Region: region_Residential_PetWorld--></T>
         <T n="name">0x13AC8438<!--Brindleton Bay--></T>
+        <T n="street_for_creation">164438</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP04</E>
         </V>
@@ -196,6 +204,7 @@
       <U ev="2323227531" n="DEL_SOL_VALLEY">
         <T n="region_id">195493<!--Region: region_Residential_FameWorld--></T>
         <T n="name">0x1F963454<!--Del Sol Valley--></T>
+        <T n="street_for_creation">201096</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP06</E>
         </V>
@@ -221,6 +230,7 @@
       <U ev="2018586480" n="STRANGERVILLE">
         <T n="region_id">201699<!--Region: region_Residential_Strangetown--></T>
         <T n="name">0xE416E1D7<!--StrangerVille--></T>
+        <T n="street_for_creation">208775</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">GP07</E>
         </V>
@@ -246,6 +256,7 @@
       <U ev="1893347376" n="SULANI">
         <T n="region_id">208308<!--Region: region_Residential_IslandWorld--></T>
         <T n="name">0xF4E5A90D<!--Sulani--></T>
+        <T n="street_for_creation">208803</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP07</E>
         </V>
@@ -271,6 +282,7 @@
       <U ev="100140133" n="GLIMMERBROOK">
         <T n="region_id">216626<!--Region: region_Residential_Magic--></T>
         <T n="name">0x1BBB2C5D<!--Glimmerbrook--></T>
+        <T n="street_for_creation">222659</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">GP08</E>
         </V>
@@ -296,6 +308,7 @@
       <U ev="2371324614" n="BRITECHESTER">
         <T n="region_id">208814<!--Region: region_Residential_UniversityWorld--></T>
         <T n="name">0xB46076CF<!--Britechester--></T>
+        <T n="street_for_creation">221610</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP08</E>
         </V>
@@ -321,6 +334,7 @@
       <U ev="2496862430" n="EVERGREEN_HARBOUR">
         <T n="region_id">228200<!--Region: region_Residential_EcoWorld--></T>
         <T n="name">0x61121B22<!--Evergreen Harbor--></T>
+        <T n="street_for_creation">235807</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP09</E>
         </V>
@@ -346,6 +360,7 @@
       <U ev="3002294565" n="MT_KOMOREBI">
         <T n="region_id">238454<!--Region: region_Residential_MountainWorld--></T>
         <T n="name">0xA13C04D8<!--Mt. Komorebi--></T>
+        <T n="street_for_creation">251669</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP10</E>
         </V>
@@ -371,6 +386,7 @@
       <U ev="2650041621" n="HENFORD_ON_BAGLEY">
         <T n="region_id">257397<!--Region: region_Residential_CottageWorld--></T>
         <T n="name">0x38949DB2<!--Henford-on-Bagley--></T>
+        <T n="street_for_creation">263090</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP11</E>
         </V>
@@ -396,6 +412,7 @@
       <U ev="3442073656" n="TARTOSA">
         <T n="region_id">272129<!--Region: region_Residential_WeddingWorld--></T>
         <T n="name">0x206F092C<!--Tartosa--></T>
+        <T n="street_for_creation">287514</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">GP11</E>
         </V>
@@ -421,6 +438,7 @@
       <U ev="1812713502" n="MOONWOOD_MILL">
         <T n="region_id">285909<!--Region: region_Residential_WolfTown--></T>
         <T n="name">0x42F5A65B<!--Moonwood Mill--></T>
+        <T n="street_for_creation">310557</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">GP12</E>
         </V>
@@ -446,6 +464,7 @@
       <U ev="1634851428" n="SELVADORADA">
         <T n="region_id">173593<!--Region: region_Destination_Jungle--></T>
         <T n="name">0xB82F60B6<!--Selvadorada--></T>
+        <T n="street_for_creation">176581</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">GP06</E>
         </V>
@@ -463,6 +482,32 @@
             <V n="resource" t="resource_key">
               <U n="resource_key">
                 <T n="key" p="icon_pack_gp06_128">2f7d0004:00000000:206a7906f9dab1e4</T>
+              </U>
+            </V>
+          </U>
+        </L>
+      </U>
+      <U ev="1505295608" n="COPPERDALE">
+        <T n="region_id">272365<!--Region: region_Residential_HighSchoolWorld--></T>
+        <T n="name">0x1F68EBD3<!--Copperdale--></T>
+        <T n="street_for_creation">290893</T>
+        <V n="pack" t="requires_pack">
+          <E n="requires_pack">EP12</E>
+        </V>
+        <L n="icon_mapping">
+          <U>
+            <E n="icon_size">SMALL</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep12_32">2f7d0004:00000000:6c0092112f208705</T>
+              </U>
+            </V>
+          </U>
+          <U>
+            <E n="icon_size">LARGE</E>
+            <V n="resource" t="resource_key">
+              <U n="resource_key">
+                <T n="key" p="icon_pack_ep12_128">2f7d0004:00000000:a5864833144ba765</T>
               </U>
             </V>
           </U>

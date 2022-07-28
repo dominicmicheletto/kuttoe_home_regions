@@ -1,6 +1,5 @@
 <M n="kuttoe_home_regions" s="18396996985248726739">
   <C n="HomeRegionsCommandTuning">
-    <T n="LOCATION_BASED_FILTER">17096304318503190874<!--SS:LocationBasedFilterTerms_KeepInHomeRegion--></T>
     <L n="HOME_WORLD_MAPPING">
       <U>
         <E n="home_world">WILLOW_CREEK</E>
@@ -19,70 +18,6 @@
         <U n="world_data">
           <T n="pie_menu_priority">10</T>
         </U>
-      </U>
-      <U>
-        <E n="home_world">MAGNOLIA_PROMENADE</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">WINDENBURG</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">SAN_MYSHUNO</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">FORGOTTEN_HOLLOW</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">BRINDLETON_BAY</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">DEL_SOL_VALLEY</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">STRANGERVILLE</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">SULANI</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">GLIMMERBROOK</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">BRITECHESTER</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">EVERGREEN_HARBOUR</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">MT_KOMOREBI</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">HENFORD_ON_BAGLEY</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">TARTOSA</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">MOONWOOD_MILL</E>
-        <U n="world_data" />
-      </U>
-      <U>
-        <E n="home_world">SELVADORADA</E>
-        <U n="world_data" />
       </U>
     </L>
     <U n="INTERACTION_DATA">

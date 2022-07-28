@@ -5,6 +5,7 @@
 # sims 4 imports
 from sims4.tuning.tunable import Tunable
 from sims4.collections import frozendict
+from sims4.utils import classproperty
 
 # filter imports
 from filters.location_based_filter_terms import LocationBasedFilterTerms
@@ -32,6 +33,9 @@ SnippetBase = vars(snippets)[snippet_name]
 
 class _DynamicFilterBase(SnippetBase):
     SOFT_FILTER_VALUE = Tunable(tunable_type=float, default=0.1)
+    INSTANCE_TUNABLES = {
+        '_skipped_regions': HomeWorldIds.create_enum_set(optional=True),
+    }
 
     @classmethod
     def _get_region_list(cls, home_world: HomeWorldIds):
@@ -44,6 +48,21 @@ class _DynamicFilterBase(SnippetBase):
     @classmethod
     def _generate_value(cls):
         return dict()
+
+    @classproperty
+    def skipped_regions(cls):
+        if not cls._skipped_regions:
+            return frozenset()
+        else:
+            return frozenset(world.region for world in cls._skipped_regions)
+
+    @classmethod
+    def is_region_skipped(cls, region):
+        return region in cls.skipped_regions
+
+    @classmethod
+    def get_filtered_value(cls):
+        return {key: value for (key, value) in cls._generate_value().items() if not cls.is_region_skipped(key)}
 
     @staticmethod
     def _merge_filter_lists(old_list, new_list):
@@ -62,7 +81,7 @@ class _DynamicFilterBase(SnippetBase):
 
     @classmethod
     def _tuning_loaded_callback(cls):
-        cls.value = cls._merge_filter_lists(cls, cls._generate_value())
+        cls.value = cls._merge_filter_lists(cls, cls.get_filtered_value())
 
 
 #######################################################################################################################

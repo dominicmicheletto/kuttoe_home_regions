@@ -161,6 +161,17 @@ class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=
     COMMAND_NAME_BASE = Tunable(tunable_type=str, allow_empty=False, needs_tuning=True, default='')
     DEFAULT = 0
 
+    @classmethod
+    def create_enum_set(cls, default=None, invalid_values=None, optional=False, default_enum_list=None, **kwargs):
+        from sims4.tuning.tunable import OptionalTunable, TunableEnumSet
+
+        kwargs.update(enum_default=default or HomeWorldIds.DEFAULT)
+        kwargs.update(default_enum_list=default_enum_list or frozenset())
+        kwargs.update(invalid_enums=invalid_values or (HomeWorldIds.DEFAULT, ))
+        enum_set = TunableEnumSet(enum_type=HomeWorldIds, **kwargs)
+
+        return OptionalTunable(enum_set) if optional else enum_set
+
     @classproperty
     def available_worlds(cls):
         return set(world for world in cls if world.is_available and world is not HomeWorldIds.DEFAULT)

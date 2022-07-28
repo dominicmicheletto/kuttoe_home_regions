@@ -17,11 +17,17 @@ from kuttoe_home_regions.home_worlds import HomeWorldIds
 
 
 #######################################################################################################################
-#  Tuning Classes                                                                                                     #
+#  Snippet Class Information                                                                                          #
 #######################################################################################################################
+
 
 snippet_name = snippets.SNIPPET_CLASS_NAMES['location_based_filter_terms']
 SnippetBase = vars(snippets)[snippet_name]
+
+
+#######################################################################################################################
+#  Base Tuning Class                                                                                                  #
+#######################################################################################################################
 
 
 class _DynamicFilterBase(SnippetBase):
@@ -57,6 +63,11 @@ class _DynamicFilterBase(SnippetBase):
     @classmethod
     def _tuning_loaded_callback(cls):
         cls.value = cls._merge_filter_lists(cls, cls._generate_value())
+
+
+#######################################################################################################################
+#  Tuning Classes                                                                                                     #
+#######################################################################################################################
 
 
 class SoftTunableLocationBasedFilterTermsSnippet(_DynamicFilterBase):

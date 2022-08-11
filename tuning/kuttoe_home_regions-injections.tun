@@ -61,6 +61,18 @@
         <T n="upper_bound">1</T>
       </U>
     </U>
+    <U n="HIGH_SCHOOL_SITUATIONS_INFO">
+      <!--This controls how the active high school situations are affected by the mod. Prefix searches for situations by name match; whitelist are additional situations that
+          are not found by the prefix and blacklist are situations that are found but should be ignored.-->
+      <L n="prefix_list">
+        <T>situation_HighSchool_Active_NPC</T>
+        <T>situation_HighSchool_Active_Background</T>
+      </L>
+      <L n="whitelist">
+        <T>282109<!--situation_HighSchool_Active_CareerDay_BackgroundNPCs--></T>
+      </L>
+      <L n="blacklist" />
+    </U>
     <L n="SOFT_LIST">
       <!--These are specific jobs/walkbys/guests that will ALWAYS have a soft filter (i.e. the game will use locals first before moving on to people from others worlds)
         These will also be added to bypass list for the mod-->
@@ -110,6 +122,7 @@
       <T>134353<!--walker_Job_CityLife_Commuter--></T>
       <T>291985<!--job_Bartender_WolfTown--></T>
       <T>292028<!--job_librarian_WolfTown--></T>
+      <T>303636<!--job_OpenStreet_HighSchoolWorld_PierVisitor--></T>
       <!--custom situation jobs-->
       <!--TURBODRIVER-->
       <T>15253418663393404728<!--TURBODRIVER:WickedWhims_Situation_StripClub_Customer_Basic--></T>
@@ -360,6 +373,8 @@
       <T>291234<!--job_WolfTown_Spar_Target--></T>
       <T>298694<!--job_WolfTown_WerewolfPackA_Invite--></T>
       <T>298695<!--job_WolfTown_WerewolfPackB_Invite--></T>
+      <T>249666<!--job_HotPot_Diner--></T>
+      <T>250202<!--job_HotPot_Host--></T>
       <!--custom situation jobs-->
       <!--Basemental-->
       <T>9971053314695168986<!--Basemental:Police_SituationJob_ArrestDealer--></T>

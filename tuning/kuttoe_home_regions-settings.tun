@@ -17,6 +17,7 @@
       </U>
     </L>
     <T n="BIDIRECTIONAL_TOGGLE">False</T>
+    <T n="HIGH_SCHOOL_TOGGLE">True</T>
     <L n="DEFAULT_WORLD_SETTINGS">
       <U>
         <E n="home_world">MAGNOLIA_PROMENADE</E>

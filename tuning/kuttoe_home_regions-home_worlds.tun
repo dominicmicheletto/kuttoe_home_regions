@@ -278,6 +278,13 @@
             </V>
           </U>
         </L>
+        <V n="local_fixup" t="enabled">
+          <U n="enabled">
+            <L n="_traits">
+              <T>208611<!--trait_IslanderCulture_Islander--></T>
+            </L>
+          </U>
+        </V>
       </U>
       <U ev="100140133" n="GLIMMERBROOK">
         <T n="region_id">216626<!--Region: region_Residential_Magic--></T>
@@ -382,6 +389,13 @@
             </V>
           </U>
         </L>
+        <V n="local_fixup" t="enabled">
+          <U n="enabled">
+            <L n="_traits">
+              <T>246366<!--trait_Hidden_SummitLocal--></T>
+            </L>
+          </U>
+        </V>
       </U>
       <U ev="2650041621" n="HENFORD_ON_BAGLEY">
         <T n="region_id">257397<!--Region: region_Residential_CottageWorld--></T>
@@ -486,11 +500,18 @@
             </V>
           </U>
         </L>
+        <V n="local_fixup" t="enabled">
+          <U n="enabled">
+            <L n="_traits">
+              <T>180954<!--trait_Hidden_IsNative--></T>
+            </L>
+          </U>
+        </V>
       </U>
       <U ev="1505295608" n="COPPERDALE">
         <T n="region_id">272365<!--Region: region_Residential_HighSchoolWorld--></T>
         <T n="name">0x1F68EBD3<!--Copperdale--></T>
-        <T n="street_for_creation">290893</T>
+        <T n="street_for_creation">290894</T>
         <V n="pack" t="requires_pack">
           <E n="requires_pack">EP12</E>
         </V>

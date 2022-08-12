@@ -124,10 +124,20 @@ class FilterToSituationJobMapping(TunableMapping):
         super().__init__(*args, **kwargs)
 
 
-class HighSchoolSituationsInfo(HasTunableFactory, AutoFactoryInit):
+class HighSchoolSituationBypassMapping(TunableMapping):
+    def __init__(self, *args, **kwargs):
+        kwargs['key_name'] = 'job'
+        kwargs['key_type'] = SituationJob.TunablePackSafeReference()
+        kwargs['value_name'] = 'add_to_global_bypass_list'
+        kwargs['value_type'] = Tunable(tunable_type=bool, default=True, allow_empty=True)
+
+        super().__init__(*args, **kwargs)
+
+
+class HighSchoolSituationJobsInfo(HasTunableFactory, AutoFactoryInit):
     FACTORY_TUNABLES = {
         'prefix_list': TunableList(Tunable(tunable_type=str, default='', allow_empty=False)),
-        'blacklist': TunableSet(tunable=SituationJob.TunablePackSafeReference()),
+        'blacklist': HighSchoolSituationBypassMapping(),
         'whitelist': TunableSet(tunable=SituationJob.TunablePackSafeReference()),
     }
 
@@ -140,29 +150,33 @@ class HighSchoolSituationsInfo(HasTunableFactory, AutoFactoryInit):
         return self._toggle_value
 
     @property
+    def blacklisted_situation_jobs(self):
+        return {job for (job, add_to_list) in self.blacklist.items() if job is not None and add_to_list}
+
+    @property
     def manager(self) -> InstanceManager:
-        return get_instance_manager(Types.SITUATION)
+        return get_instance_manager(Types.SITUATION_JOB)
 
-    def _does_situation_match(self, situation):
-        situation_name = str(situation)
+    def _does_situation_job_match(self, situation_job):
+        situation_job_name = str(situation_job)
 
-        return any(prefix in situation_name for prefix in self.prefix_list)
+        return any(prefix in situation_job_name for prefix in self.prefix_list)
 
-    def get_situations_matching_prefix(self):
-        return set(situation for situation in self.manager.types.values() if self._does_situation_match(situation))
+    def get_situation_jobs_matching_prefix(self):
+        return set(job for job in self.manager.types.values() if self._does_situation_job_match(job))
 
-    def build_situations_list(self):
-        situations = self.get_situations_matching_prefix()
-        situations.update(self.whitelist)
-        situations.difference_update(self.blacklist)
+    def build_situation_jobs_list(self):
+        situation_jobs = self.get_situation_jobs_matching_prefix()
+        situation_jobs.update(self.whitelist)
+        situation_jobs.difference_update(self.blacklisted_situation_jobs)
 
-        return {situation for situation in situations if situation is not None}
+        return {situation_job for situation_job in situation_jobs if situation_job is not None}
 
     def __bool__(self):
         return self.toggle_value
 
     def __call__(self):
-        return set() if self else self.build_situations_list()
+        return set() if self else self.build_situation_jobs_list()
 
 
 class SituationJobModifications:
@@ -178,14 +192,14 @@ class SituationJobModifications:
     FILTERS_TO_BYPASS = TunableList(tunable=TunableSimFilter.TunablePackSafeReference())
     BYPASS_TAGS = TunableSet(tunable=TunableEnumWithFilter(tunable_type=Tag, filter_prefixes=['situation'],
                                                            default=Tag.INVALID, pack_safe=True))
-    HIGH_SCHOOL_SITUATIONS_INFO = HighSchoolSituationsInfo.TunableFactory()
+    HIGH_SCHOOL_SITUATION_JOBS_INFO = HighSchoolSituationJobsInfo.TunableFactory()
     _BYPASSED_JOBS = set()
 
     @classproperty
-    def high_school_situations_list(self) -> set:
+    def high_school_situation_jobs_info(cls) -> set:
         from kuttoe_home_regions.settings import Settings
 
-        return self.HIGH_SCHOOL_SITUATIONS_INFO(Settings.high_school_toggle)()
+        return cls.HIGH_SCHOOL_SITUATION_JOBS_INFO(Settings.high_school_toggle)
 
     @classproperty
     def soft_list(cls):
@@ -194,8 +208,10 @@ class SituationJobModifications:
     @classproperty
     def bypass_list(cls):
         primary_list = {situation_job for situation_job in cls.BYPASS_LIST if situation_job is not None}
+        primary_list.update(cls.high_school_situation_jobs_info.blacklisted_situation_jobs)
+        primary_list.update(cls.high_school_situation_jobs_info())
 
-        return primary_list | cls.high_school_situations_list
+        return primary_list
 
     @classproperty
     def second_chance_list(cls):

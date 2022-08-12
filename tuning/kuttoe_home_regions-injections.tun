@@ -61,17 +61,57 @@
         <T n="upper_bound">1</T>
       </U>
     </U>
-    <U n="HIGH_SCHOOL_SITUATIONS_INFO">
-      <!--This controls how the active high school situations are affected by the mod. Prefix searches for situations by name match; whitelist are additional situations that
-          are not found by the prefix and blacklist are situations that are found but should be ignored.-->
+    <U n="HIGH_SCHOOL_SITUATION_JOBS_INFO">
+      <!--This controls how the active high school situation jobs are affected by the mod. Prefix searches for situation jobs by name match; 
+          whitelist are additional situation jobs that are not found by the prefix and blacklist are ones that are found but should be ignored.-->
       <L n="prefix_list">
-        <T>situation_HighSchool_Active_NPC</T>
-        <T>situation_HighSchool_Active_Background</T>
+        <T>job_HighSchoolFestival_</T>
+        <T>job_HSGraduation_</T>
+        <T>situationJob_CheerMat_</T>
+        <T>situationJob_HSProm_</T>
+        <T>job_HighSchool_Active_</T>
       </L>
-      <L n="whitelist">
-        <T>282109<!--situation_HighSchool_Active_CareerDay_BackgroundNPCs--></T>
+      <L n="whitelist" />
+      <!--By default, these jobs will also be added to the global bypass list.-->
+      <L n="blacklist">
+        <U>
+          <T n="job">281992<!--job_HighSchoolFestival_All_Player--></T>
+          <?ignore <T n="add_to_global_bypass_list">False</T> ?>
+        </U>
+        <U>
+          <T n="job">285986<!--job_HSGraduation_Valedictorian_Player--></T>
+        </U>
+        <U>
+          <T n="job">291375<!--job_HSGraduation_PhaseJob_Player--></T>
+        </U>
+        <U>
+          <T n="job">291376<!--job_HSGraduation_PhaseJob_Player_Graduate--></T>
+        </U>
+        <U>
+          <T n="job">277917<!--job_HighSchool_Active_Player_Base--></T>
+        </U>
+        <U>
+          <T n="job">278117<!--job_HighSchool_Active_Player_Phases--></T>
+        </U>
+        <U>
+          <T n="job">291375<!--job_HSGraduation_PhaseJob_Player--></T>
+        </U>
+        <U>
+          <T n="job">291376<!--job_HSGraduation_PhaseJob_Player_Graduate--></T>
+        </U>
+        <U>
+          <T n="job">291380<!--job_HSGraduation_PhaseJob_Valedictorian_Player--></T>
+        </U>
+        <U>
+          <T n="job">282156<!--job_HighSchool_Active_CareerDay_NPC_Professional--></T>
+        </U>
+        <U>
+          <T n="job">287989<!--job_HighSchool_Active_CareerDay_NPC_Professional2--></T>
+        </U>
+        <U>
+          <T n="job">287990<!--job_HighSchool_Active_CareerDay_NPC_Professional3--></T>
+		</U>
       </L>
-      <L n="blacklist" />
     </U>
     <L n="SOFT_LIST">
       <!--These are specific jobs/walkbys/guests that will ALWAYS have a soft filter (i.e. the game will use locals first before moving on to people from others worlds)

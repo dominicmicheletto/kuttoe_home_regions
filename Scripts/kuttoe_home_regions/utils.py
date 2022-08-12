@@ -84,6 +84,14 @@ class InteractionTargetType(DynamicEnum):
 #######################################################################################################################
 
 
+def create_tunable_reference(tuning_type: Types, pack_safe: bool = True, class_restrictions=(), *args, **kwargs):
+    from sims4.tuning.tunable import TunableReference
+
+    manager = get_instance_manager(tuning_type)
+    return TunableReference(manager=manager, class_restrictions=class_restrictions, pack_safe=pack_safe, *args,
+                            **kwargs)
+
+
 def on_load_complete(manager_type: Types, safe=True):
     def wrapper(func):
         @wraps(func)
@@ -200,4 +208,3 @@ def create_tunable_factory_with_overrides(factory_cls, **overrides):
     tuned_values = factory_cls._tuned_values.clone_with_overrides(**overrides)
 
     return TunableFactory.TunableFactoryWrapper(tuned_values, factory_cls._name, factory_cls.factory)
-

@@ -7,7 +7,7 @@ import services
 
 # sim4 imports
 from sims4.utils import classproperty
-from sims4.tuning.tunable import OptionalTunable, TunableEnumEntry, Tunable
+from sims4.tuning.tunable import OptionalTunable, TunableEnumEntry, Tunable, TunableRange
 from sims4.tuning.instances import lock_instance_tunables
 from sims4.localization import LocalizationHelperTuning
 from sims4.commands import execute as execute_command
@@ -64,12 +64,30 @@ class _TargetHomeWorldMixin:
         return cls.target_home_world.command_name
 
 
+class _PieMenuPriorityMixin:
+    BUMP_UP_PRIORITY = TunableRange(tunable_type=int, minimum=0, maximum=10, default=8)
+    REMOVE_INSTANCE_TUNABLES = ('pie_menu_priority', )
+    INSTANCE_TUNABLES = {
+        '_pie_menu_priority': TunableRange(tunable_type=int, minimum=0, maximum=10, default=1),
+    }
+
+    @classproperty
+    def pie_menu_priority(cls):
+        current_region = services.current_region()
+        target_region = cls.target_home_world.region
+
+        if target_region is current_region:
+            return cls.BUMP_UP_PRIORITY
+        else:
+            return cls._pie_menu_priority
+
+
 #######################################################################################################################
 # Picker Interactions                                                                                                 #
 #######################################################################################################################
 
 
-class HomeWorldPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, SimPickerInteraction):
+class HomeWorldPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, _PieMenuPriorityMixin, SimPickerInteraction):
     @classproperty
     def client_id(cls):
         return services.client_manager().get_first_client_id()
@@ -94,7 +112,7 @@ class HomeWorldPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixi
         self.display_notification(*self.create_tokens_list(*sim_ids))
 
 
-class WorldListPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, InteractionPickerSuperInteraction):
+class WorldListPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, _PieMenuPriorityMixin, InteractionPickerSuperInteraction):
     REMOVE_INSTANCE_TUNABLES = ('possible_actions', )
 
     def on_multi_choice_selected(self, picked_choice, **kwargs):
@@ -110,7 +128,7 @@ class WorldListPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixi
         return self.on_multi_choice_selected((choice, ), **kwargs)
 
 
-class SoftTogglePickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, InteractionPickerSuperInteraction):
+class SoftTogglePickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, _PieMenuPriorityMixin, InteractionPickerSuperInteraction):
     REMOVE_INSTANCE_TUNABLES = ('possible_actions',)
 
     def on_choice_selected(self, choice, **kwargs):
@@ -126,7 +144,7 @@ class SoftTogglePickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMix
 #######################################################################################################################
 
 
-class CommandImmediateSuperInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, ImmediateSuperInteraction):
+class CommandImmediateSuperInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, _PieMenuPriorityMixin, ImmediateSuperInteraction):
     REMOVE_INSTANCE_TUNABLES = ('basic_extras', )
 
     @classproperty

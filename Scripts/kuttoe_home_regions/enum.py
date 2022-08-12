@@ -237,3 +237,4 @@ class DynamicFactoryEnumMetaclass(enum.Metaclass):
     @property
     def factory_values(cls):
         return tuple(cls._tuned_values_mapping)
+

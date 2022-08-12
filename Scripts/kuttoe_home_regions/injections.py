@@ -124,6 +124,47 @@ class FilterToSituationJobMapping(TunableMapping):
         super().__init__(*args, **kwargs)
 
 
+class HighSchoolSituationsInfo(HasTunableFactory, AutoFactoryInit):
+    FACTORY_TUNABLES = {
+        'prefix_list': TunableList(Tunable(tunable_type=str, default='', allow_empty=False)),
+        'blacklist': TunableSet(tunable=SituationJob.TunablePackSafeReference()),
+        'whitelist': TunableSet(tunable=SituationJob.TunablePackSafeReference()),
+    }
+
+    def __init__(self, toggle_value: bool, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._toggle_value = toggle_value
+
+    @property
+    def toggle_value(self):
+        return self._toggle_value
+
+    @property
+    def manager(self) -> InstanceManager:
+        return get_instance_manager(Types.SITUATION)
+
+    def _does_situation_match(self, situation):
+        situation_name = str(situation)
+
+        return any(prefix in situation_name for prefix in self.prefix_list)
+
+    def get_situations_matching_prefix(self):
+        return set(situation for situation in self.manager.types.values() if self._does_situation_match(situation))
+
+    def build_situations_list(self):
+        situations = self.get_situations_matching_prefix()
+        situations.update(self.whitelist)
+        situations.difference_update(self.blacklist)
+
+        return {situation for situation in situations if situation is not None}
+
+    def __bool__(self):
+        return self.toggle_value
+
+    def __call__(self):
+        return set() if self else self.build_situations_list()
+
+
 class SituationJobModifications:
     TEMPLATE = SituationJobTemplate.TunableFactory()
     SOFT_FILTER = TunableLocationBasedFilterTermsSnippet(pack_safe=True)
@@ -137,7 +178,14 @@ class SituationJobModifications:
     FILTERS_TO_BYPASS = TunableList(tunable=TunableSimFilter.TunablePackSafeReference())
     BYPASS_TAGS = TunableSet(tunable=TunableEnumWithFilter(tunable_type=Tag, filter_prefixes=['situation'],
                                                            default=Tag.INVALID, pack_safe=True))
+    HIGH_SCHOOL_SITUATIONS_INFO = HighSchoolSituationsInfo.TunableFactory()
     _BYPASSED_JOBS = set()
+
+    @classproperty
+    def high_school_situations_list(self) -> set:
+        from kuttoe_home_regions.settings import Settings
+
+        return self.HIGH_SCHOOL_SITUATIONS_INFO(Settings.high_school_toggle)()
 
     @classproperty
     def soft_list(cls):
@@ -145,7 +193,9 @@ class SituationJobModifications:
 
     @classproperty
     def bypass_list(cls):
-        return {situation_job for situation_job in cls.BYPASS_LIST if situation_job is not None}
+        primary_list = {situation_job for situation_job in cls.BYPASS_LIST if situation_job is not None}
+
+        return primary_list | cls.high_school_situations_list
 
     @classproperty
     def second_chance_list(cls):
@@ -154,10 +204,6 @@ class SituationJobModifications:
     @classproperty
     def forced_replacement_list(cls):
         return {situation_job for situation_job in cls.FORCED_REPLACEMENT_LIST if situation_job is not None}
-
-    @classproperty
-    def bypassed_situations(cls):
-        return cls.soft_list | cls.bypass_list
 
     @classmethod
     def _inject_soft_filter(cls):

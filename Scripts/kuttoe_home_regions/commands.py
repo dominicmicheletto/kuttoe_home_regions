@@ -41,7 +41,9 @@ def kuttoe_set_world_id(home_world_id: HomeWorldIds, sim_info, _connection=None)
         return False
 
     household._home_world_id = value
+    home_world_id.apply_fixup_to_sim_info(sim_info)
     output('Home world ID for {} ({}) is now {} ({})'.format(sim_name, sim_info.id, name, value))
+
     return True
 
 
@@ -225,9 +227,18 @@ def toggle_notification_setting(*setting_name, new_value: bool = None, _connecti
 def toggle_bidirectional(new_value: bool = None, _connection=None):
     from kuttoe_home_regions.settings import Settings
 
-    new_value = new_value if new_value is not None else not Settings.bidirectional_toggle
-    response = 'on' if Settings.update_setting('bidirectional_toggle', new_value) else 'off'
+    response = 'on' if Settings.toggle_setting('bidirectional_toggle', new_value) else 'off'
     Output(_connection)('Bidirectional toggle for Allow and Disallow World pickers is now turned {}'.format(response))
+
+    return True
+
+
+@Command('kuttoe.toggle_high_school', command_type=CommandType.Live)
+def kuttoe_toggle_high_school(new_value: bool = None, _connection=None):
+    from kuttoe_home_regions.settings import Settings
+
+    response = 'on' if Settings.toggle_setting('high_school_toggle', new_value) else 'off'
+    Output(_connection)('Region filter for Active High School situations is now turned {}'.format(response))
 
     return True
 

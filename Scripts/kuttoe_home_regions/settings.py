@@ -89,6 +89,7 @@ class Settings:
     )
     NOTIFICATION_SETTINGS = NotificationSettingsMapping()
     BIDIRECTIONAL_TOGGLE = Tunable(tunable_type=bool, default=False, allow_empty=False, needs_tuning=True)
+    HIGH_SCHOOL_TOGGLE = Tunable(tunable_type=bool, default=True, allow_empty=False, needs_tuning=True)
     _SETTINGS = None
 
     @classmethod
@@ -101,6 +102,8 @@ class Settings:
             from kuttoe_home_regions.commands import kuttoe_notifications_toggle
 
             return kuttoe_notifications_toggle(notification_type, new_value=new_value, _connection=_connection)
+
+        return _kuttoe_notification_toggle
 
     @classmethod
     def create_world_console_commands(cls, home_world: HomeWorldIds):
@@ -224,7 +227,7 @@ class Settings:
 
     @classproperty
     def additional_settings(cls):
-        return dict(bidirectional_toggle=cls.BIDIRECTIONAL_TOGGLE)
+        return dict(bidirectional_toggle=cls.BIDIRECTIONAL_TOGGLE, high_school_toggle=cls.HIGH_SCHOOL_TOGGLE)
 
     @classproperty
     def default_settings(cls):
@@ -303,6 +306,10 @@ class Settings:
     def bidirectional_toggle(cls) -> bool:
         return cls.settings['bidirectional_toggle']
 
+    @classproperty
+    def high_school_toggle(cls) -> bool:
+        return cls.settings['high_school_toggle']
+
     @classmethod
     def get_token(cls, setting_key: str, enabled_token=None, disabled_token=None, *string_tokens):
         value = cls.settings.get(setting_key, False)
@@ -320,4 +327,13 @@ class Settings:
         cls.settings[setting_key] = setting_value
         cls.dump_settings(cls.settings_directory, cls.settings)
         return True
+
+    @classmethod
+    def toggle_setting(cls, setting_key: str, setting_value: bool = None):
+        if setting_key not in cls.settings:
+            raise KeyError(f'Setting key {setting_key} not in Settings!')
+
+        new_value = setting_value if setting_value is not None else not cls.settings[setting_key]
+        cls.settings[setting_key] = new_value
+        return new_value
 

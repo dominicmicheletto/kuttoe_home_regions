@@ -210,7 +210,7 @@ class PythonBasedInteractionData(
         properties_mapping['display_tooltip'] = 'interaction_display_tooltip'
         properties_mapping['category'] = 'category'
         properties_mapping['test_globals'] = 'global_tests'
-        properties_mapping['pie_menu_priority'] = 'pie_menu_priority'
+        properties_mapping['_pie_menu_priority'] = 'pie_menu_priority'
         properties_mapping['display_name'] = 'interaction_display_name'
         properties_mapping['notification'] = 'notification'
         properties_mapping['target_home_world'] = 'home_world'
@@ -789,3 +789,4 @@ class InteractionData(HasTunableFactory, AutoFactoryInit):
             mapping[target] += target.update_and_register_affordances(*affordance_infos)
 
         return {**mapping}
+

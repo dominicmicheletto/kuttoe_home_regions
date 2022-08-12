@@ -15,6 +15,7 @@ from sims4.resources import Types
 # event testing imports
 from event_testing.test_base import BaseTest
 from event_testing.results import TestResult
+from event_testing.test_variants import TunableIdentityTest
 
 # interaction imports
 from interactions import ParticipantTypeSingle, ParticipantTypeSingleSim, ParticipantType
@@ -29,9 +30,6 @@ from traits.trait_type import TraitType
 from world.world_tests import HomeRegionTest
 from traits.traits import Trait
 from services import get_instance_manager
-
-# event testing imports
-from event_testing.test_variants import TunableIdentityTest
 
 # tunable utils imports
 from tunable_utils.tunable_white_black_list import TunableWhiteBlackList

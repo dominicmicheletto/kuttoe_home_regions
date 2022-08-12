@@ -3,7 +3,7 @@
 #######################################################################################################################
 
 # python imports
-from typing import Dict, Any
+from typing import Dict, Any, Set
 
 # misc imports
 import enum
@@ -11,10 +11,11 @@ from services import get_instance_manager
 from singletons import DEFAULT
 
 # sims 4 imports
-from sims4.resources import Types
+from sims4.resources import Types, get_resource_key
 from sims4.collections import frozendict
 from sims4.tuning.tunable import TunableMapping, TunableEnumEntry, Tunable, OptionalTunable, HasTunableFactory
 from sims4.tuning.tunable import AutoFactoryInit, TunablePackSafeReference, TunableWorldDescription
+from sims4.tuning.tunable import TunableSet
 from sims4.localization import TunableLocalizedStringFactory
 from sims4.common import Pack, is_available_pack
 from sims4.utils import classproperty
@@ -86,6 +87,83 @@ class TunableIconDefinition(OptionalTunable):
         super().__init__(*args, **kwargs)
 
 
+class LocalFixup(AutoFactoryInit, HasTunableFactory):
+    FACTORY_TUNABLES = {
+        '_traits': TunableSet(Tunable(tunable_type=int, default=0, allow_empty=False)),
+    }
+
+    _ADDITION_MAPPING = dict()
+    _REMOVAL_MAPPING = dict()
+
+    @classmethod
+    def _collect_traits_to_remove(cls, region_id):
+        traits_list = set()
+
+        for (region, traits) in cls.traits_to_add.items():
+            if region != region_id:
+                traits_list.update(traits)
+
+        return traits_list
+
+    @classmethod
+    def register(cls, factory, region_id):
+        cls.traits_to_add.setdefault(region_id, factory._traits)
+
+    @classproperty
+    def traits_to_add(cls):
+        from traits.traits import Trait
+        mapping: Dict[RegionData, Trait] = cls._ADDITION_MAPPING
+
+        return mapping
+
+    @classproperty
+    def traits_to_remove(cls):
+        from traits.traits import Trait
+        mapping: Dict[RegionData, Set[Trait]] = cls._REMOVAL_MAPPING
+
+        return mapping
+
+    def _load_traits(self, traits_list):
+        manager = get_instance_manager(Types.TRAIT)
+
+        return {manager.get(get_resource_key(trait_id, Types.TRAIT)) for trait_id in traits_list}
+
+    def __init__(self, sim_info, *args, **kwargs):
+        from sims.sim_info import SimInfo
+
+        super().__init__(*args, **kwargs)
+        self._sim_info: SimInfo = sim_info
+
+    @property
+    def sim_info(self):
+        return self._sim_info
+
+    @property
+    def trait_tracker(self):
+        from traits.trait_tracker import TraitTracker
+
+        trait_tracker: TraitTracker = self.sim_info.trait_tracker
+        return trait_tracker
+
+    def __call__(self, region_id):
+        trait_tracker = self.trait_tracker
+
+        traits_to_remove = self.traits_to_remove.setdefault(
+            region_id, self._load_traits(self._collect_traits_to_remove(region_id))
+        )
+        for trait in traits_to_remove:
+            trait_tracker._remove_trait(trait)
+
+        traits_to_add = self._load_traits(self.traits_to_add[region_id])
+        for trait in traits_to_add:
+            trait_tracker._add_trait(trait)
+
+
+class OptionalTunableLocalFixup(OptionalTunable):
+    def __init__(self, *args, **kwargs):
+        super().__init__(tunable=LocalFixup.TunableFactory(), *args, **kwargs)
+
+
 #######################################################################################################################
 #  Enumerations                                                                                                       #
 #######################################################################################################################
@@ -98,13 +176,18 @@ class RegionData:
             name=None,
             street_for_creation: int = None,
             pack: Pack = Pack.BASE_GAME,
-            icon_mapping=frozendict()
+            icon_mapping=frozendict(),
+            local_fixup: LocalFixup = None,
     ):
         self._region_id = region_id
         self._name = name
         self._pack = pack
         self._icon_mapping = icon_mapping
         self._street_for_creation = street_for_creation
+        self._local_fixup = local_fixup
+
+        if self.local_fixup:
+            self.local_fixup.factory.register(self.local_fixup, self._region_id)
 
     @property
     def street_for_creation(self):
@@ -135,6 +218,20 @@ class RegionData:
     def get_icon(self, icon_size=IconSize.SMALL):
         return self.icon_mapping.get(icon_size, None)
 
+    @property
+    def local_fixup(self):
+        return self._local_fixup
+
+    @property
+    def has_local_fixup(self):
+        return self._local_fixup is not None
+
+    def apply_fixup_to_sim_info(self, sim_info):
+        if sim_info is None or not self.has_local_fixup:
+            return
+
+        self.local_fixup(sim_info)(self.region.guid64)
+
 
 @EnumItemFactory.ReprMixin(name='region_name', region_id=None, region=DEFAULT)
 @EnumItemFactory.TunableReferenceMixin(region=('region_id', True))
@@ -145,6 +242,7 @@ class RegionDataFactory(EnumItemFactory):
         'pack': PackDefinition(),
         'icon_mapping': IconMapping(),
         'street_for_creation': TunableWorldDescription(pack_safe=True),
+        'local_fixup': OptionalTunableLocalFixup(),
     }
     FACTORY_TYPE = RegionData
 

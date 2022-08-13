@@ -334,6 +334,6 @@ class Settings:
             raise KeyError(f'Setting key {setting_key} not in Settings!')
 
         new_value = setting_value if setting_value is not None else not cls.settings[setting_key]
-        cls.settings[setting_key] = new_value
+        cls.update_setting(setting_key, new_value)
         return new_value
 

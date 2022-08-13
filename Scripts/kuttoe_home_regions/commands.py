@@ -2,7 +2,7 @@
 #  Imports                                                                                                            #
 #######################################################################################################################
 
-from typing import List, Optional
+from typing import List, Optional, Callable, Any
 import enum
 import services
 from sims4.commands import Command, CommandType, Output
@@ -77,6 +77,30 @@ def get_notification_type_from_name(*notification_type_name, _connection=None) -
         return None
 
     return NotificationType[notif_key]
+
+
+def dump_data_to_file(
+        file_name: str, data: dict, file_path: str = None, _connection=None,
+        file_writer: Callable[[str, Any], str]=None
+):
+    from kuttoe_home_regions.settings import Settings
+    from os import path
+    from subprocess import Popen
+
+    output = Output(_connection)
+    gv_data = Settings.gv_directory
+    file_path = path.join(file_path or gv_data.directory_path, file_name)
+
+    def _default_file_writer(item_key, item_value):
+        return f'{item_key}: {item_value}\n\n'
+
+    with open(file_path, 'w+') as file:
+        for (key, value) in data.items():
+            file.write((file_writer or _default_file_writer)(key, value))
+
+    output(f'Successfully wrote data to file: {file_path}')
+    Popen(['notepad', file_path])
+    return True
 
 
 #######################################################################################################################
@@ -243,23 +267,34 @@ def kuttoe_toggle_high_school(new_value: bool = None, _connection=None):
     return True
 
 
-@Command('kuttoe.dump_filters', command_type=CommandType.Live)
+#######################################################################################################################
+#  Debug Console Commands                                                                                             #
+#######################################################################################################################
+
+
+@Command('kuttoe.dump_filters', command_type=CommandType.Cheat)
 def dump_filters(file_path: str = None, _connection=None):
     from kuttoe_home_regions.injections import SituationJobModifications
-    from kuttoe_home_regions.settings import Settings
-    from os import path
-    from subprocess import Popen
 
     filters = dict(soft=SituationJobModifications.SOFT_FILTER, main=SituationJobModifications.MAIN_FILTER)
-    output = Output(_connection)
+    file_name = 'Kuttoe_Filter_Dump.txt'
 
-    gv_data = Settings.gv_directory
-    file_path = path.join(file_path or gv_data.directory_path, 'Kuttoe_Filter_Dump.txt')
+    def _dump_item(key, value):
+        return f'{key} ({value}):\n{getattr(value, "value")}\n\n'
 
-    with open(file_path, 'w+') as file:
-        for (name, filter_obj) in filters.items():
-            file.write(f'{name} ({filter_obj}):\n{getattr(filter_obj, "value")}\n\n')
+    return dump_data_to_file(file_name, filters, file_path, _connection, file_writer=_dump_item)
 
-    output(f'Successfully wrote filters to file: {file_path}')
-    Popen(['notepad', file_path])
-    return True
+
+@Command('kuttoe.dump_bypassed_sjs', command_type=CommandType.Cheat)
+def dump_bypassed_situation_jobs(file_path: str = None, _connection=None):
+    from kuttoe_home_regions.injections import SituationJobModifications
+    from kuttoe_home_regions.settings import Settings
+
+    situation_jobs_info = {
+        "high_school_filter": Settings.high_school_toggle,
+        "soft_filter": SituationJobModifications.soft_list,
+        "bypassed_jobs": SituationJobModifications._BYPASSED_JOBS,
+    }
+    file_name = 'Kuttoe_Situation_Jobs_Dump.txt'
+
+    return dump_data_to_file(file_name, situation_jobs_info, file_path, _connection)

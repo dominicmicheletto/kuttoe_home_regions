@@ -168,7 +168,6 @@ class HighSchoolSituationJobsInfo(HasTunableFactory, AutoFactoryInit):
     def build_situation_jobs_list(self):
         situation_jobs = self.get_situation_jobs_matching_prefix()
         situation_jobs.update(self.whitelist)
-        situation_jobs.difference_update(self.blacklisted_situation_jobs)
 
         return {situation_job for situation_job in situation_jobs if situation_job is not None}
 
@@ -176,7 +175,9 @@ class HighSchoolSituationJobsInfo(HasTunableFactory, AutoFactoryInit):
         return self.toggle_value
 
     def __call__(self):
-        return set() if self else self.build_situation_jobs_list()
+        blacklisted_situation_jobs = self.blacklisted_situation_jobs
+
+        return blacklisted_situation_jobs if self else self.build_situation_jobs_list() - blacklisted_situation_jobs
 
 
 class SituationJobModifications:
@@ -208,10 +209,8 @@ class SituationJobModifications:
     @classproperty
     def bypass_list(cls):
         primary_list = {situation_job for situation_job in cls.BYPASS_LIST if situation_job is not None}
-        primary_list.update(cls.high_school_situation_jobs_info.blacklisted_situation_jobs)
-        primary_list.update(cls.high_school_situation_jobs_info())
 
-        return primary_list
+        return primary_list | cls.high_school_situation_jobs_info()
 
     @classproperty
     def second_chance_list(cls):

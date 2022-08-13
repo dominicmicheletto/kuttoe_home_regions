@@ -74,9 +74,9 @@
       <L n="whitelist" />
       <!--By default, these jobs will also be added to the global bypass list.-->
       <L n="blacklist">
+        <!--By default, these jobs will also be added to the global bypass list.-->
         <U>
           <T n="job">281992<!--job_HighSchoolFestival_All_Player--></T>
-          <?ignore <T n="add_to_global_bypass_list">False</T> ?>
         </U>
         <U>
           <T n="job">285986<!--job_HSGraduation_Valedictorian_Player--></T>
@@ -104,13 +104,76 @@
         </U>
         <U>
           <T n="job">282156<!--job_HighSchool_Active_CareerDay_NPC_Professional--></T>
+          <T n="add_to_global_bypass_list">False</T>
         </U>
         <U>
           <T n="job">287989<!--job_HighSchool_Active_CareerDay_NPC_Professional2--></T>
+          <T n="add_to_global_bypass_list">False</T>
         </U>
         <U>
           <T n="job">287990<!--job_HighSchool_Active_CareerDay_NPC_Professional3--></T>
-		</U>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">281915<!--job_HighSchoolFestival_All_Judge--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">281914<!--job_HighSchoolFestival_All_Teacher--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">281916<!--job_HighSchoolFestival_All_Vendor--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">288274<!--job_HighSchool_Active_Base_FireFighter--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">290196<!--job_HighSchool_Active_Base_NPC_Janitor--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">278223<!--job_HighSchool_Active_Base_NPC_Principal--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">277895<!--job_HighSchool_Active_Base_NPC_Teacher1--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">278963<!--job_HighSchool_Active_Base_NPC_Teacher2--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">277918<!--job_HighSchool_Active_NPC_Phases_Teacher1--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">297170<!--job_HighSchool_Active_NPC_Phases_Teacher2--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">278224<!--job_HighSchool_Active_Phases_NPC_Principal--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">291377<!--job_HSGraduation_PhaseJob_Principal--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">291378<!--job_HSGraduation_PhaseJob_Teacher--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">287866<!--job_HSGraduation_Principal--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
+        <U>
+          <T n="job">291321<!--job_HSGraduation_Teacher--></T>
+          <T n="add_to_global_bypass_list">False</T>
+        </U>
       </L>
     </U>
     <L n="SOFT_LIST">

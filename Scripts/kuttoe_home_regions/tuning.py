@@ -14,10 +14,11 @@ from services import get_instance_manager
 from sims4 import hash_util
 from sims4.resources import Types, get_resource_key
 from sims4.utils import classproperty, constproperty
-from sims4.tuning.tunable import AutoFactoryInit, HasTunableFactory, OptionalTunable, Tunable, TunableMapping
-from sims4.tuning.tunable import TunableTuple, TunablePackSafeReference, TunableEnumEntry
+from sims4.tuning.tunable import AutoFactoryInit, HasTunableFactory, OptionalTunable, Tunable
+from sims4.tuning.tunable import TunableTuple, TunablePackSafeReference, TunableEnumEntry, TunableRange, TunableMapping
 from sims4.tuning.instances import lock_instance_tunables
 from sims4.localization import TunableLocalizedStringFactory
+from sims4.common import Pack
 
 # interaction imports
 from interactions import TargetType, ParticipantType
@@ -40,12 +41,18 @@ from kuttoe_home_regions.utils import construct_auto_init_factory, make_immutabl
 from kuttoe_home_regions.utils import create_tunable_factory_with_overrides, InteractionTargetType
 from kuttoe_home_regions.home_worlds import HomeWorldIds, TunableIconDefinition
 from kuttoe_home_regions.commands import AlterType
-from kuttoe_home_regions.ui import InteractionType
+from kuttoe_home_regions.ui import InteractionType, NotificationType
 from kuttoe_home_regions.tests import _TestSetMixin
-from kuttoe_home_regions.interactions import _DisplayNotificationMixin
+from kuttoe_home_regions.interactions import _DisplayNotificationMixin, \
+    NotificationToggleSettingImmediateSuperInteraction
 from kuttoe_home_regions.interactions import HomeWorldPickerInteraction, WorldListPickerInteraction
 from kuttoe_home_regions.interactions import CommandImmediateSuperInteraction, AlterWorldListImmediateSuperInteraction
 from kuttoe_home_regions.interactions import SoftTogglePickerInteraction, ToggleSettingImmediateSuperInteraction
+from kuttoe_home_regions.interactions import BooleanSettingTogglePickerInteraction, \
+    BooleanToggleSettingImmediateSuperInteraction
+from kuttoe_home_regions.disabled_interation_behaviour import TunableDisabledInteractionBehaviourSnippet, \
+    DisabledInteractionBehaviour
+from kuttoe_home_regions.setting_value_mapping import TunableSettingValue
 
 
 #######################################################################################################################
@@ -112,6 +119,7 @@ class TunableInteractionName(Tunable):
 
 
 class _InteractionTypeMixin:
+    __CACHE = dict()
     FACTORY_TUNABLES = {
         'injection_target': TunableEnumEntry(tunable_type=InteractionTargetType,
                                              default=InteractionTargetType.INVALID,
@@ -134,11 +142,26 @@ class _InteractionTypeMixin:
 
     @property
     def command_interaction(self):
-        return self.create_tuning_class(self.class_base, locked_args=self.locked_args, **self.properties_mapping)
+        if self in self.__CACHE:
+            return self.__CACHE[self]
+
+        cls = self.create_tuning_class(self.class_base, locked_args=self.locked_args, **self.properties_mapping)
+        return self.__CACHE.setdefault(self, cls)
 
     @property
     def interaction_name_info(self):
-        return self.interaction_name_base(self.home_world)
+        home_world = getattr(self, 'home_world', None)
+        suffix = getattr(self, 'interaction_name_suffix', None)
+        name_base = getattr(self, 'interaction_name_base')
+
+        if home_world:
+            return name_base(home_world)
+        elif suffix:
+            return name_base._get_hash_for_suffix(suffix)
+        else:
+            base = name_base.interaction_name_base
+
+            return base, hash_util.hash64(base)
 
     @property
     def interaction_resource_key(self):
@@ -218,41 +241,9 @@ class PythonBasedInteractionData(
 
         return properties_mapping
 
-    def __init__(self, world_data, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._world_data = world_data
-
-    @property
-    def world_data(self):
-        return self._world_data
-
-    @property
-    def region(self):
-        return self.world_data.region
-
-    @property
-    def pie_menu_priority(self):
-        return self.world_data.pie_menu_priority
-
-    @property
-    def interaction_display_name(self):
-        return self.world_data.interaction_display_name
-
-    @property
-    def pie_menu_icon(self):
-        return self.world_data.pie_menu_icon
-
     @property
     def category(self):
         return self.interaction_category
-
-    @property
-    def home_world(self) -> HomeWorldIds:
-        return self.world_data.home_world
-
-    @property
-    def command_name(self):
-        return self.home_world.command_name
 
     @property
     def interaction_display_tooltip(self):
@@ -310,7 +301,59 @@ class PythonBasedInteractionData(
         return _InteractionTuningClass
 
 
-class CommandInteractionTuningData(PythonBasedInteractionData):
+class PythonBasedInteractionWithRegionData(PythonBasedInteractionData):
+    def __init__(self, world_data, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._world_data = world_data
+
+    @property
+    def world_data(self):
+        return self._world_data
+
+    @property
+    def region(self):
+        return self.world_data.region
+
+    @property
+    def pie_menu_priority(self):
+        return self.world_data.pie_menu_priority
+
+    @property
+    def interaction_display_name(self):
+        return self.world_data.interaction_display_name
+
+    @property
+    def pie_menu_icon(self):
+        return self.world_data.pie_menu_icon
+
+    @property
+    def home_world(self) -> HomeWorldIds:
+        return self.world_data.home_world
+
+    @property
+    def command_name(self):
+        return self.home_world.command_name
+
+
+class InteractionDisplayNameMap(TunableMapping):
+    def __init__(self, *args, **kwargs):
+        kwargs['key_name'] = 'notification_type'
+        kwargs['key_type'] = TunableEnumEntry(tunable_type=NotificationType, default=NotificationType.SUCCESS)
+        kwargs['value_name'] = 'interaction_display_name'
+        kwargs['value_type'] = TunableLocalizedStringFactory()
+        super().__init__(*args, **kwargs)
+
+
+class PythonBasedInteractionWithoutRegionData(PythonBasedInteractionData):
+    FACTORY_TUNABLES = {
+        'interaction_display_name': TunableLocalizedStringFactory(),
+        'pie_menu_icon': OptionalTunable(TunableIconVariant()),
+        'command_name': Tunable(tunable_type=str, default=None, allow_empty=False),
+        'pie_menu_priority': TunableRange(tunable_type=int, maximum=10, default=1),
+    }
+
+
+class CommandInteractionTuningData(PythonBasedInteractionWithRegionData):
     @constproperty
     def class_base():
         return CommandImmediateSuperInteraction
@@ -327,7 +370,7 @@ class CommandInteractionTuningData(PythonBasedInteractionData):
         return TestList(base_tests)
 
 
-class PickerInteractionTuningData(PythonBasedInteractionData):
+class PickerInteractionTuningData(PythonBasedInteractionWithRegionData):
     FACTORY_TUNABLES = {
         'sim_picker': UiSimPicker.TunableFactory(),
         'picker_icon': OptionalTunable(tunable=TunableIconVariant()),
@@ -372,7 +415,7 @@ class PickerInteractionTuningData(PythonBasedInteractionData):
         return properties_mapping
 
 
-class _WorldListInteractionTuningDataBase(PythonBasedInteractionData):
+class _WorldListInteractionTuningDataBase(PythonBasedInteractionWithRegionData):
     BIDIRECTIONAL_TOGGLE_TOKEN = TunableLocalizedStringFactory()
     ENABLED_TOKEN = TunableLocalizedStringFactory()
     DISABLED_TOKEN = TunableLocalizedStringFactory()
@@ -559,42 +602,11 @@ class DisallowWorldInteractionTuningData(_WorldListInteractionTuningDataBase):
         return AlterType.DISALLOW_WORLD
 
 
-class TooltipReasonMapping(TunableMapping):
-    def __init__(self, *args, **kwargs):
-        kwargs['key_name'] = 'toggle_value'
-        kwargs['key_type'] = Tunable(tunable_type=bool, default=False)
-        kwargs['value_name'] = 'display_text'
-        kwargs['value_type'] = TunableLocalizedStringFactory()
-
-        super().__init__(*args, **kwargs)
-
-
-class SettingValueMapping(TunableMapping):
-    def __init__(self, *args, **kwargs):
-        kwargs['key_name'] = 'setting_value'
-        kwargs['key_type'] = Tunable(tunable_type=bool, default=False)
-        kwargs['value_name'] = 'display_data'
-
-        tuple_args = dict()
-        tuple_args['text'] = TunableLocalizedStringFactory()
-        tuple_args['pie_menu_icon'] = OptionalTunable(TunableIconVariant())
-        kwargs['value_type'] = TunableTuple(**tuple_args)
-
-        super().__init__(*args, **kwargs)
-
-
-class SoftFilterInteractionTuningData(PythonBasedInteractionData):
-    _SUB_INTERACTION_CACHE = defaultdict(dict)
+class _ToggleInteractionTuningDataBase:
+    __CACHE = dict()
     FACTORY_TUNABLES = {
-        'disabled_interaction_behaviour': OptionalTunable(
-            tunable=TunableTuple(
-                base=TunableLocalizedStringFactory(),
-                tooltip_reason_mapping=TooltipReasonMapping(),
-            ),
-            disabled_name='do_not_show',
-            enabled_name='show_interactions',
-        ),
-        'setting_value_mapping': SettingValueMapping(),
+        'disabled_interaction_behaviour': TunableDisabledInteractionBehaviourSnippet(),
+        'setting_value_mapping': TunableSettingValue(),
         'picker_dialog': UiItemPicker.TunableFactory(),
     }
 
@@ -605,14 +617,6 @@ class SoftFilterInteractionTuningData(PythonBasedInteractionData):
         properties_mapping['picker_dialog'] = 'custom_picker_dialog'
 
         return properties_mapping
-
-    @constproperty
-    def class_base():
-        return SoftTogglePickerInteraction
-
-    @classproperty
-    def sub_interaction_cache(cls) -> Dict[HomeWorldIds, Dict[bool, ImmediateSuperInteraction]]:
-        return cls._SUB_INTERACTION_CACHE
 
     @staticmethod
     def _register_interaction(interaction_cls, interaction_data):
@@ -625,22 +629,118 @@ class SoftFilterInteractionTuningData(PythonBasedInteractionData):
         suffix = {True: 'On', False: 'Off'}[toggle_value]
         func = TunableInteractionName._Wrapper._get_hash_for_name
 
-        return func(self.interaction_name, suffix)
+        return func(self.interaction_name_base.interaction_name_base, suffix)
 
     def _create_sub_interaction(self, toggle_value: bool):
         interaction_data = self._get_sub_interaction_name(toggle_value)
+        if interaction_data[1] in self.__CACHE:
+            return self.__CACHE[interaction_data[1]]
+        base_class = self.sub_interaction_base_class
 
-        class _ToggleSettingImmediateSuperInteraction(ToggleSettingImmediateSuperInteraction):
+        class _ToggleSettingImmediateSuperInteraction(base_class):
             pass
 
         locked_args = dict()
-        locked_args['target_home_world'] = self.home_world
+        locked_args.update(self.sub_interaction_locked_args)
         locked_args['toggle_value'] = toggle_value
         _ToggleSettingImmediateSuperInteraction.__name__ = interaction_data[0]
         lock_instance_tunables(_ToggleSettingImmediateSuperInteraction, **locked_args)
         self._register_interaction(_ToggleSettingImmediateSuperInteraction, interaction_data)
 
-        return _ToggleSettingImmediateSuperInteraction
+        return self.__CACHE.setdefault(interaction_data[1], _ToggleSettingImmediateSuperInteraction)
+
+    @property
+    def additional_picker_item_args(self):
+        return {'args': (), 'kwargs': {}}
+
+    def possible_actions(self):
+        additional_picker_item_args = self.additional_picker_item_args
+        args = additional_picker_item_args['args']
+        kwargs = additional_picker_item_args['kwargs']
+
+        return tuple(self._create_picker_item(toggle_value, *args, **kwargs) for toggle_value in (True, False))
+
+    @classmethod
+    def _create_continuation(cls, toggle_value: bool, *additional_args, **kwargs):
+        args = dict()
+        args['actor'] = ParticipantType.Actor
+        args['target'] = ParticipantType.Object
+        args['affordance'] = cls._get_continuation_affordance(toggle_value, *additional_args, **kwargs)
+        args['carry_target'] = None
+        args['inventory_carry_target'] = None
+        args['preserve_preferred_object'] = True
+        args['preserve_target_part'] = False
+        args['si_affordance_override'] = None
+
+        return make_immutable_slots_class(**args)
+
+    def _create_picker_item(self, toggle_value: bool, *additional_args, **kwargs):
+        display_data = self.setting_value_mapping.value.get_display_data(toggle_value)
+
+        args = dict()
+        args['continuation'] = (self._create_continuation(toggle_value, *additional_args, **kwargs),)
+        args['item_description'] = None
+        args['item_tooltip'] = None
+        args['localization_tokens'] = None
+        args['name'] = display_data.text
+        args['icon'] = display_data.pie_menu_icon
+
+        tests = self.get_enabled_tests(toggle_value)
+        dib = self.disabled_interaction_behaviour
+        args.update(DisabledInteractionBehaviour.create_picker(dib, tests, toggle_value, *additional_args, **args))
+
+        return construct_auto_init_factory(InteractionPickerItem, **args)
+
+    def get_enabled_tests(self, toggle_value: bool):
+        return CompoundTestList()
+
+    @property
+    def additional_disable_token_reasons(self):
+        return ()
+
+    @property
+    def additional_picker_dialog_tokens(self):
+        return ()
+
+    def custom_picker_dialog(self):
+        additional_tokens = self.additional_picker_dialog_tokens
+        text = self.picker_dialog.text
+
+        def new_text(*tokens):
+            return text(*additional_tokens, *tokens)
+
+        if not text:
+            return self.picker_dialog
+        return create_tunable_factory_with_overrides(self.picker_dialog, text=new_text)
+
+
+class SoftFilterInteractionTuningData(_ToggleInteractionTuningDataBase, PythonBasedInteractionWithRegionData):
+    _SUB_INTERACTION_CACHE = defaultdict(dict)
+
+    @constproperty
+    def class_base():
+        return SoftTogglePickerInteraction
+
+    @classproperty
+    def sub_interaction_cache(cls) -> Dict[HomeWorldIds, Dict[bool, ImmediateSuperInteraction]]:
+        return cls._SUB_INTERACTION_CACHE
+
+    @constproperty
+    def sub_interaction_base_class():
+        return ToggleSettingImmediateSuperInteraction
+
+    @property
+    def sub_interaction_locked_args(self):
+        locked_args = dict()
+
+        locked_args['target_home_world'] = self.home_world
+        return locked_args
+
+    def _get_sub_interaction_name(self, toggle_value: bool):
+        suffix = {True: 'On', False: 'Off'}[toggle_value]
+        func = TunableInteractionName._Wrapper._get_hash_for_name
+
+        return func(self.interaction_name_base(self.home_world)[0], suffix)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -652,16 +752,13 @@ class SoftFilterInteractionTuningData(PythonBasedInteractionData):
             for toggle_value in (True, False):
                 self.sub_interaction_cache[self.home_world][toggle_value] = self._create_sub_interaction(toggle_value)
 
-    def custom_picker_dialog(self):
-        region_text = self.home_world.region_name()
-        text = self.picker_dialog.text
+    @property
+    def additional_picker_dialog_tokens(self):
+        return (self.home_world.region_name(), )
 
-        def new_text(*tokens):
-            return text(region_text, *tokens)
-
-        if not text:
-            return self.picker_dialog
-        return create_tunable_factory_with_overrides(self.picker_dialog, text=new_text)
+    @property
+    def additional_picker_item_args(self):
+        return {'args': (self.home_world, ), 'kwargs': {}}
 
     @property
     def global_tests(self):
@@ -671,52 +768,12 @@ class SoftFilterInteractionTuningData(PythonBasedInteractionData):
         return TestList(base_tests)
 
     @classmethod
-    def _create_continuation(cls, source_world: HomeWorldIds, toggle_value: bool):
-        args = dict()
-        args['actor'] = ParticipantType.Actor
-        args['target'] = ParticipantType.Object
-        args['affordance'] = cls.sub_interaction_cache[source_world][toggle_value]
-        args['carry_target'] = None
-        args['inventory_carry_target'] = None
-        args['preserve_preferred_object'] = True
-        args['preserve_target_part'] = False
-        args['si_affordance_override'] = None
+    def _get_continuation_affordance(cls, toggle_value: bool, source_world: HomeWorldIds):
+        return cls.sub_interaction_cache[source_world][toggle_value]
 
-        return make_immutable_slots_class(**args)
-
-    def get_display_data(self, toggle_value: bool):
-        return self.setting_value_mapping[toggle_value]
-
-    def _create_picker_item(self, toggle_value: bool):
-        display_data = self.get_display_data(toggle_value)
-
-        args = dict()
-        args['continuation'] = (self._create_continuation(self.home_world, toggle_value),)
-        args['item_description'] = None
-        args['item_tooltip'] = None
-        args['localization_tokens'] = None
-        args['name'] = display_data.text
-        args['icon'] = display_data.pie_menu_icon
-
-        tests = self.get_enabled_tests(toggle_value)
-        if self.disabled_interaction_behaviour:
-            args['enable_tests'] = tests
-            args['disable_tooltip'] = self.get_disabled_tooltip(toggle_value)
-            args['visibility_tests'] = None
-        else:
-            args['enable_tests'] = None
-            args['disable_tooltip'] = None
-            args['visibility_tests'] = tests
-
-        return construct_auto_init_factory(InteractionPickerItem, **args)
-
-    def get_disabled_tooltip(self, toggle_value: bool):
-        disabled_interaction_behaviour = self.disabled_interaction_behaviour
-        base = disabled_interaction_behaviour.base
-        tooltip_reason = disabled_interaction_behaviour.tooltip_reason_mapping[toggle_value]()
-        region_name = self.home_world.region_name()
-
-        return lambda *tokens: base(region_name, tooltip_reason, *tokens)
+    @property
+    def additional_disable_token_reasons(self):
+        return (self.home_world.region_name(), )
 
     def get_enabled_tests(self, toggle_value: bool):
         base_tests = list()
@@ -724,47 +781,97 @@ class SoftFilterInteractionTuningData(PythonBasedInteractionData):
 
         return CompoundTestList([TestList(base_tests)])
 
-    def possible_actions(self):
-        return tuple(self._create_picker_item(toggle_value) for toggle_value in (True, False))
+
+class _BooleanToggleInteractionTuningDataBase(_ToggleInteractionTuningDataBase, PythonBasedInteractionWithoutRegionData):
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__()
+        cls._SUB_INTERACTION_CACHE = dict()
+
+    @classproperty
+    def sub_interaction_cache(cls) -> Dict[bool, ImmediateSuperInteraction]:
+        return cls._SUB_INTERACTION_CACHE
+
+    @constproperty
+    def class_base():
+        return BooleanSettingTogglePickerInteraction
+
+    @constproperty
+    def sub_interaction_base_class():
+        return BooleanToggleSettingImmediateSuperInteraction
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for toggle_value in (True, False):
+            self.sub_interaction_cache.setdefault(toggle_value, self._create_sub_interaction(toggle_value))
+
+    @property
+    def interaction_name_suffix(self):
+        return None
+
+    @property
+    def sub_interaction_locked_args(self):
+        locked_args = dict()
+
+        locked_args['command_name'] = self.command_name
+        return locked_args
+
+    @classmethod
+    def _get_continuation_affordance(cls, toggle_value: bool):
+        return cls.sub_interaction_cache[toggle_value]
 
 
-class NotificationSettingsInteractionTuningData(PythonBasedInteractionData):
-    _SUB_INTERACTION_CACHE = defaultdict(dict)
-    FACTORY_TUNABLES = {}
+class HighSchoolToggleTuningData(_BooleanToggleInteractionTuningDataBase):
+    @property
+    def global_tests(self):
+        base_tests = list()
+        base_tests.append(self.get_pack_test({Pack.EP12}))
+
+        return TestList(base_tests)
+
+    def get_enabled_tests(self, toggle_value: bool):
+        base_tests = list()
+        base_tests.append(self.get_boolean_toggle_test('high_school_toggle', toggle_value))
+
+        return CompoundTestList([TestList(base_tests)])
 
 
-class InteractionData(HasTunableFactory, AutoFactoryInit):
-    FACTORY_TUNABLES = {
-        'command': CommandInteractionTuningData.TunableFactory(),
-        'picker': PickerInteractionTuningData.TunableFactory(),
-        'allow_world': AllowWorldInteractionTuningData.TunableFactory(),
-        'disallow_world': DisallowWorldInteractionTuningData.TunableFactory(),
-        'soft_filter': SoftFilterInteractionTuningData.TunableFactory(),
-    }
+class BidirectionalToggleTuningData(_BooleanToggleInteractionTuningDataBase):
+    @property
+    def global_tests(self):
+        return TestList()
 
-    @staticmethod
-    def _create_properties(inst, key: str):
+    def get_enabled_tests(self, toggle_value: bool):
+        base_tests = list()
+        base_tests.append(self.get_boolean_toggle_test('bidirectional_toggle', toggle_value))
+
+        return CompoundTestList([TestList(base_tests)])
+
+
+class _InteractionDataBase(HasTunableFactory, AutoFactoryInit):
+    @classmethod
+    def _init_property(cls, inst, property_cls):
+        return property_cls()
+
+    @classmethod
+    def _create_properties(cls, inst, key: str):
         tuning_cls = getattr(inst, key, None)
         if not tuning_cls:
             return
 
-        tuning = tuning_cls(inst.world_data)
+        tuning = cls._init_property(inst, tuning_cls)
         setattr(inst, f'{key}_data', tuning)
 
-    def __init__(self, world_data, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self._world_data = world_data
         for key in self.forwarded_properties:
             self._create_properties(self, key)
 
-    @property
-    def forwarded_properties(self):
-        return tuple(InteractionData.FACTORY_TUNABLES.keys())
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
 
-    @property
-    def world_data(self):
-        return self._world_data
+        tunables = getattr(cls, 'FACTORY_TUNABLES', dict())
+        setattr(cls, 'forwarded_properties', tuple(tunables.keys()))
 
     def __iter__(self):
         for prop in self.forwarded_properties:
@@ -772,13 +879,13 @@ class InteractionData(HasTunableFactory, AutoFactoryInit):
 
     @property
     def interaction_target_mapping(self) -> Dict[InteractionTargetType, List[InteractionRegistryData]]:
-        mapping = defaultdict(list)
+        mapping = defaultdict(set)
 
         for interaction_data in self:
             if not interaction_data:
                 continue
 
-            mapping[interaction_data.injection_target].append(interaction_data.interaction_data)
+            mapping[interaction_data.injection_target].add(interaction_data.interaction_data)
 
         return {**mapping}
 
@@ -790,3 +897,31 @@ class InteractionData(HasTunableFactory, AutoFactoryInit):
 
         return {**mapping}
 
+
+class InteractionData(_InteractionDataBase):
+    FACTORY_TUNABLES = {
+        'command': CommandInteractionTuningData.TunableFactory(),
+        'picker': PickerInteractionTuningData.TunableFactory(),
+        'allow_world': AllowWorldInteractionTuningData.TunableFactory(),
+        'disallow_world': DisallowWorldInteractionTuningData.TunableFactory(),
+        'soft_filter': SoftFilterInteractionTuningData.TunableFactory(),
+    }
+
+    @classmethod
+    def _init_property(cls, inst, property_cls):
+        return property_cls(inst.world_data)
+
+    def __init__(self, world_data, *args, **kwargs):
+        self._world_data = world_data
+        super().__init__(*args, **kwargs)
+
+    @property
+    def world_data(self):
+        return self._world_data
+
+
+class InteractionWithoutRegionData(_InteractionDataBase):
+    FACTORY_TUNABLES = {
+        'high_school_toggle': HighSchoolToggleTuningData.TunableFactory(),
+        'bidirectional_toggle': BidirectionalToggleTuningData.TunableFactory(),
+    }

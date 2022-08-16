@@ -7,6 +7,7 @@ from collections import namedtuple
 
 # miscellaneous
 import enum
+from snippets import define_snippet
 
 # interaction imports
 from interactions import ParticipantType
@@ -23,6 +24,7 @@ from ui.ui_dialog_notification import UiDialogNotification
 
 # local imports
 from kuttoe_home_regions.enum import DynamicFactoryEnumMetaclass, EnumItemFactory, EnumItem
+
 
 #######################################################################################################################
 #  Notification Colour Code                                                                                           #
@@ -188,3 +190,6 @@ class Notification(HasTunableFactory, AutoFactoryInit):
     @property
     def dialog(self):
         return UiDialogNotification.TunableFactory().default(None, resolver=self.resolver, **self.params)
+
+
+(TunableNotificationSnippetReference, TunableNotificationSnippet) = define_snippet('custom_notification', Notification.TunableFactory())

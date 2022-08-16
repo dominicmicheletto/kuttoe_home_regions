@@ -3,7 +3,7 @@
 #######################################################################################################################
 
 # python imports
-from typing import List
+from typing import List, Set
 
 # sim4 imports
 from sims4.tuning.tunable import AutoFactoryInit, TunableEnumEntry, HasTunableSingletonFactory, TunableEnumSet
@@ -11,6 +11,7 @@ from sims4.tuning.tunable import TunableList, TunablePackSafeReference, Tunable
 from sims4.localization import TunableLocalizedStringFactory
 from sims4.utils import constproperty
 from sims4.resources import Types
+from sims4.common import Pack, is_available_pack
 
 # event testing imports
 from event_testing.test_base import BaseTest
@@ -38,6 +39,7 @@ from tunable_utils.tunable_white_black_list import TunableWhiteBlackList
 from kuttoe_home_regions.home_worlds import HomeWorldIds
 from kuttoe_home_regions.commands import AlterType
 from kuttoe_home_regions.utils import construct_auto_init_factory, make_immutable_slots_class
+from kuttoe_home_regions.ui import NotificationType
 
 
 #######################################################################################################################
@@ -133,6 +135,66 @@ class SoftFilterToggleValueTest(_WorldsTestsBase):
                           self.target_home_world.name, not self.invert, tooltip=self.tooltip)
 
 
+class BooleanSettingValueTest(HasTunableSingletonFactory, AutoFactoryInit, BaseTest):
+    FACTORY_TUNABLES = {
+        'invert': Tunable(tunable_type=bool, default=False),
+        'setting_name': Tunable(tunable_type=str, default=None, allow_empty=False)
+    }
+
+    def get_expected_args(self):
+        return {}
+
+    @property
+    def setting_value(self):
+        from kuttoe_home_regions.settings import Settings
+
+        return Settings.settings[self.setting_name]
+
+    def __call__(self):
+        result = self.setting_value != self.invert
+
+        return TestResult(result, 'Boolean setting {} does not have the required value of {}',
+                          self.setting_name, not self.invert, tooltip=self.tooltip)
+
+
+class NotificationSettingValueTest(HasTunableSingletonFactory, AutoFactoryInit, BaseTest):
+    FACTORY_TUNABLES = {
+        'invert': Tunable(tunable_type=bool, default=False),
+        'notification_type': TunableEnumEntry(tunable_type=NotificationType, default=NotificationType.SUCCESS),
+    }
+
+    def get_expected_args(self):
+        return {}
+
+    @property
+    def setting_value(self):
+        from kuttoe_home_regions.settings import Settings
+
+        return Settings.settings[self.notification_type.setting_name]
+
+    def __call__(self):
+        result = self.setting_value != self.invert
+
+        return TestResult(result, 'Notification setting {} does not have the required value of {}',
+                          self.notification_type, not self.invert, tooltip=self.tooltip)
+
+
+class PackTest(HasTunableSingletonFactory, AutoFactoryInit, BaseTest):
+    FACTORY_TUNABLES = {
+        'invert': Tunable(tunable_type=bool, default=False),
+        'required_packs': TunableEnumSet(enum_type=Pack, enum_default=Pack.BASE_GAME, invalid_enums=()),
+    }
+
+    def get_expected_args(self):
+        return {}
+
+    def __call__(self):
+        result = all(is_available_pack(pack) for pack in self.required_packs) != self.invert
+
+        return TestResult(result, 'Pack requirements of {} does not have the required value of {}',
+                          self.required_packs, not self.invert, tooltip=self.tooltip)
+
+
 #######################################################################################################################
 #  Test Set Mixin                                                                                                     #
 #######################################################################################################################
@@ -144,6 +206,33 @@ class _TestSetMixin:
     BLACKLIST_TRAIT_TYPES = TunableEnumSet(enum_type=TraitType, allow_empty_set=True)
     TRAIT_BLACKLIST = TunableList(tunable=Trait.TunablePackSafeReference(), allow_none=False)
     VENUE_FILTER = TunableWhiteBlackList(tunable=TunablePackSafeReference(manager=get_instance_manager(Types.VENUE)))
+
+    @staticmethod
+    def get_notification_setting_test(notification_type: NotificationType, invert: bool = False, disabled_tooltip=None):
+        args = dict()
+        args['invert'] = invert
+        args['notification_type'] = notification_type
+        args['tooltip'] = disabled_tooltip
+
+        return construct_auto_init_factory(NotificationSettingValueTest, **args)
+
+    @staticmethod
+    def get_pack_test(packs_list: Set[Pack], invert: bool = False, disabled_tooltip=None):
+        args = dict()
+        args['invert'] = invert
+        args['required_packs'] = packs_list
+        args['tooltip'] = disabled_tooltip
+
+        return construct_auto_init_factory(PackTest, **args)
+
+    @staticmethod
+    def get_boolean_toggle_test(setting_name: str, invert: bool = False, disabled_tooltip=None):
+        args = dict()
+        args['invert'] = invert
+        args['setting_name'] = setting_name
+        args['tooltip'] = disabled_tooltip
+
+        return construct_auto_init_factory(BooleanSettingValueTest, **args)
 
     @staticmethod
     def get_soft_filter_toggle_test(source_world: HomeWorldIds, invert: bool = False, disabled_tooltip=None):

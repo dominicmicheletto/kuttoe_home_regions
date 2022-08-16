@@ -24,7 +24,7 @@ from sims.sim_info_manager import SimInfoManager
 from kuttoe_home_regions.utils import make_do_command, CommandsList
 from kuttoe_home_regions.home_worlds import HomeWorldIds
 from kuttoe_home_regions.commands import AlterType
-from kuttoe_home_regions.ui import NotificationType, Notification, InteractionType
+from kuttoe_home_regions.ui import NotificationType, TunableNotificationSnippet, InteractionType
 
 
 #######################################################################################################################
@@ -35,7 +35,7 @@ from kuttoe_home_regions.ui import NotificationType, Notification, InteractionTy
 class _DisplayNotificationMixin:
     INSTANCE_TUNABLES = {
         'interaction_type': TunableEnumEntry(tunable_type=InteractionType, default=InteractionType.COMMAND),
-        'notification': OptionalTunable(tunable=Notification.TunableFactory())
+        'notification': OptionalTunable(tunable=TunableNotificationSnippet())
     }
     FACTORY_TUNABLES = {k: v for (k, v) in INSTANCE_TUNABLES.items() if k != 'interaction_type'}
 
@@ -43,13 +43,17 @@ class _DisplayNotificationMixin:
     def has_notification(self):
         return self.notification is not None
 
+    @property
+    def dialog(self):
+        return getattr(self.notification, 'value', None)
+
     def display_notification(self, *additional_tokens, notification_type=NotificationType.SUCCESS):
         from kuttoe_home_regions.settings import Settings
 
         if not self.has_notification or not Settings.should_show_notification[notification_type]:
             return
 
-        dialog = self.notification(self, self.interaction_type, additional_tokens=additional_tokens).dialog
+        dialog = self.dialog(self, self.interaction_type, additional_tokens=additional_tokens).dialog
         dialog.show_dialog()
 
 
@@ -128,7 +132,7 @@ class WorldListPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixi
         return self.on_multi_choice_selected((choice, ), **kwargs)
 
 
-class SoftTogglePickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, _PieMenuPriorityMixin, InteractionPickerSuperInteraction):
+class _SingleChoiceTogglePickerInteractionBase(_DisplayNotificationMixin, InteractionPickerSuperInteraction):
     REMOVE_INSTANCE_TUNABLES = ('possible_actions',)
 
     def on_choice_selected(self, choice, **kwargs):
@@ -137,6 +141,14 @@ class SoftTogglePickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMix
         if choice is not None:
             self.display_notification(notification_type=NotificationType.SETTINGS_CHANGED)
         return value
+
+
+class SoftTogglePickerInteraction(_TargetHomeWorldMixin, _PieMenuPriorityMixin, _SingleChoiceTogglePickerInteractionBase):
+    pass
+
+
+class BooleanSettingTogglePickerInteraction(_SingleChoiceTogglePickerInteractionBase):
+    pass
 
 
 #######################################################################################################################
@@ -219,6 +231,51 @@ class ToggleSettingImmediateSuperInteraction(_TargetHomeWorldMixin, ImmediateSup
         return (cls.do_command, )
 
 
+class BooleanToggleSettingImmediateSuperInteraction(ImmediateSuperInteraction):
+    REMOVE_INSTANCE_TUNABLES = ('basic_extras',)
+    INSTANCE_TUNABLES = {
+        'command_name': Tunable(tunable_type=str, default=None, allow_empty=False),
+        'toggle_value': Tunable(tunable_type=bool, default=True),
+    }
+
+    @classproperty
+    def command_arguments(cls):
+        return CommandsList().add_boolean(cls.toggle_value)
+
+    @classproperty
+    def do_command(cls):
+        return make_do_command(cls.command_name, *cls.command_arguments)
+
+    @classproperty
+    def basic_extras(cls):
+        return (cls.do_command, )
+
+
+class NotificationToggleSettingImmediateSuperInteraction(ImmediateSuperInteraction):
+    REMOVE_INSTANCE_TUNABLES = ('basic_extras',)
+    INSTANCE_TUNABLES = {
+        'command_name': Tunable(tunable_type=str, default=None, allow_empty=False),
+        'notification_type': TunableEnumEntry(tunable_type=NotificationType, default=NotificationType.SUCCESS),
+        'toggle_value': Tunable(tunable_type=bool, default=True),
+    }
+
+    @classproperty
+    def setting_name(cls):
+        return cls.notification_type.setting_name
+
+    @classproperty
+    def command_arguments(cls):
+        return CommandsList().add_string(cls.setting_name).add_boolean(cls.toggle_value)
+
+    @classproperty
+    def do_command(cls):
+        return make_do_command(cls.command_name, *cls.command_arguments)
+
+    @classproperty
+    def basic_extras(cls):
+        return (cls.do_command, )
+
+
 #######################################################################################################################
 # Tuning Locking                                                                                                      #
 #######################################################################################################################
@@ -228,3 +285,4 @@ lock_instance_tunables(HomeWorldPickerInteraction, interaction_type=InteractionT
 lock_instance_tunables(CommandImmediateSuperInteraction, interaction_type=InteractionType.COMMAND)
 lock_instance_tunables(WorldListPickerInteraction, interaction_type=InteractionType.SETTING_WORLD_PICKER)
 lock_instance_tunables(SoftTogglePickerInteraction, interaction_type=InteractionType.SOFT_FILTER)
+lock_instance_tunables(BooleanSettingTogglePickerInteraction, interaction_type=InteractionType.COMMAND)

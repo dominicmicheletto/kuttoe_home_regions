@@ -68,13 +68,13 @@ class InteractionTargetType(DynamicEnum):
     def update_and_register_affordances(self, *affordances):
         affordance_manager = services.get_instance_manager(Types.INTERACTION)
 
-        collected_affordances = []
+        collected_affordances = set()
         for affordance in affordances:
             interaction = affordance.interaction
             resource_key = affordance.resource_key
 
             affordance_manager.register_tuned_class(interaction, resource_key)
-            collected_affordances.append(interaction)
+            collected_affordances.add(interaction)
 
         return self.update_affordance_list(*collected_affordances)
 

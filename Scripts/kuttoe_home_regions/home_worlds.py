@@ -279,6 +279,10 @@ class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=
         return ', '.join(world.name for world in cls.available_worlds)
 
     @property
+    def __tooltip_repr__(self):
+        return self.region_name()
+
+    @property
     def command_name_base(self):
         return self.COMMAND_NAME_BASE
 

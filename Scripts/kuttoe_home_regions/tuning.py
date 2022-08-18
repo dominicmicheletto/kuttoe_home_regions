@@ -654,9 +654,9 @@ class _ToggleInteractionTuningDataBase:
         return {'args': (), 'kwargs': {}}
 
     def possible_actions(self):
-        additional_picker_item_args = self.additional_picker_item_args
-        args = additional_picker_item_args['args']
-        kwargs = additional_picker_item_args['kwargs']
+        additional_picker_item_args = self.additional_picker_item_args or dict()
+        args = additional_picker_item_args.get('args', tuple())
+        kwargs = additional_picker_item_args.get('kwargs', dict())
 
         return tuple(self._create_picker_item(toggle_value, *args, **kwargs) for toggle_value in (True, False))
 

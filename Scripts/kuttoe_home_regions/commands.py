@@ -298,3 +298,4 @@ def dump_bypassed_situation_jobs(file_path: str = None, _connection=None):
     file_name = 'Kuttoe_Situation_Jobs_Dump.txt'
 
     return dump_data_to_file(file_name, situation_jobs_info, file_path, _connection)
+

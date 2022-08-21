@@ -54,7 +54,6 @@ from kuttoe_home_regions.disabled_interation_behaviour import TunableDisabledInt
     DisabledInteractionBehaviour
 from kuttoe_home_regions.setting_value_mapping import TunableSettingValue
 
-
 #######################################################################################################################
 #  Named Tuples                                                                                                       #
 #######################################################################################################################
@@ -123,7 +122,7 @@ class _InteractionTypeMixin:
     FACTORY_TUNABLES = {
         'injection_target': TunableEnumEntry(tunable_type=InteractionTargetType,
                                              default=InteractionTargetType.INVALID,
-                                             invalid_enums=(InteractionTargetType.INVALID, )),
+                                             invalid_enums=(InteractionTargetType.INVALID,)),
         'interaction_name_base': TunableInteractionName(),
     }
     INSTANCE_TUNABLES = FACTORY_TUNABLES
@@ -674,22 +673,36 @@ class _ToggleInteractionTuningDataBase:
 
         return make_immutable_slots_class(**args)
 
+    @classmethod
+    def create_picker_item(cls, **kwargs):
+        kwargs.setdefault('item_description', None)
+        kwargs.setdefault('item_tooltip', None)
+        kwargs.setdefault('localization_tokens', None)
+        kwargs.setdefault('enable_tests', None)
+        kwargs.setdefault('disable_tooltip', None)
+        kwargs.setdefault('enable_tests', None)
+        kwargs.setdefault('disable_tooltip', None)
+        kwargs.setdefault('visibility_tests', None)
+
+        return construct_auto_init_factory(InteractionPickerItem, **kwargs)
+
     def _create_picker_item(self, toggle_value: bool, *additional_args, **kwargs):
         display_data = self.setting_value_mapping.value.get_display_data(toggle_value)
+        dib: DisabledInteractionBehaviour = getattr(self.disabled_interaction_behaviour, 'value', None)
+        tokens = self.additional_disable_token_reasons or tuple()
 
         args = dict()
         args['continuation'] = (self._create_continuation(toggle_value, *additional_args, **kwargs),)
-        args['item_description'] = None
-        args['item_tooltip'] = None
-        args['localization_tokens'] = None
         args['name'] = display_data.text
         args['icon'] = display_data.pie_menu_icon
 
         tests = self.get_enabled_tests(toggle_value)
-        dib = self.disabled_interaction_behaviour
-        args.update(DisabledInteractionBehaviour.create_picker(dib, tests, toggle_value, *additional_args, **args))
+        if dib:
+            args.update(dib(toggle_value, tests, tokens))
+        else:
+            args['visibility_tests'] = tests
 
-        return construct_auto_init_factory(InteractionPickerItem, **args)
+        return self.create_picker_item(**args)
 
     def get_enabled_tests(self, toggle_value: bool):
         return CompoundTestList()
@@ -754,11 +767,11 @@ class SoftFilterInteractionTuningData(_ToggleInteractionTuningDataBase, PythonBa
 
     @property
     def additional_picker_dialog_tokens(self):
-        return (self.home_world.region_name(), )
+        return (self.home_world.region_name(),)
 
     @property
     def additional_picker_item_args(self):
-        return {'args': (self.home_world, ), 'kwargs': {}}
+        return {'args': (self.home_world,), 'kwargs': {}}
 
     @property
     def global_tests(self):
@@ -773,7 +786,7 @@ class SoftFilterInteractionTuningData(_ToggleInteractionTuningDataBase, PythonBa
 
     @property
     def additional_disable_token_reasons(self):
-        return (self.home_world.region_name(), )
+        return (self.home_world.region_name(),)
 
     def get_enabled_tests(self, toggle_value: bool):
         base_tests = list()
@@ -782,7 +795,8 @@ class SoftFilterInteractionTuningData(_ToggleInteractionTuningDataBase, PythonBa
         return CompoundTestList([TestList(base_tests)])
 
 
-class _BooleanToggleInteractionTuningDataBase(_ToggleInteractionTuningDataBase, PythonBasedInteractionWithoutRegionData):
+class _BooleanToggleInteractionTuningDataBase(_ToggleInteractionTuningDataBase,
+                                              PythonBasedInteractionWithoutRegionData):
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__()
         cls._SUB_INTERACTION_CACHE = dict()

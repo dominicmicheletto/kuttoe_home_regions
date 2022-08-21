@@ -3,8 +3,9 @@
 #######################################################################################################################
 
 from snippets import define_snippet
-from sims4.tuning.tunable import AutoFactoryInit, OptionalTunable, Tunable, TunableMapping, HasTunableSingletonFactory
+from sims4.tuning.tunable import AutoFactoryInit, OptionalTunable, Tunable, TunableMapping, HasTunableFactory
 from sims4.localization import TunableLocalizedStringFactory
+from event_testing.tests import CompoundTestList
 
 
 #######################################################################################################################
@@ -22,45 +23,58 @@ class TooltipReasonMapping(TunableMapping):
         super().__init__(*args, **kwargs)
 
 
-class DisabledInteractionBehaviour(HasTunableSingletonFactory, AutoFactoryInit):
+class DisabledInteractionBehaviour(HasTunableFactory, AutoFactoryInit):
     FACTORY_TUNABLES = {
         'base': TunableLocalizedStringFactory(),
         'tooltip_reason_mapping': TooltipReasonMapping(),
     }
-    TOOLTIP_REPR_PROPERTY = '__tooltip_repr__'
 
-    @classmethod
-    def get_tooltip_from_token(cls, token):
-        return getattr(token, cls.TOOLTIP_REPR_PROPERTY, token)
-
-    def get_tooltip_reason(self, toggle_value: bool):
-        tooltip_reason = self.tooltip_reason_mapping.get(toggle_value)
+    @staticmethod
+    def get_tooltip_reason(inst, toggle_value: bool):
+        tooltip_reason = inst.tooltip_reason_mapping.get(toggle_value)
 
         return tooltip_reason() if tooltip_reason else None
 
-    def get_disabled_tooltip(self, toggle_value: bool, *additional_tokens):
-        base = self.base
-        tooltip_reason = self.get_tooltip_reason(toggle_value)
-        tooltip_tokens = (self.get_tooltip_from_token(token) for token in additional_tokens)
+    def __init__(self, toggle_value: bool, tests: CompoundTestList, additional_tokens=tuple(), *args, **kwargs):
+        self._toggle_value = toggle_value
+        self._tests = tests
+        self._additional_tokens = additional_tokens
 
-        if not base:
-            return None
-        return lambda *tokens: base(*tooltip_tokens, tooltip_reason, *tokens)
+        super().__init__(*args, **kwargs)
 
-    @staticmethod
-    def create_picker(inst, tests, toggle_value: bool, *additional_tokens, **args):
-        value = getattr(inst, 'value', inst)
+    @property
+    def toggle_value(self):
+        return self._toggle_value
 
-        if value:
-            args['enable_tests'] = tests
-            args['disable_tooltip'] = value.get_disabled_tooltip(toggle_value, *additional_tokens)
-            args['visibility_tests'] = None
-        else:
-            args['enable_tests'] = None
-            args['disable_tooltip'] = None
-            args['visibility_tests'] = tests
+    @property
+    def tests(self):
+        return self._tests
+
+    @property
+    def additional_tokens(self):
+        return self._additional_tokens
+
+    @property
+    def tooltip_reason(self):
+        return self.get_tooltip_reason(self, self.toggle_value)
+
+    def __bool__(self):
+        return self.base is not None
+
+    def __call__(self):
+        args = dict()
+        args['enable_tests'] = self.tests
+        args['disable_tooltip'] = self.get_disabled_tooltip()
 
         return args
+
+    def __iter__(self):
+        yield from iter(self().items())
+
+    def get_disabled_tooltip(self):
+        if not self:
+            return None
+        return lambda *tokens: self.base(*self.additional_tokens, self.tooltip_reason, *tokens)
 
 
 (_, DisabledInteractionBehaviourSnippet) = define_snippet('disabled_interaction_behaviour',

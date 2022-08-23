@@ -686,21 +686,28 @@ class _ToggleInteractionTuningDataBase:
 
         return construct_auto_init_factory(InteractionPickerItem, **kwargs)
 
-    def _create_picker_item(self, toggle_value: bool, *additional_args, **kwargs):
-        display_data = self.setting_value_mapping.value.get_display_data(toggle_value)
-        dib: DisabledInteractionBehaviour = getattr(self.disabled_interaction_behaviour, 'value', None)
-        tokens = self.additional_disable_token_reasons or tuple()
+    def get_display_data(self, toggle_value: bool):
+        return self.setting_value_mapping.get_display_data(toggle_value)
 
+    def get_display_data_args(self, toggle_value: bool):
+        display_data = self.get_display_data(toggle_value)
+
+        return dict(name=display_data.text, icon=display_data.pie_menu_icon)
+
+    def get_disabled_interaction_behaviour(self, toggle_value: bool):
+        dib: DisabledInteractionBehaviour = self.disabled_interaction_behaviour
+        tokens = self.additional_disable_token_reasons or tuple()
+        tests = self.get_enabled_tests(toggle_value)
+
+        if not dib:
+            return dict(visibility_tests=tests)
+        return dib.value(toggle_value, tests, tokens)
+
+    def _create_picker_item(self, toggle_value: bool, *additional_args, **kwargs):
         args = dict()
         args['continuation'] = (self._create_continuation(toggle_value, *additional_args, **kwargs),)
-        args['name'] = display_data.text
-        args['icon'] = display_data.pie_menu_icon
-
-        tests = self.get_enabled_tests(toggle_value)
-        if dib:
-            args.update(dib(toggle_value, tests, tokens))
-        else:
-            args['visibility_tests'] = tests
+        args.update(self.get_display_data_args(toggle_value))
+        args.update(self.get_disabled_interaction_behaviour(toggle_value))
 
         return self.create_picker_item(**args)
 

@@ -2,6 +2,9 @@
 #  Imports                                                                                                            #
 #######################################################################################################################
 
+# typing imports
+from typing import Set
+
 # python imports
 from functools import wraps
 
@@ -25,6 +28,10 @@ from tag import Tag
 from interactions.utils.tunable import DoCommand
 from interactions.utils.success_chance import SuccessChance
 from interactions import ParticipantType
+
+# zone modifier imports
+from zone_modifier.zone_modifier import ZoneModifier
+from zone_modifier.zone_modifier_service import ZoneModifierService
 
 # objects
 from objects.definition_manager import DefinitionManager
@@ -208,3 +215,18 @@ def create_tunable_factory_with_overrides(factory_cls, **overrides):
     tuned_values = factory_cls._tuned_values.clone_with_overrides(**overrides)
 
     return TunableFactory.TunableFactoryWrapper(tuned_values, factory_cls._name, factory_cls.factory)
+
+
+def get_zone_modifiers(zone_id: int = None) -> Set[ZoneModifier]:
+    zone_modifier_service: ZoneModifierService = services.get_zone_modifier_service()
+    zone_id = zone_id or services.current_zone_id()
+
+    return zone_modifier_service.get_zone_modifiers(zone_id, force_refresh=True)
+
+
+def does_zone_have_modifier(modifier: ZoneModifier, zone_id: int = None):
+    return modifier in get_zone_modifiers(zone_id)
+
+
+def does_zone_have_modifiers(*modifiers: ZoneModifier, num_required: int = 1, zone_id: int = None):
+    return len(get_zone_modifiers(zone_id) & set(modifiers)) >= num_required

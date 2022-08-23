@@ -2,19 +2,60 @@
 #  Imports                                                                                                            #
 #######################################################################################################################
 
+# typing imports
+from typing import Set
+
 # sims 4 imports
-from sims4.tuning.tunable import Tunable
+from sims4.tuning.tunable import Tunable, TunableSet
 from sims4.collections import frozendict
 from sims4.utils import classproperty
 
 # filter imports
 from filters.location_based_filter_terms import LocationBasedFilterTerms
 
+# zone modifier imports
+from zone_modifier.zone_modifier import ZoneModifier
+
 # misc imports
 import snippets
 
 # local imports
 from kuttoe_home_regions.home_worlds import HomeWorldIds
+from kuttoe_home_regions.utils import does_zone_have_modifiers
+
+
+#######################################################################################################################
+#  Filter Tuning                                                                                                      #
+#######################################################################################################################
+
+
+class LocationBasedFilterTermsWithLotTraitExceptions(LocationBasedFilterTerms):
+    FACTORY_TUNABLES = {
+        'lot_trait_exceptions': TunableSet(ZoneModifier.TunablePackSafeReference()),
+        'num_required': Tunable(tunable_type=int, default=1)
+    }
+
+    def __init__(self, lot_trait_exceptions: Set[ZoneModifier] = frozenset(), num_required: int = 1, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self._lot_trait_exceptions = lot_trait_exceptions
+        self._num_required = num_required
+
+    @property
+    def lot_trait_exceptions(self):
+        return self._lot_trait_exceptions
+
+    @property
+    def num_required(self):
+        return self._num_required
+
+    def is_lot_exempt(self):
+        return does_zone_have_modifiers(*self.lot_trait_exceptions, num_required=self.num_required)
+
+    def get_filter_terms(self):
+        if self.is_lot_exempt():
+            return self.default_filter_terms
+        return super().get_filter_terms()
 
 
 #######################################################################################################################
@@ -33,6 +74,7 @@ SnippetBase = vars(snippets)[snippet_name]
 
 class _DynamicFilterBase(SnippetBase):
     SOFT_FILTER_VALUE = Tunable(tunable_type=float, default=0.1)
+    LOT_TRAIT_INSTANCE = ZoneModifier.TunablePackSafeReference()
     INSTANCE_TUNABLES = {
         '_skipped_regions': HomeWorldIds.create_enum_set(optional=True),
     }
@@ -65,9 +107,8 @@ class _DynamicFilterBase(SnippetBase):
         return {key: value for (key, value) in cls._generate_value().items() if not cls.is_region_skipped(key)}
 
     @staticmethod
-    def _merge_filter_lists(old_list, new_list):
-        value = old_list.value
-        terms = dict(value.region_to_filter_terms)
+    def _merge_filter_lists(old_list: LocationBasedFilterTermsWithLotTraitExceptions, new_list: dict):
+        terms = dict(old_list.region_to_filter_terms)
 
         for (region, filter_term) in new_list.items():
             new_terms = {filter_term}
@@ -75,9 +116,12 @@ class _DynamicFilterBase(SnippetBase):
             terms[region] = tuple(new_terms)
 
         args = dict()
-        args['default_filter_terms'] = value.default_filter_terms
+        args['default_filter_terms'] = old_list.default_filter_terms
         args['region_to_filter_terms'] = frozendict(terms)
-        return LocationBasedFilterTerms(**args)
+        args['lot_trait_exceptions'] = frozenset({old_list.LOT_TRAIT_INSTANCE})
+        args['num_required'] = 1
+
+        return LocationBasedFilterTermsWithLotTraitExceptions(**args)
 
     @classmethod
     def _tuning_loaded_callback(cls):

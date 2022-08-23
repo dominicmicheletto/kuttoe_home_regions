@@ -2,7 +2,8 @@
 #  Imports                                                                                                            #
 #######################################################################################################################
 
-from typing import List, Optional, Callable, Any
+from typing import List, Optional, Callable, Any, Dict, Union
+from collections import defaultdict
 import enum
 import services
 from sims4.commands import Command, CommandType, Output
@@ -81,7 +82,7 @@ def get_notification_type_from_name(*notification_type_name, _connection=None) -
 
 def dump_data_to_file(
         file_name: str, data: dict, file_path: str = None, _connection=None,
-        file_writer: Callable[[str, Any], str]=None
+        file_writer: Callable[[Union[str, int], Any], str] = None
 ):
     from kuttoe_home_regions.settings import Settings
     from os import path

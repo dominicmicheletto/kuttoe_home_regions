@@ -1,539 +1,237 @@
-<M n="kuttoe_home_regions.home_worlds" s="16730851913995983435">
-  <C n="HomeWorldIds">
-    <T n="COMMAND_NAME_BASE">kuttoe.set_world_id</T>
-    <L n="_elements">
-      <U ev="2363457107" n="WILLOW_CREEK">
-        <T n="region_id">104064<!--region_Residential_WillowCreek--></T>
-        <T n="street_for_creation">20382</T>
-        <T n="name">0xAE8A4AE5<!--Willow Creek--></T>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_base_32">2f7d0004:00000000:e89ef5376c627d52</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_base_128">2f7d0004:00000000:a89f072d2b611ea4</T>
-              </U>
-            </V>
-          </U>
-        </L>
+<M n="kuttoe_home_regions" s="18396996985248726739">
+  <C n="HomeRegionsCommandTuning">
+    <L n="HOME_WORLD_MAPPING">
+      <U>
+        <E n="home_world">WILLOW_CREEK</E>
+        <U n="world_data">
+          <T n="pie_menu_priority">10</T>
+        </U>
       </U>
-      <U ev="711065386" n="OASIS_SPRINGS">
-        <T n="region_id">104065<!--region_Residential_OasisSprings--></T>
-        <T n="name">0x72841393<!--Oasis Springs--></T>
-        <T n="street_for_creation">23280</T>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_base_32">2f7d0004:00000000:e89ef5376c627d52</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_base_128">2f7d0004:00000000:a89f072d2b611ea4</T>
-              </U>
-            </V>
-          </U>
-        </L>
+      <U>
+        <E n="home_world">OASIS_SPRINGS</E>
+        <U n="world_data">
+          <T n="pie_menu_priority">10</T>
+        </U>
       </U>
-      <U ev="3942535331" n="NEWCREST">
-        <T n="region_id">119917<!--Region: region_Residential_Newcrest--></T>
-        <T n="name">0xCD2ADFEB<!--Newcrest--></T>
-        <T n="street_for_creation">93559</T>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_base_32">2f7d0004:00000000:e89ef5376c627d52</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_base_128">2f7d0004:00000000:a89f072d2b611ea4</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="1704446400" n="MAGNOLIA_PROMENADE">
-        <T n="region_id">108704<!--Region: region_Career_Retail--></T>
-        <T n="name">0xDA89B479<!--Magnolia Promenade--></T>
-        <T n="street_for_creation">72719</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP01</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep01_32">2f7d0004:00000000:afc4db08385d71e1</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep01_128">2f7d0004:00000000:08f89ff7c6cde189</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="3691563516" n="WINDENBURG">
-        <T n="region_id">123129<!--Region: region_Residential_NorthEurope--></T>
-        <T n="name">0x0D10C688<!--Windenburg--></T>
-        <T n="street_for_creation">101536</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP02</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep02_32">2f7d0004:00000000:967278082a360da8</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep02_128">2f7d0004:00000000:da8895dfb9d3080a</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="1075237116" n="SAN_MYSHUNO">
-        <T n="region_id">134252<!--Region: region_Residential_CityLife--></T>
-        <T n="name">0x2B5BF587<!--San Myshuno--></T>
-        <T n="street_for_creation">121286</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP03</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep03_32">2f7d0004:00000000:9ce791082d3e5667</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep03_128">2f7d0004:00000000:dbcae7e4e0e6cdbf</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="3950992577" n="FORGOTTEN_HOLLOW">
-        <T n="region_id">152175<!--Region: region_Residential_VampireWorld--></T>
-        <T n="name">0x0376C71A<!--Forgotten Hollow--></T>
-        <T n="street_for_creation">146194</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">GP04</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp04_32">2f7d0004:00000000:0a0bb34697e16190</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp04_128">2f7d0004:00000000:f33c48f413f2d1f2</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="2893613071" n="BRINDLETON_BAY">
-        <T n="region_id">166547<!--Region: region_Residential_PetWorld--></T>
-        <T n="name">0x13AC8438<!--Brindleton Bay--></T>
-        <T n="street_for_creation">164438</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP04</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep04_32">2f7d0004:00000000:c83dde0845cc421e</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep04_128">2f7d0004:00000000:0d694e0e9a1a4ed8</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="2323227531" n="DEL_SOL_VALLEY">
-        <T n="region_id">195493<!--Region: region_Residential_FameWorld--></T>
-        <T n="name">0x1F963454<!--Del Sol Valley--></T>
-        <T n="street_for_creation">201096</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP06</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep06_32">2f7d0004:00000000:b71394083c1ebb1c</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep06_128">2f7d0004:00000000:34f91dfe28329df6</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="2018586480" n="STRANGERVILLE">
-        <T n="region_id">201699<!--Region: region_Residential_Strangetown--></T>
-        <T n="name">0xE416E1D7<!--StrangerVille--></T>
-        <T n="street_for_creation">208775</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">GP07</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp07_32">2f7d0004:00000000:2437b646a6c1c649</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp07_128">2f7d0004:00000000:4c77f30d5b49f1b1</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="1893347376" n="SULANI">
-        <T n="region_id">208308<!--Region: region_Residential_IslandWorld--></T>
-        <T n="name">0xF4E5A90D<!--Sulani--></T>
-        <T n="street_for_creation">208803</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP07</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep07_32">2f7d0004:00000000:c0ef2d08420b065b</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_base_128">2f7d0004:00000000:e169500838b66c7b</T>
-              </U>
-            </V>
-          </U>
-        </L>
-        <V n="local_fixup" t="enabled">
-          <U n="enabled">
-            <L n="_traits">
-              <T>208611<!--trait_IslanderCulture_Islander--></T>
-            </L>
-          </U>
-        </V>
-      </U>
-      <U ev="100140133" n="GLIMMERBROOK">
-        <T n="region_id">216626<!--Region: region_Residential_Magic--></T>
-        <T n="name">0x1BBB2C5D<!--Glimmerbrook--></T>
-        <T n="street_for_creation">222659</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">GP08</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp08_32">2f7d0004:00000000:e96a974685f8b43c</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp08_128">2f7d0004:00000000:98cc40d5a5941596</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="2371324614" n="BRITECHESTER">
-        <T n="region_id">208814<!--Region: region_Residential_UniversityWorld--></T>
-        <T n="name">0xB46076CF<!--Britechester--></T>
-        <T n="street_for_creation">221610</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP08</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep08_32">2f7d0004:00000000:ec44fa085a9818f2</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep08_128">2f7d0004:00000000:11545631f077b5c4</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="2496862430" n="EVERGREEN_HARBOUR">
-        <T n="region_id">228200<!--Region: region_Residential_EcoWorld--></T>
-        <T n="name">0x61121B22<!--Evergreen Harbor--></T>
-        <T n="street_for_creation">235807</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP09</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep09_32">2f7d0004:00000000:f39433085e5a3ba9</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep09_128">2f7d0004:00000000:3f15503853596391</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="3002294565" n="MT_KOMOREBI">
-        <T n="region_id">238454<!--Region: region_Residential_MountainWorld--></T>
-        <T n="name">0xA13C04D8<!--Mt. Komorebi--></T>
-        <T n="street_for_creation">251669</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP10</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep10_32">2f7d0004:00000000:5c89281126e45e6b</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep10_128">2f7d0004:00000000:21667025160635cb</T>
-              </U>
-            </V>
-          </U>
-        </L>
-        <V n="local_fixup" t="enabled">
-          <U n="enabled">
-            <L n="_traits">
-              <T>246366<!--trait_Hidden_SummitLocal--></T>
-            </L>
-          </U>
-        </V>
-      </U>
-      <U ev="2650041621" n="HENFORD_ON_BAGLEY">
-        <T n="region_id">257397<!--Region: region_Residential_CottageWorld--></T>
-        <T n="name">0x38949DB2<!--Henford-on-Bagley--></T>
-        <T n="street_for_creation">263090</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP11</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep11_32">2f7d0004:00000000:51d48f112040226c</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep11_128">2f7d0004:00000000:4c4a7e19ccf45106</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="3442073656" n="TARTOSA">
-        <T n="region_id">272129<!--Region: region_Residential_WeddingWorld--></T>
-        <T n="name">0x206F092C<!--Tartosa--></T>
-        <T n="street_for_creation">287514</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">GP11</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp11_32">2f7d0004:00000000:d924b44f99c392b6</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp11_128">2f7d0004:00000000:bcf7a14247579e30</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="1812713502" n="MOONWOOD_MILL">
-        <T n="region_id">285909<!--Region: region_Residential_WolfTown--></T>
-        <T n="name">0x42F5A65B<!--Moonwood Mill--></T>
-        <T n="street_for_creation">310557</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">GP12</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp12_32">2f7d0004:00000000:d0fc834f95498cb3</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp12_128">2f7d0004:00000000:6698e33aabf41093</T>
-              </U>
-            </V>
-          </U>
-        </L>
-      </U>
-      <U ev="1634851428" n="SELVADORADA">
-        <T n="region_id">173593<!--Region: region_Destination_Jungle--></T>
-        <T n="name">0xB82F60B6<!--Selvadorada--></T>
-        <T n="street_for_creation">176581</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">GP06</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp06_32">2f7d0004:00000000:1ce8fd46a3007d12</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_gp06_128">2f7d0004:00000000:206a7906f9dab1e4</T>
-              </U>
-            </V>
-          </U>
-        </L>
-        <V n="local_fixup" t="enabled">
-          <U n="enabled">
-            <L n="_traits">
-              <T>180954<!--trait_Hidden_IsNative--></T>
-            </L>
-          </U>
-        </V>
-      </U>
-      <U ev="1505295608" n="COPPERDALE">
-        <T n="region_id">272365<!--Region: region_Residential_HighSchoolWorld--></T>
-        <T n="name">0x1F68EBD3<!--Copperdale--></T>
-        <T n="street_for_creation">290894</T>
-        <V n="pack" t="requires_pack">
-          <E n="requires_pack">EP12</E>
-        </V>
-        <L n="icon_mapping">
-          <U>
-            <E n="icon_size">SMALL</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep12_32">2f7d0004:00000000:6c0092112f208705</T>
-              </U>
-            </V>
-          </U>
-          <U>
-            <E n="icon_size">LARGE</E>
-            <V n="resource" t="resource_key">
-              <U n="resource_key">
-                <T n="key" p="icon_pack_ep12_128">2f7d0004:00000000:a5864833144ba765</T>
-              </U>
-            </V>
-          </U>
-        </L>
+      <U>
+        <E n="home_world">NEWCREST</E>
+        <U n="world_data">
+          <T n="pie_menu_priority">10</T>
+        </U>
       </U>
     </L>
+    <U n="INTERACTION_DATA">
+      <U n="command">
+        <E n="injection_target">SIM_OBJECT</E>
+        <T n="interaction_category">11674182787679442620<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_AssignWorld--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_interaction_AssignWorld</T>
+        <V n="display_tooltip" t="enabled">
+          <T n="enabled">0xA7D9AF58</T>
+        </V>
+        <V n="notification" t="enabled">
+          <V n="enabled" t="reference">
+            <T n="reference">12281041405685632424<!--Kuttoe:HomeRegions_Notification_SingleSimMoved--></T>
+          </V>
+        </V>
+      </U>
+      <U n="picker">
+        <E n="injection_target">TERRAIN_OBJECT</E>
+        <T n="interaction_category">11883946411162872063<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_AssignWorld_Multiple--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_simpicker_AssignWorld</T>
+        <V n="display_tooltip" t="enabled">
+          <T n="enabled">0x54AEA217</T>
+        </V>
+        <V n="notification" t="enabled">
+          <V n="enabled" t="reference">
+            <T n="reference">17105578458640911063<!--Kuttoe:HomeRegions_Notification_MultipleSimsMoved--></T>
+          </V>
+        </V>
+        <U n="sim_picker">
+          <V n="max_selectable" t="static_count">
+            <U n="static_count">
+              <T n="number_selectable">100</T>
+            </U>
+          </V>
+          <T n="min_choices">1</T>
+          <V n="text" t="enabled">
+            <V n="enabled" t="single">
+              <T n="display_name">0x025DED97</T>
+            </V>
+          </V>
+        </U>
+        <V n="picker_icon" t="enabled">
+          <V n="enabled" t="participant">
+            <U n="participant">
+              <L n="participant_type">
+                <E>Actor</E>
+              </L>
+            </U>
+          </V>
+        </V>
+      </U>
+      <U n="allow_world">
+        <E n="injection_target">TERRAIN_OBJECT</E>
+        <T n="interaction_category">17707535405075195193<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_Settings_AllowWorlds--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_interaction_AllowWorld</T>
+        <T n="picker_interaction_name">0x1CF177A7</T>
+        <V n="item_icon" t="use_specific">
+          <U n="use_specific">
+            <E n="icon_size">LARGE</E>
+          </U>
+        </V>
+        <V n="no_worlds_available_tooltip" t="enabled">
+          <T n="enabled">0x6B983963</T>
+        </V>
+        <V n="disabled_interaction_behaviour" t="show_interactions">
+          <U n="show_interactions">
+            <V n="disable_tooltip" t="enabled">
+              <T n="enabled">0xC639056A</T>
+            </V>
+          </U>
+        </V>
+        <U n="picker_dialog">
+          <V n="max_selectable" t="unlimited" />
+          <T n="min_choices">1</T>
+          <V n="text" t="enabled">
+            <V n="enabled" t="single">
+              <T n="single">0x9DBD26B1</T>
+            </V>
+          </V>
+        </U>
+        <V n="notification" t="enabled">
+          <V n="enabled" t="reference">
+            <T>15648705277243618868<!--Kuttoe:HomeRegions_Notification_RestartRequired--></T>
+          </V>
+        </V>
+      </U>
+      <U n="disallow_world">
+        <E n="injection_target">TERRAIN_OBJECT</E>
+        <T n="interaction_category">16603715714581714131<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_Settings_DisallowWorlds--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_interaction_DisllowWorld</T>
+        <T n="picker_interaction_name">0x3E3AE693</T>
+        <V n="item_icon" t="use_specific">
+          <U n="use_specific">
+            <E n="icon_size">LARGE</E>
+          </U>
+        </V>
+        <V n="no_worlds_available_tooltip" t="enabled">
+          <T n="enabled">0x96A6E1E7</T>
+        </V>
+        <V n="disabled_interaction_behaviour" t="show_interactions">
+          <U n="show_interactions">
+            <V n="disable_tooltip" t="enabled">
+              <T n="enabled">0xDFFF9D02</T>
+            </V>
+          </U>
+        </V>
+        <U n="picker_dialog">
+          <V n="max_selectable" t="unlimited" />
+          <T n="min_choices">1</T>
+          <V n="text" t="enabled">
+            <V n="enabled" t="single">
+              <T n="single">0xC9B1750</T>
+            </V>
+          </V>
+        </U>
+        <V n="notification" t="enabled">
+          <V n="enabled" t="reference">
+            <T>15648705277243618868<!--Kuttoe:HomeRegions_Notification_RestartRequired--></T>
+          </V>
+        </V>
+      </U>
+      <U n="soft_filter">
+        <E n="injection_target">TERRAIN_OBJECT</E>
+        <T n="interaction_category">9873996288832809619<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_Settings_SoftToggle--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_interaction_SoftToggle</T>
+        <U n="picker_dialog">
+          <T n="min_choices">1</T>
+          <V n="text" t="enabled">
+            <V n="enabled" t="single">
+              <T n="single">0x342B134B</T>
+            </V>
+          </V>
+        </U>
+        <V n="disabled_interaction_behaviour" t="show_interactions">
+          <V n="show_interaction" t="reference">
+            <T n="reference">16122069398769179060<!--Kuttoe:HomeRegions_DisabledInteractionBehaviour_SoftFilter--></T>
+          </V>
+        </V>
+        <V n="setting_value_mapping" t="reference">
+          <T n="reference">16134253201676531717<!--Kuttoe:HomeRegions_ToggleSettingValueMapping--></T>
+        </V>
+        <V n="notification" t="enabled">
+          <V n="enabled" t="reference">
+            <T>15648705277243618868<!--Kuttoe:HomeRegions_Notification_RestartRequired--></T>
+          </V>
+        </V>
+      </U>
+    </U>
+    <U n="SETTING_DATA">
+      <U n="high_school_toggle">
+        <E n="injection_target">TERRAIN_OBJECT</E>
+        <T n="interaction_category">14225616373263080812<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_Settings--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_interaction_HighSchoolToggle</T>
+        <T n="command_name">kuttoe.toggle_high_school</T>
+        <T n="interaction_display_name">0x3860C08C</T>
+        <U n="picker_dialog">
+          <T n="min_choices">1</T>
+          <V n="text" t="enabled">
+            <V n="enabled" t="single">
+              <T n="single">0x7D08967F</T>
+            </V>
+          </V>
+        </U>
+        <V n="pie_menu_icon" t="enabled">
+          <V n="enabled" t="resource_key">
+            <U n="resource_key">
+              <T n="key" p="Career_HighSchool_Main_piemenu.png">2f7d0004:00000000:0270b2591abc75b4</T>
+            </U>
+          </V>
+        </V>
+        <V n="disabled_interaction_behaviour" t="show_interactions">
+          <V n="show_interactions" t="reference">
+            <T n="reference">14186044381240881374<!--Kuttoe:HomeRegions_DisabledInteractionBehaviour_HighSchoolToggle--></T>
+          </V>
+        </V>
+        <V n="setting_value_mapping" t="reference">
+          <T n="reference">16134253201676531717<!--Kuttoe:HomeRegions_ToggleSettingValueMapping--></T>
+        </V>
+        <V n="notification" t="enabled">
+          <V n="enabled" t="reference">
+            <T>15648705277243618868<!--Kuttoe:HomeRegions_Notification_RestartRequired--></T>
+          </V>
+        </V>
+      </U>
+      <U n="bidirectional_toggle">
+        <E n="injection_target">TERRAIN_OBJECT</E>
+        <T n="interaction_category">14225616373263080812<!--Kuttoe:KeepInHomeRegion_pieMenuCategory_Settings--></T>
+        <T n="interaction_name_base">Kuttoe:KeepInHomeRegion_interaction_BidirectionalToggle</T>
+        <T n="command_name">kuttoe.toggle_bidirectional</T>
+        <T n="interaction_display_name">0x11D72D35</T>
+        <U n="picker_dialog">
+          <T n="min_choices">1</T>
+          <V n="text" t="enabled">
+            <V n="enabled" t="single">
+              <T n="single">0x5FD4DBCA</T>
+            </V>
+          </V>
+        </U>
+        <V n="pie_menu_icon" t="enabled">
+          <V n="enabled" t="resource_key">
+            <U n="resource_key">
+              <T n="key" p="Kuttoe:Bidirectional_icon.png">2f7d0004:00000000:D529C2B829ADCBC8</T>
+            </U>
+          </V>
+        </V>
+        <V n="disabled_interaction_behaviour" t="show_interactions">
+          <V n="show_interactions" t="reference">
+            <T n="reference">16526721782966104839<!--Kuttoe:HomeRegions_DisabledInteractionBehaviour_BidirectionalToggle--></T>
+          </V>
+        </V>
+        <V n="setting_value_mapping" t="reference">
+          <T n="reference">16134253201676531717<!--Kuttoe:HomeRegions_ToggleSettingValueMapping--></T>
+        </V>
+      </U>
+    </U>
   </C>
 </M>

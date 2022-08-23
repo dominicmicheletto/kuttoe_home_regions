@@ -2,5 +2,6 @@
 <M n="kuttoe_home_regions.filters" s="12884297069496339741">
   <C n="_DynamicFilterBase">
     <T n="SOFT_FILTER_VALUE">0.1</T>
+    <T n="LOT_TRAIT_INSTANCE">11017126125179890103<!--Kuttoe:HomeRegions_zoneModifier_lotTrait_TouristTrap--></T>
   </C>
 </M>

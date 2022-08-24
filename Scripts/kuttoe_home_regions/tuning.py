@@ -43,15 +43,14 @@ from kuttoe_home_regions.home_worlds import HomeWorldIds, TunableIconDefinition
 from kuttoe_home_regions.commands import AlterType
 from kuttoe_home_regions.ui import InteractionType, NotificationType
 from kuttoe_home_regions.tests import _TestSetMixin
-from kuttoe_home_regions.interactions import _DisplayNotificationMixin, \
-    NotificationToggleSettingImmediateSuperInteraction
+from kuttoe_home_regions.interactions import _DisplayNotificationMixin
 from kuttoe_home_regions.interactions import HomeWorldPickerInteraction, WorldListPickerInteraction
 from kuttoe_home_regions.interactions import CommandImmediateSuperInteraction, AlterWorldListImmediateSuperInteraction
 from kuttoe_home_regions.interactions import SoftTogglePickerInteraction, ToggleSettingImmediateSuperInteraction
-from kuttoe_home_regions.interactions import BooleanSettingTogglePickerInteraction, \
-    BooleanToggleSettingImmediateSuperInteraction
-from kuttoe_home_regions.disabled_interation_behaviour import TunableDisabledInteractionBehaviourSnippet, \
-    DisabledInteractionBehaviour
+from kuttoe_home_regions.interactions import BooleanSettingTogglePickerInteraction
+from kuttoe_home_regions.interactions import BooleanToggleSettingImmediateSuperInteraction
+from kuttoe_home_regions.disabled_interation_behaviour import TunableDisabledInteractionBehaviourSnippet
+from kuttoe_home_regions.disabled_interation_behaviour import DisabledInteractionBehaviour
 from kuttoe_home_regions.setting_value_mapping import TunableSettingValue
 
 #######################################################################################################################

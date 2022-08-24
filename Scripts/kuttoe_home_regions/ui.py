@@ -3,11 +3,16 @@
 #######################################################################################################################
 
 # python imports
-from collections import namedtuple
+from collections import namedtuple, defaultdict
+from typing import Dict
 
 # miscellaneous
 import enum
 from snippets import define_snippet
+
+# sim imports
+from sims.sim_info import SimInfo
+from sims.sim_info_types import Gender
 
 # interaction imports
 from interactions import ParticipantType
@@ -111,29 +116,45 @@ class Notification(HasTunableFactory, AutoFactoryInit):
                                    invalid_enums=(NotificationColour.INVALID, )),
     }
 
+    @staticmethod
+    def _sort_sim_infos(*sim_infos: SimInfo):
+        if len(sim_infos) <= 2:
+            return sim_infos
+
+        sims: Dict[Gender, list] = defaultdict(list)
+        for sim_info in sim_infos:
+            sims[sim_info.gender].append(sim_info)
+
+        sims_list = list()
+        if Gender.FEMALE in sims:
+            sims_list.append(sims[Gender.FEMALE].pop())
+        sims_list.extend(sims[Gender.MALE])
+        sims_list.extend(sims[Gender.FEMALE])
+        return tuple(sims_list)
+
     def __init__(
             self,
             interaction: ImmediateSuperInteraction,
             interaction_type: InteractionType,
-            additional_tokens=(),
+            sim_infos=(),
             *args, **kwargs
     ):
         super().__init__(*args, **kwargs)
         self._interaction = interaction
         self._interaction_type = interaction_type
-        self._additional_tokens = additional_tokens or tuple()
+        self._sim_infos = self._sort_sim_infos(*sim_infos)
 
     @property
     def interaction_type(self):
         return self._interaction_type
 
     @property
-    def additional_tokens(self):
-        return self.additional_tokens
+    def has_sim_infos(self):
+        return bool(self.sim_infos)
 
     @property
-    def has_additional_tokens(self):
-        return bool(self.additional_tokens)
+    def sim_infos(self):
+        return self._sim_infos
 
     @property
     def interaction(self):
@@ -153,12 +174,18 @@ class Notification(HasTunableFactory, AutoFactoryInit):
         return self.get_participant() or self.get_participant(ParticipantType.Actor)
 
     @property
+    def sim_name_list(self):
+        sim_names = tuple(LocalizationHelperTuning.get_sim_full_name(sim_info) for sim_info in self.sim_infos)
+
+        return LocalizationHelperTuning.get_bulleted_list(None, *sim_names)
+
+    @property
     def tokens(self):
         display_name = self.interaction.display_name()
 
         if self._interaction_type == InteractionType.PICKER:
-            count = len(self._additional_tokens)
-            return count, display_name, LocalizationHelperTuning.get_bulleted_list(None, *self._additional_tokens)
+            count = len(self.sim_infos)
+            return (count, display_name, self.sim_name_list, *self.sim_infos)
         return self.recipient, display_name
 
     @property
@@ -175,13 +202,15 @@ class Notification(HasTunableFactory, AutoFactoryInit):
     def colour_properties(self) -> dict:
         return self.colour.as_dict
 
+    def _get_text_with_tokens(self, attr_name: str):
+        attr = getattr(self, attr_name, None)
+        return (lambda *tokens: attr(*self.tokens, *tokens)) if attr else None
+
     @property
     def params(self):
-        text = self.text(*self.tokens)
-
         params = dict()
-        params['text'] = lambda *_, **__: text
-        params['title'] = self.title
+        params['text'] = self._get_text_with_tokens('text')
+        params['title'] = self._get_text_with_tokens('title')
         params['icon'] = self.notification_icon
         params.update(self.colour_properties)
 
@@ -192,4 +221,6 @@ class Notification(HasTunableFactory, AutoFactoryInit):
         return UiDialogNotification.TunableFactory().default(None, resolver=self.resolver, **self.params)
 
 
-(TunableNotificationSnippetReference, TunableNotificationSnippet) = define_snippet('custom_notification', Notification.TunableFactory())
+(
+    TunableNotificationSnippetReference, TunableNotificationSnippet
+) = define_snippet('custom_notification', Notification.TunableFactory())

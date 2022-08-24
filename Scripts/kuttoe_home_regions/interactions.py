@@ -9,7 +9,6 @@ import services
 from sims4.utils import classproperty
 from sims4.tuning.tunable import OptionalTunable, TunableEnumEntry, Tunable, TunableRange
 from sims4.tuning.instances import lock_instance_tunables
-from sims4.localization import LocalizationHelperTuning
 from sims4.commands import execute as execute_command
 
 # interaction imports
@@ -47,13 +46,13 @@ class _DisplayNotificationMixin:
     def dialog(self):
         return getattr(self.notification, 'value', None)
 
-    def display_notification(self, *additional_tokens, notification_type=NotificationType.SUCCESS):
+    def display_notification(self, *sim_infos, notification_type=NotificationType.SUCCESS):
         from kuttoe_home_regions.settings import Settings
 
         if not self.has_notification or not Settings.should_show_notification[notification_type]:
             return
 
-        dialog = self.dialog(self, self.interaction_type, additional_tokens=additional_tokens).dialog
+        dialog = self.dialog(self, self.interaction_type, sim_infos=sim_infos).dialog
         dialog.show_dialog()
 
 
@@ -97,13 +96,13 @@ class HomeWorldPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixi
         return services.client_manager().get_first_client_id()
 
     @staticmethod
-    def create_sim_token(sim_id):
+    def get_sim_info(sim_id: int):
         manager: SimInfoManager = services.sim_info_manager()
-        return LocalizationHelperTuning.get_sim_full_name(manager.get(sim_id))
+        return manager.get(sim_id)
 
     @classmethod
-    def create_tokens_list(cls, *sim_ids):
-        return tuple(cls.create_sim_token(sim_id) for sim_id in sim_ids)
+    def get_sim_infos(cls, *sim_ids: int):
+        return tuple(cls.get_sim_info(sim_id) for sim_id in sim_ids)
 
     def _push_continuations(self, *args, **kwargs):
         sim_ids = args[0]
@@ -113,7 +112,7 @@ class HomeWorldPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixi
         self._set_inventory_carry_target()
         super()._push_continuations(*args, **kwargs)
 
-        self.display_notification(*self.create_tokens_list(*sim_ids))
+        self.display_notification(*self.get_sim_infos(*sim_ids))
 
 
 class WorldListPickerInteraction(_DisplayNotificationMixin, _TargetHomeWorldMixin, _PieMenuPriorityMixin, InteractionPickerSuperInteraction):

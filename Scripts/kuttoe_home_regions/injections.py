@@ -1,9 +1,12 @@
 #######################################################################################################################
 #  Imports                                                                                                            #
 #######################################################################################################################
+from collections import defaultdict
+from itertools import chain
+from typing import Dict
 
 # sims4 imports
-from sims4.utils import classproperty
+from sims4.utils import classproperty, constproperty
 from sims4.resources import Types
 from sims4.tuning.instance_manager import InstanceManager
 from sims4.collections import frozendict
@@ -124,12 +127,20 @@ class FilterToSituationJobMapping(TunableMapping):
         super().__init__(*args, **kwargs)
 
 
+class BypassListType(enum.Int):
+    NONE = 0
+    GLOBAL = 1
+    SOFT = 2
+
+
 class HighSchoolSituationBypassMapping(TunableMapping):
     def __init__(self, *args, **kwargs):
         kwargs['key_name'] = 'job'
         kwargs['key_type'] = SituationJob.TunablePackSafeReference()
-        kwargs['value_name'] = 'add_to_global_bypass_list'
-        kwargs['value_type'] = Tunable(tunable_type=bool, default=True, allow_empty=True)
+        # kwargs['value_name'] = 'add_to_global_bypass_list'
+        # kwargs['value_type'] = Tunable(tunable_type=bool, default=True, allow_empty=True)
+        kwargs['value_name'] = 'bypass_list'
+        kwargs['value_type'] = TunableEnumEntry(tunable_type=BypassListType, default=BypassListType.GLOBAL)
 
         super().__init__(*args, **kwargs)
 
@@ -141,21 +152,29 @@ class HighSchoolSituationJobsInfo(HasTunableFactory, AutoFactoryInit):
         'whitelist': TunableSet(tunable=SituationJob.TunablePackSafeReference()),
     }
 
+    @constproperty
+    def manager() -> InstanceManager:
+        return get_instance_manager(Types.SITUATION_JOB)
+
+    def _build_blacklisted_situations_jobs(self):
+        situations_lists: Dict[BypassListType, set] = defaultdict(set)
+
+        for (job, bypass_list_type) in self.blacklist.items():
+            if not job or bypass_list_type == BypassListType.NONE:
+                continue
+
+            situations_lists[bypass_list_type].add(job)
+
+        return situations_lists
+
     def __init__(self, toggle_value: bool, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._toggle_value = toggle_value
+        self._blacklisted_situations_jobs = self._build_blacklisted_situations_jobs()
 
     @property
     def toggle_value(self):
         return self._toggle_value
-
-    @property
-    def blacklisted_situation_jobs(self):
-        return {job for (job, add_to_list) in self.blacklist.items() if job is not None and add_to_list}
-
-    @property
-    def manager(self) -> InstanceManager:
-        return get_instance_manager(Types.SITUATION_JOB)
 
     def _does_situation_job_match(self, situation_job):
         situation_job_name = str(situation_job)
@@ -171,13 +190,30 @@ class HighSchoolSituationJobsInfo(HasTunableFactory, AutoFactoryInit):
 
         return {situation_job for situation_job in situation_jobs if situation_job is not None}
 
+    @property
+    def blacklisted_situation_jobs(self):
+        return self._blacklisted_situations_jobs
+
+    @property
+    def all_blacklisted_situation_jobs(self):
+        return set(chain.from_iterable(self._blacklisted_situations_jobs.values()))
+
+    @property
+    def softly_bypassed_jobs(self):
+        return self.blacklisted_situation_jobs[BypassListType.SOFT]
+
+    @property
+    def globally_bypassed_jobs(self):
+        return self.blacklisted_situation_jobs[BypassListType.GLOBAL]
+
     def __bool__(self):
         return self.toggle_value
 
     def __call__(self):
-        blacklisted_situation_jobs = self.blacklisted_situation_jobs
+        blacklisted_situation_jobs = self.all_blacklisted_situation_jobs
+        situations_list = self.build_situation_jobs_list()
 
-        return blacklisted_situation_jobs if self else self.build_situation_jobs_list() - blacklisted_situation_jobs
+        return blacklisted_situation_jobs if self else situations_list.difference(blacklisted_situation_jobs)
 
 
 class SituationJobModifications:
@@ -204,7 +240,9 @@ class SituationJobModifications:
 
     @classproperty
     def soft_list(cls):
-        return {situation_job for situation_job in cls.SOFT_LIST if situation_job is not None}
+        primary_list = {situation_job for situation_job in cls.SOFT_LIST if situation_job is not None}
+
+        return primary_list | cls.high_school_situation_jobs_info.softly_bypassed_jobs
 
     @classproperty
     def bypass_list(cls):

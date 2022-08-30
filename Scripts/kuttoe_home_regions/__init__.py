@@ -16,7 +16,6 @@ from sims4.commands import Command, CommandType
 
 # local imports
 from kuttoe_home_regions.home_worlds import HomeWorldIds
-from kuttoe_home_regions.tuning import InteractionType, TunableInteractionName, InteractionRegistryData
 from kuttoe_home_regions.tuning import InteractionData, InteractionWithoutRegionData
 from kuttoe_home_regions.settings import Settings
 from kuttoe_home_regions.commands import kuttoe_set_world_id

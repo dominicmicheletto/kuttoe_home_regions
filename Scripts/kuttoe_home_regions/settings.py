@@ -17,7 +17,7 @@ from sims4.commands import Command, CommandType
 
 # local imports
 from kuttoe_home_regions.home_worlds import HomeWorldIds
-from kuttoe_home_regions.tuning import TunableInteractionName
+from kuttoe_home_regions.tunable import TunableInteractionName
 from kuttoe_home_regions.ui import NotificationType
 
 
@@ -336,4 +336,3 @@ class Settings:
         new_value = setting_value if setting_value is not None else not cls.settings[setting_key]
         cls.update_setting(setting_key, new_value)
         return new_value
-

@@ -182,7 +182,7 @@ class NotificationSettingsPickerInteraction(PickerSuperInteraction, DisplayNotif
             yield inst_or_cls.create_row(resolver, notification_type)
 
     def _run_interaction_gen(self, timeline):
-        self._show_picker_dialog(self.sim, target_sim=self.sim)
+        self._show_picker_dialog(None, target_sim=self.sim)
 
         yield from super()._run_interaction_gen(timeline)
 

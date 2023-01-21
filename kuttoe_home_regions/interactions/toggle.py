@@ -55,7 +55,7 @@ class ToggleSuperInteraction(PickerSuperInteraction, DisplayNotificationMixin):
         yield from inst_or_cls.toggle_items(cls.setting_key).picker_rows_gen(resolver)
 
     def _run_interaction_gen(self, timeline):
-        self._show_picker_dialog(self.sim, target_sim=self.sim)
+        self._show_picker_dialog(None, target_sim=self.sim)
 
         return True
 

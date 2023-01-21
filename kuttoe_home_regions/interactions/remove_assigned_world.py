@@ -72,5 +72,9 @@ class RemoveAssignedWorldPickerSuperInteration(SimPickerInteraction, DisplayNoti
         pass
 
 
+#######################################################################################################################
+#  Instance Tunable Locking                                                                                           #
+#######################################################################################################################
+
 lock_instance_tunables(RemoveAssignedWorldImmediateSuperInteraction, interaction_type=InteractionType.COMMAND)
 lock_instance_tunables(RemoveAssignedWorldPickerSuperInteration, interaction_type=InteractionType.PICKER)

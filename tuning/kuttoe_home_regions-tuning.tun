@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<M n="kuttoe_home_regions.tuning" s="9506752340397300767">
-  <C n="_WorldListInteractionTuningDataBase">
-    <T n="BIDIRECTIONAL_TOGGLE_TOKEN">0x569E0240</T>
-    <T n="ENABLED_TOKEN">0x45073D12</T>
-    <T n="DISABLED_TOKEN">0x4370CF7F</T>
-  </C>
-</M>

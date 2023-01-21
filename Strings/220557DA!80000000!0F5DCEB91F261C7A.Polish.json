@@ -1,0 +1,194 @@
+[
+  {
+    "key": "0x153ED851",
+    "value": "Przenieś Miastowego do"
+  },
+  {
+    "key": "0xD3352EA0",
+    "value": "Przenieś Miastowych do"
+  },
+  {
+    "key": "0xA7D9AF58",
+    "value": "Przenosi rodzinę tego Sima do {0.String}. Nie ma wpływu na Simów już mieszkających w domu."
+  },
+  {
+    "key": "0x0DC8628E",
+    "value": "Ten Sim już tu mieszka!"
+  },
+  {
+    "key": "0x63D8438C",
+    "value": "Ten Sim ma dom!"
+  },
+  {
+    "key": "0xD419A218",
+    "value": "Sim Przeniesiony"
+  },
+  {
+    "key": "0x23E5291F",
+    "value": "{0.SimName} został pomyślnie przeniesiony do <strong><u>{1.String}</u></strong>."
+  },
+  {
+    "key": "0x22534F94",
+    "value": "{S0.Jeden Sim został}{P0.Liczba {0.Number} Simów została} pomyślnie przeniesion{S0.y}{P0.a} do <strong><u>{1.String}</u></strong>, w tym:\\n{2.String}"
+  },
+  {
+    "key": "0x12107DE4",
+    "value": "Simowie Przeniesieni"
+  },
+  {
+    "key": "0x025DED97",
+    "value": "Wybierz Simów, którzy mają się przenieść do wybranego Świata. Dotyczy to również wszystkich członków ich gospodarstw domowych."
+  },
+  {
+    "key": "0x54AEA217",
+    "value": "Przenosi jednego lub więcej Simów do {0.String}. Wpływa również na wszystkich Simów w ich gospodarstwach domowych."
+  },
+  {
+    "key": "0xADB3D60D",
+    "value": "Wymaga ponownego uruchomienia!"
+  },
+  {
+    "key": "0xF86BCFB7",
+    "value": "Zmiana ustawień dla <b>Regionów Domowych</b> wymaga ponownego uruchomienia gry, aby zaczęła działać!"
+  },
+  {
+    "key": "0x1CF177A7",
+    "value": "Pozwól Simom w {0.String}"
+  },
+  {
+    "key": "0x4B800535",
+    "value": "Nie zezwalaj Simom z {0.String} w"
+  },
+  {
+    "key": "0x75E38E4E",
+    "value": "Ustawienia Regionów Domowych"
+  },
+  {
+    "key": "0x2CC211FC",
+    "value": "Dozwolone światy"
+  },
+  {
+    "key": "0xC639056A",
+    "value": "{0.String} jest już na liście dozwolonych światów {1.String}!"
+  },
+  {
+    "key": "0x9DBD26B1",
+    "value": "\\nWybierz jeden lub więcej Światów, aby Simowie z nich mogli pojawić się w <b><u>{0.String}</u></b>."
+  },
+  {
+    "key": "0xF1D8808D",
+    "value": "Niedozwolone Światy"
+  },
+  {
+    "key": "0x3E3AE693",
+    "value": "Wyłączenie Simów w {0.String}"
+  },
+  {
+    "key": "0xDFFF9D02",
+    "value": "{0.String} nie znajduje się na liście dozwolonych światów {1.String}!"
+  },
+  {
+    "key": "0x0C9B1750",
+    "value": "\\nWybierz jeden lub więcej światów, aby Simowie nie pojawiali się w <b><u>{0.String}</u></b>."
+  },
+  {
+    "key": "0x6B983963",
+    "value": "{0.String} już pozwala Simom ze wszystkich Światów."
+  },
+  {
+    "key": "0x96A6E1E7",
+    "value": "{0.String} nie dopuszcza obecnie Simów z żadnego innego Świata."
+  },
+  {
+    "key": "0x00E352C0",
+    "value": "Przełącznik filtra miękkiego"
+  },
+  {
+    "key": "0x25DF474D",
+    "value": "Włącz"
+  },
+  {
+    "key": "0x08886346",
+    "value": "Wyłącz"
+  },
+  {
+    "key": "0xFC2671C4",
+    "value": "Miękki filtr {0.String} jest już {1.String}!"
+  },
+  {
+    "key": "0x9E41F7CE",
+    "value": "Włącz"
+  },
+  {
+    "key": "0xFE2589FB",
+    "value": "Wyłącz"
+  },
+  {
+    "key": "0x342B134B",
+    "value": "Określ, czy {0.String} ma nałożony na siebie \"miękki filtr\", czy nie."
+  },
+  {
+    "key": "0x569E0240",
+    "value": "{0.String}\\n\\n<b>Informacja:</b> Dwukierunkowość jest obecnie wyłączona <b>{1.String}</b>."
+  },
+  {
+    "key": "0x45073D12",
+    "value": "Wł"
+  },
+  {
+    "key": "0x4370CF7F",
+    "value": "Wył"
+  },
+  {
+    "key": "0x7DEBD073",
+    "value": "Pula Simów dostępnych dla Liceum wynosi obecnie {0,String}!"
+  },
+  {
+    "key": "0x34B7F1A3",
+    "value": "Ograniczenie do Copperdale"
+  },
+  {
+    "key": "0x8A521D26",
+    "value": "Bez Ograniczeń"
+  },
+  {
+    "key": "0x3860C08C",
+    "value": "Przełącznik Szkoły Średniej"
+  },
+  {
+    "key": "0x7D08967F",
+    "value": "Gdy włączone, tylko Simowie dopuszczeni w Copperdale będą uczęszczać do Liceum.\\n\\nGdy wyłączone, Simowie ze wszystkich światów będą uczęszczać do Liceum."
+  },
+  {
+    "key": "0x11D72D35",
+    "value": "Przełącznik Dwukierunkowy"
+  },
+  {
+    "key": "0x5FD4DBCA",
+    "value": "Umożliwia zastosowanie filtru regionalnego w obie strony podczas dopuszczania lub niedopuszczania Światów."
+  },
+  {
+    "key": "0x70E89FF5",
+    "value": "Przełącznik Dwukierunkowy jest już obecnie {0.String}!"
+  },
+  {
+    "key": "0x5F3D84A5",
+    "value": "Miastowy Przeniesiony"
+  },
+  {
+    "key": "0x890894EC",
+    "value": "Ustawienie zmienione"
+  },
+  {
+    "key": "0x1EB643E4",
+    "value": "Powiadomienia dla {1.String} są obecnie {0.String}!"
+  },
+  {
+    "key": "0xA5D8E465",
+    "value": "Centrum Międzynarodowe"
+  },
+  {
+    "key": "0x9DC29ABA",
+    "value": "Ta partia jest bardzo dobrze urozmaicona, pojawią się tu Simowie z całego Świata.\\n\\nFiltry regionu domowego nie mają zastosowania do tej partii."
+  }
+]

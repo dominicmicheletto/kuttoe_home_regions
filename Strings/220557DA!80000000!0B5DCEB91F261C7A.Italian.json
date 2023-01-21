@@ -1,0 +1,194 @@
+[
+  {
+    "key": "0x153ED851",
+    "value": "Trasferisci il cittadino a"
+  },
+  {
+    "key": "0xD3352EA0",
+    "value": "Trasferisci i cittadini a"
+  },
+  {
+    "key": "0xA7D9AF58",
+    "value": "Trasferisci l'unità familiare di questo Sim a {0.String}. Non avrà effetti sui Sim che vivono già nella casa."
+  },
+  {
+    "key": "0x0DC8628E",
+    "value": "Questo Sim vive già lì!"
+  },
+  {
+    "key": "0x63D8438C",
+    "value": "Questo Sim ha una casa!"
+  },
+  {
+    "key": "0xD419A218",
+    "value": "Sim trasferito"
+  },
+  {
+    "key": "0x23E5291F",
+    "value": "{0.SimName} è stat{M0.o}{F0.a} trasferit{M0.o}{F0.a} con successo a <strong><u>{1.String}</u></strong>."
+  },
+  {
+    "key": "0x22534F94",
+    "value": "{S0.Un Sim è stato}{P0.Tutti e {0.Number} i Sim sono stati} trasferit{S0.o}{P0.i} con successo a <strong><u>{1.String}</u></strong>, includendo:\\n{2.String}"
+  },
+  {
+    "key": "0x12107DE4",
+    "value": "Sim trasferiti"
+  },
+  {
+    "key": "0x025DED97",
+    "value": "Seleziona i Sim da trasferire nel mondo selezionato. Avrà effetto anche sui membri delle loro unità familiari."
+  },
+  {
+    "key": "0x54AEA217",
+    "value": "Trasferisci uno o più Sim a {0.String}. Influenzerà anche i Sim delle loro unità familiari."
+  },
+  {
+    "key": "0xADB3D60D",
+    "value": "Richiede il riavvio!"
+  },
+  {
+    "key": "0xF86BCFB7",
+    "value": "Cambiare le impostazioni della mod <b>Home Regions</b> richiede il riavvio del gioco affinché le modifiche abbiano effetto!"
+  },
+  {
+    "key": "0x1CF177A7",
+    "value": "Permetti i Sim a {0.String}"
+  },
+  {
+    "key": "0x4B800535",
+    "value": "Disattiva i Sim di {0.String} a"
+  },
+  {
+    "key": "0x75E38E4E",
+    "value": "Impostazioni Home Regions"
+  },
+  {
+    "key": "0x2CC211FC",
+    "value": "Mondi permessi"
+  },
+  {
+    "key": "0xC639056A",
+    "value": "{0.String} è già nella lista di mondi approvati di {1.String}!"
+  },
+  {
+    "key": "0x9DBD26B1",
+    "value": "\\nScegli uno o più mondi in cui i Sim che vivono lì possano apparire a <b><u>{0.String}</u></b>."
+  },
+  {
+    "key": "0xF1D8808D",
+    "value": "Mondi disattivati"
+  },
+  {
+    "key": "0x3E3AE693",
+    "value": "Disattiva i Sim in {0.String}"
+  },
+  {
+    "key": "0xDFFF9D02",
+    "value": "{0.String} non è permesso nella lista dei mondi di {1.String}!"
+  },
+  {
+    "key": "0x0C9B1750",
+    "value": "\\nScegli uno o più mondi affinché i Sim non compaiano lì <b><u>{0.String}</u></b>."
+  },
+  {
+    "key": "0x6B983963",
+    "value": "{0.String} permette già visite dai Sim di tutti i mondi."
+  },
+  {
+    "key": "0x96A6E1E7",
+    "value": "{0.String} attualmente non permette visite di Sim dagli altri mondi."
+  },
+  {
+    "key": "0x00E352C0",
+    "value": "Opzione per il Filtro Leggero"
+  },
+  {
+    "key": "0x25DF474D",
+    "value": "Attivato"
+  },
+  {
+    "key": "0x08886346",
+    "value": "Disattivato"
+  },
+  {
+    "key": "0xFC2671C4",
+    "value": "Il filtro di {0.String} è già stato attivato {1.String}!"
+  },
+  {
+    "key": "0x9E41F7CE",
+    "value": "attivato"
+  },
+  {
+    "key": "0xFE2589FB",
+    "value": "disattivato"
+  },
+  {
+    "key": "0x342B134B",
+    "value": "Determina se {0.String} ha o meno il \"filtro leggero\" applicato."
+  },
+  {
+    "key": "0x569E0240",
+    "value": "{0.String}\\n\\n<b>Nota:</b> La bidirezionalità è attualmente impostata su <b>{1.String}</b>."
+  },
+  {
+    "key": "0x45073D12",
+    "value": "attivo"
+  },
+  {
+    "key": "0x4370CF7F",
+    "value": "spento"
+  },
+  {
+    "key": "0x7DEBD073",
+    "value": "Il numero di Sim disponibili per il Liceo è attualmente {0.String}!"
+  },
+  {
+    "key": "0x34B7F1A3",
+    "value": "ristretto a Copperdale"
+  },
+  {
+    "key": "0x8A521D26",
+    "value": "non ristretto"
+  },
+  {
+    "key": "0x3860C08C",
+    "value": "Opzione per il Liceo"
+  },
+  {
+    "key": "0x7D08967F",
+    "value": "Quando è attivo, solamente i Sim che possono visitare Copperdale frequenteranno il Liceo.\\n\\nQuando è disattivato, tutti i Sim dei vari mondi frequenteranno il Liceo."
+  },
+  {
+    "key": "0x11D72D35",
+    "value": "Opzione Bidirezionale"
+  },
+  {
+    "key": "0x5FD4DBCA",
+    "value": "Ti permette di applicare un filtro regionale in entrambe le direzione quando si attivano o disattivano i Mondi."
+  },
+  {
+    "key": "0x70E89FF5",
+    "value": "L'opzione bidirezionale è già attiva in {0.String}!"
+  },
+  {
+    "key": "0x5F3D84A5",
+    "value": "Cittadino trasferito"
+  },
+  {
+    "key": "0x890894EC",
+    "value": "Impostazione cambiata"
+  },
+  {
+    "key": "0x1EB643E4",
+    "value": "Le notifiche per {1.String} sono attualmente {0.String}!"
+  },
+  {
+    "key": "0xA5D8E465",
+    "value": "Centro Internazionale"
+  },
+  {
+    "key": "0x9DC29ABA",
+    "value": "Questo lotto è molto trafficato, i Sim da tutto il globo lo visiteranno.\\n\\nI filtri della mod Home Region non possono essere applicati a questo lotto."
+  }
+]

@@ -1,0 +1,194 @@
+[
+  {
+    "key": "0x153ED851",
+    "value": "Mover Townie para"
+  },
+  {
+    "key": "0xD3352EA0",
+    "value": "Mover Townies para"
+  },
+  {
+    "key": "0xA7D9AF58",
+    "value": "Move a família deste Sim para {0.String}. Não tem efeito em Sims que já moram em uma casa."
+  },
+  {
+    "key": "0x0DC8628E",
+    "value": "Este Sim já mora lá!"
+  },
+  {
+    "key": "0x63D8438C",
+    "value": "Este Sim tem uma casa!"
+  },
+  {
+    "key": "0xD419A218",
+    "value": "Sim movido"
+  },
+  {
+    "key": "0x23E5291F",
+    "value": "{0.SimName} foi movido com sucesso para <strong><u>{1.String}</u></strong>."
+  },
+  {
+    "key": "0x22534F94",
+    "value": "{S0.Um Sim {P0.Todos os {0.Number} Sims} foram movidos com sucesso para <strong><u>{1.String}</u></strong>, incluindo:\\n{2.String}"
+  },
+  {
+    "key": "0x12107DE4",
+    "value": "Sims movidos"
+  },
+  {
+    "key": "0x025DED97",
+    "value": "Escolha Sims para se mover para o mundo selecionado. Isso também afeta todos os membros de suas famílias."
+  },
+  {
+    "key": "0x54AEA217",
+    "value": "Move um ou mais Sims para {0.String}. Também afeta todos os Sims em suas famílias."
+  },
+  {
+    "key": "0xADB3D60D",
+    "value": "Requer reinicialização!"
+  },
+  {
+    "key": "0xF86BCFB7",
+    "value": "Alterar as configurações para <b>Regiões de origem</b> requer uma reinicialização para ter efeito!"
+  },
+  {
+    "key": "0x1CF177A7",
+    "value": "Permitir Sims em {0.String}"
+  },
+  {
+    "key": "0x4B800535",
+    "value": "Não permitir Sims de {0.String} em"
+  },
+  {
+    "key": "0x75E38E4E",
+    "value": "Configurações das regiões iniciais"
+  },
+  {
+    "key": "0x2CC211FC",
+    "value": "Mundos permitidos"
+  },
+  {
+    "key": "0xC639056A",
+    "value": "{0.String} já está na lista de mundos permitidos de {1.String}!"
+  },
+  {
+    "key": "0x9DBD26B1",
+    "value": "Escolha um ou mais mundos para permitir que os Sims de lá apareçam em <b><u>{0.String}</u></b>."
+  },
+  {
+    "key": "0xF1D8808D",
+    "value": "Mundos não permitidos"
+  },
+  {
+    "key": "0x3E3AE693",
+    "value": "Não permitir Sims em {0.String}"
+  },
+  {
+    "key": "0xDFFF9D02",
+    "value": "{0.String} não está na lista de mundos permitidos de {1.String}!"
+  },
+  {
+    "key": "0x0C9B1750",
+    "value": "Escolha um ou mais mundos para evitar que os Sims apareçam em <b><u>{0.String}</u></b>."
+  },
+  {
+    "key": "0x6B983963",
+    "value": "{0.String} já permite Sims de todos os mundos."
+  },
+  {
+    "key": "0x96A6E1E7",
+    "value": "{0.String} atualmente não permite Sims de nenhum outro mundo."
+  },
+  {
+    "key": "0x00E352C0",
+    "value": "Alternar Filtro Suave"
+  },
+  {
+    "key": "0x25DF474D",
+    "value": "Habilitado"
+  },
+  {
+    "key": "0x08886346",
+    "value": "Desabilitado"
+  },
+  {
+    "key": "0xFC2671C4",
+    "value": "O filtro suave de {0.String} já é {1.String}!"
+  },
+  {
+    "key": "0x9E41F7CE",
+    "value": "ativado"
+  },
+  {
+    "key": "0xFE2589FB",
+    "value": "Desativado"
+  },
+  {
+    "key": "0x342B134B",
+    "value": "Determine se {0.String} tem ou não um \"filtro suave\" aplicado a ele."
+  },
+  {
+    "key": "0x569E0240",
+    "value": "{0.String}\\n\\n<b>Observação:</b> a bidirecionalidade está atualmente ativada <b>{1.String}</b>."
+  },
+  {
+    "key": "0x45073D12",
+    "value": "sobre"
+  },
+  {
+    "key": "0x4370CF7F",
+    "value": "desligado"
+  },
+  {
+    "key": "0x7DEBD073",
+    "value": "O conjunto de Sims disponível para o Ensino Médio é atualmente {0.String}!"
+  },
+  {
+    "key": "0x34B7F1A3",
+    "value": "restrito a Copperdale"
+  },
+  {
+    "key": "0x8A521D26",
+    "value": "irrestrito"
+  },
+  {
+    "key": "0x3860C08C",
+    "value": "Alternar Ensino Médio"
+  },
+  {
+    "key": "0x7D08967F",
+    "value": "Quando ativado, apenas os Sims permitidos em Copperdale frequentarão o Ensino Médio.\\n\\nQuando desativado, Sims de todos os mundos frequentarão o Ensino Médio."
+  },
+  {
+    "key": "0x11D72D35",
+    "value": "Alternar bidirecional"
+  },
+  {
+    "key": "0x5FD4DBCA",
+    "value": "Permite que você aplique um filtro regional nos dois sentidos ao permitir ou desautorizar Mundos."
+  },
+  {
+    "key": "0x70E89FF5",
+    "value": "A alternância de bidirecionalidade já é {0.String} no momento!"
+  },
+  {
+    "key": "0x5F3D84A5",
+    "value": "Cidade mudada"
+  },
+  {
+    "key": "0x890894EC",
+    "value": "Configuração alterada"
+  },
+  {
+    "key": "0x1EB643E4",
+    "value": "As notificações para {1.String} atualmente são {0.String}!"
+  },
+  {
+    "key": "0xA5D8E465",
+    "value": "Hub Internacional"
+  },
+  {
+    "key": "0x9DC29ABA",
+    "value": "Este lote é muito viajado, Sims de todo o mundo aparecerão aqui.\\n\\nOs filtros da região de origem não se aplicam a este lote."
+  }
+]

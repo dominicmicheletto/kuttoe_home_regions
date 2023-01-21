@@ -1,0 +1,194 @@
+[
+  {
+    "key": "0x153ED851",
+    "value": "Realojar a PNJ en"
+  },
+  {
+    "key": "0xD3352EA0",
+    "value": "Realojar a PNJs en"
+  },
+  {
+    "key": "0xA7D9AF58",
+    "value": "Realoja la unidad doméstica de este Sim en {0.String}. No afecta a Sims ya alojados."
+  },
+  {
+    "key": "0x0DC8628E",
+    "value": "¡Este Sim ya vive allí!"
+  },
+  {
+    "key": "0x63D8438C",
+    "value": "¡Este Sim ya está alojad{M0.o}{F0.a}!"
+  },
+  {
+    "key": "0xD419A218",
+    "value": "Sim realojad{M0.o}{F0.a}"
+  },
+  {
+    "key": "0x23E5291F",
+    "value": "{0.SimName} ha sido realojad{M0.o}{F0.a} en con éxito <strong><u>{1.String}</u></strong>."
+  },
+  {
+    "key": "0x22534F94",
+    "value": "{S0.Un{F3.a} Sim}{P0.{M3.Todos los}{F3.{M4.Todos los}{F4.Todas las}} {0.Number} Sims} ha{P0.n} sido realojad{S0.{M3.o}{F3.a}}{P0.{M3.os}{F3.{M4.os}{F4.as}}} con éxito en <strong><u>{1.String}</u></strong>, incluid{S0.{M3.o}{F3.a}}{P0.{M3.os}{F3.{M4.os}{F4.as}}}:\\n{2.String}"
+  },
+  {
+    "key": "0x12107DE4",
+    "value": "Sim{P0.s} realojad{S0.{M3.o}{F3.a}}{P0.{M3.os}{F3.{M4.os}{F4.as}}}"
+  },
+  {
+    "key": "0x025DED97",
+    "value": "Elegir a Sims que serán realojados en el mundo seleccionado. Esto afectará a todos los compañeros de casa."
+  },
+  {
+    "key": "0x54AEA217",
+    "value": "Realojar a uno o más Sims en {0.String}. Esto afectará a todos los Sims en sus unidades domésticas."
+  },
+  {
+    "key": "0xADB3D60D",
+    "value": "¡Reinicio requerido!"
+  },
+  {
+    "key": "0xF86BCFB7",
+    "value": "¡Cambios a los ajustes de <b>Home Regions</b> necesitan que el juego sea reiniciado para que surtan efecto!"
+  },
+  {
+    "key": "0x1CF177A7",
+    "value": "Permitir en {0.String} a Sims de"
+  },
+  {
+    "key": "0x4B800535",
+    "value": "No permitir a Sims de {0.String} en"
+  },
+  {
+    "key": "0x75E38E4E",
+    "value": "Ajustes de Home Regions"
+  },
+  {
+    "key": "0x2CC211FC",
+    "value": "Mundos permitidos"
+  },
+  {
+    "key": "0xC639056A",
+    "value": "¡{0.String} ya es parte de la lista blanca de mundos permitidos para {1.String}!"
+  },
+  {
+    "key": "0x9DBD26B1",
+    "value": "Elegir uno o más mundos que permitirán poder viajar a <b><u>{0.String}</u></b> a Sims viviendos allí."
+  },
+  {
+    "key": "0xF1D8808D",
+    "value": "Mundos no permitidos"
+  },
+  {
+    "key": "0x3E3AE693",
+    "value": "No permitir en {0.String} a Sims de"
+  },
+  {
+    "key": "0xDFFF9D02",
+    "value": "¡{0.String} no es parte de la lista blanca de mundos permitidos para {1.String}!"
+  },
+  {
+    "key": "0x0C9B1750",
+    "value": "Quitar de la lista blanca actual de <b><u>{0.String}</u></b> uno o más mundos."
+  },
+  {
+    "key": "0x6B983963",
+    "value": "Ya se permite que Sims de otros mundos puedan viajar a {0.String}."
+  },
+  {
+    "key": "0x96A6E1E7",
+    "value": "{0.String} actualmente no permite viajar allí a Sims de otros mundos."
+  },
+  {
+    "key": "0x00E352C0",
+    "value": "Ajuste del filtro suave"
+  },
+  {
+    "key": "0x25DF474D",
+    "value": "Activado"
+  },
+  {
+    "key": "0x08886346",
+    "value": "Desactivado"
+  },
+  {
+    "key": "0xFC2671C4",
+    "value": "¡Está al momento {1.String} el filtro suave de {0.String}!"
+  },
+  {
+    "key": "0x9E41F7CE",
+    "value": "activado"
+  },
+  {
+    "key": "0xFE2589FB",
+    "value": "desactivado"
+  },
+  {
+    "key": "0x342B134B",
+    "value": "Determina si o no hay un \"filtro suave\" activado para {0.String}."
+  },
+  {
+    "key": "0x569E0240",
+    "value": "{0.String}\\n\\n<b>¡Aviso!</b> Está al momento <b>{1.String}</b> el ajuste bidireccional"
+  },
+  {
+    "key": "0x45073D12",
+    "value": "activado"
+  },
+  {
+    "key": "0x4370CF7F",
+    "value": "desactivado"
+  },
+  {
+    "key": "0x7DEBD073",
+    "value": "¡El grupo de Sims que se permiten asistir escuela secundaria activa es en el momento {0.String}!"
+  },
+  {
+    "key": "0x34B7F1A3",
+    "value": "restringido para los que viven en Copperdale"
+  },
+  {
+    "key": "0x8A521D26",
+    "value": "irrestricto"
+  },
+  {
+    "key": "0x3860C08C",
+    "value": "Ajuste de escuela secundaria"
+  },
+  {
+    "key": "0x7D08967F",
+    "value": "\\nDetermina si o no se permiten asistir escuela secundaria activa a Sims que no viven en Copperdale."
+  },
+  {
+    "key": "0x11D72D35",
+    "value": "Ajuste bidireccional"
+  },
+  {
+    "key": "0x5FD4DBCA",
+    "value": "Permite aplicar un filtro mundial en ambas direcciones"
+  },
+  {
+    "key": "0x70E89FF5",
+    "value": "¡El ajuste bidireccional ya está {0.String}!"
+  },
+  {
+    "key": "0x5F3D84A5",
+    "value": "NPJs estén realejados"
+  },
+  {
+    "key": "0x890894EC",
+    "value": "Ajustes estén cambiados"
+  },
+  {
+    "key": "0x1EB643E4",
+    "value": "¡Notificaciones cuando {1.String} están al momento {0.String}!"
+  },
+  {
+    "key": "0xA5D8E465",
+    "value": "Centro internacional"
+  },
+  {
+    "key": "0x9DC29ABA",
+    "value": "Este solar está muy bien viajado: Sims en todas partes del mundo se viajarán aquí.\\n\\nLos filtros del mod Home Regions no serán aplicados a este solar."
+  }
+]

@@ -19,20 +19,21 @@ from collections import namedtuple
 
 # game imports
 from sims4.utils import classproperty, exception_protected
-from sims4.tuning.tunable import AutoFactoryInit, HasTunableFactory, TunableMapping, TunableEnumEntry, Tunable
+from sims4.tuning.tunable import AutoFactoryInit, HasTunableFactory, TunableMapping, TunableRange, Tunable
 from sims4.tuning.tunable import TunableEnumSet, TunableTuple, OptionalTunable
 from sims4.commands import Command, CommandType
+from sims4.math import MAX_FLOAT
 
 # local imports
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 from kuttoe_home_regions.tunable import TunableInteractionName
 from kuttoe_home_regions.ui import NotificationType
+from kuttoe_home_regions.utils import matches_bounds, BoundTypes
 
 
 #######################################################################################################################
 #  Settings Tuning                                                                                                    #
 #######################################################################################################################
-
 
 class TunableWorldSettings(HasTunableFactory, AutoFactoryInit):
     FACTORY_TUNABLES = {
@@ -105,6 +106,7 @@ class Settings:
     NOTIFICATION_SETTINGS = TunableNotificationSettingsMapping()
     BIDIRECTIONAL_TOGGLE = Tunable(tunable_type=bool, default=False, allow_empty=False, needs_tuning=True)
     HIGH_SCHOOL_TOGGLE = Tunable(tunable_type=bool, default=True, allow_empty=False, needs_tuning=True)
+    SOFT_FILTER_VALUE = TunableRange(tunable_type=float, default=0.1, minimum=0.0, maximum=1.0)
     _SETTINGS = None
 
     class WorldSettingNames:
@@ -124,6 +126,7 @@ class Settings:
     class SettingNames:
         BIDIRECTIONAL_TOGGLE = 'bidirectional_toggle'
         HIGH_SCHOOL_TOGGLE = 'high_school_toggle'
+        SOFT_FILTER_VALUE = 'soft_filter_value'
 
         @staticmethod
         def _filter(item):
@@ -215,6 +218,25 @@ class Settings:
     @classmethod
     def validate_bool(cls, key: str, settings: Dict[str, Any], default: Dict[str, Any], settings_directory):
         if not isinstance(settings[key], bool):
+            settings[key] = default[key]
+            cls.dump_settings(settings_directory, settings)
+
+    @classmethod
+    def validate_number(cls,
+                        key: str,
+                        settings: Dict[str, Any],
+                        default: Dict[str, Any],
+                        settings_directory,
+                        **constraints):
+        value = settings[key]
+        min_value = constraints.setdefault('min_value', 0.0)
+        max_value = constraints.setdefault('max_value', MAX_FLOAT)
+        include_bounds = constraints.setdefault('include_bounds', BoundTypes.BOTH)
+
+        value_type = constraints.setdefault('value_type', float)
+        value_type = float if not isinstance(value_type, (int, float, )) else value_type
+
+        if not isinstance(value, value_type) or not matches_bounds(value, include_bounds, (min_value, max_value)):
             settings[key] = default[key]
             cls.dump_settings(settings_directory, settings)
 
@@ -313,20 +335,25 @@ class Settings:
                            settings_dict: Dict[str, Any],
                            default_settings: Dict[str, Any],
                            settings_directory: str):
-        WorldSettingNames = cls.WorldSettingNames
+        validate_args = dict(settings=settings_dict, default=default_settings, settings_directory=settings_directory)
+
+        cls.validate_number(cls.SettingNames.SOFT_FILTER_VALUE, **validate_args, max_value=1.0, include_bounds=BoundTypes.NONE)
+        cls.validate_bool(cls.SettingNames.HIGH_SCHOOL_TOGGLE, **validate_args)
+        cls.validate_bool(cls.SettingNames.BIDIRECTIONAL_TOGGLE, **validate_args)
+
+        for notification_type in NotificationType.exported_values:
+            cls.validate_bool(notification_type.setting_name, **validate_args)
+
         for home_world in HomeWorldIds:
             if home_world == HomeWorldIds.DEFAULT:
                 continue
 
             base_name = home_world.settings_name_base
-            cls.validate_bool('{}_{}'.format(base_name, WorldSettingNames.SOFT),
-                              settings_dict, default_settings, settings_directory)
-            cls.validate_list('{}_{}'.format(base_name, WorldSettingNames.WORLDS),
-                              settings_dict, default_settings, settings_directory,
+            cls.validate_bool('{}_{}'.format(base_name, cls.WorldSettingNames.SOFT), **validate_args)
+            cls.validate_list('{}_{}'.format(base_name, cls.WorldSettingNames.WORLDS), **validate_args,
                               value_constraints=lambda value: value in HomeWorldIds)
             if home_world.has_tourists:
-                cls.validate_bool('{}_{}'.format(base_name, WorldSettingNames.TOURISTS),
-                                  settings_dict, default_settings, settings_directory)
+                cls.validate_bool('{}_{}'.format(base_name, cls.WorldSettingNames.TOURISTS), **validate_args)
 
     @classmethod
     def _load_settings(cls):
@@ -371,12 +398,13 @@ class Settings:
         return {notif_type: cls.settings[notif_type.setting_name] for notif_type in NotificationType.exported_values}
 
     @classproperty
-    def bidirectional_toggle(cls) -> bool:
-        return cls.settings[cls.SettingNames.BIDIRECTIONAL_TOGGLE]
+    def bidirectional_toggle(cls) -> bool: return cls.settings[cls.SettingNames.BIDIRECTIONAL_TOGGLE]
 
     @classproperty
-    def high_school_toggle(cls) -> bool:
-        return cls.settings[cls.SettingNames.HIGH_SCHOOL_TOGGLE]
+    def high_school_toggle(cls) -> bool: return cls.settings[cls.SettingNames.HIGH_SCHOOL_TOGGLE]
+
+    @classproperty
+    def soft_filter_value(cls) -> float: return cls.settings[cls.SettingNames.SOFT_FILTER_VALUE]
 
     @classmethod
     def get_token(cls, setting_key: str, enabled_token=None, disabled_token=None, *string_tokens):
@@ -394,6 +422,7 @@ class Settings:
 
         cls.settings[setting_key] = setting_value
         cls.dump_settings(cls.settings_directory, cls.settings)
+
         return True
 
     @classmethod
@@ -403,6 +432,7 @@ class Settings:
 
         new_value = setting_value if setting_value is not None else not cls.settings[setting_key]
         cls.update_setting(setting_key, new_value)
+
         return new_value
 
 

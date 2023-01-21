@@ -19,6 +19,7 @@ from server_commands.argument_helpers import OptionalSimInfoParam, get_optional_
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 from kuttoe_home_regions.commands.base_commands import *
 from kuttoe_home_regions.commands.utils import *
+from kuttoe_home_regions.utils import matches_bounds, BoundTypes
 
 #######################################################################################################################
 #  Set Assigned World                                                                                                 #
@@ -274,4 +275,25 @@ def kuttoe_toggle_high_school(new_value: bool = None, _connection=None):
     response = 'on' if Settings.toggle_setting('high_school_toggle', new_value) else 'off'
     Output(_connection)('Region filter for Active High School situations is now turned {}'.format(response))
 
+    return True
+
+
+#######################################################################################################################
+# Soft Filter Value                                                                                                   #
+#######################################################################################################################
+
+@Command('kuttoe.set_soft_filter_value', command_type=CommandType.Live)
+def kuttoe_set_soft_filter_value(new_value: float, _connection=None):
+    from kuttoe_home_regions.settings import Settings
+
+    output = Output(_connection)
+    min_value = 0.0
+    max_value = 1.0
+
+    if not matches_bounds(new_value, BoundTypes.NONE, (min_value, max_value)):
+        output(f'Soft filter value must be between {min_value} and {max_value} (exclusive)')
+        return False
+
+    output(f'Soft filter value updated to {new_value}')
+    Settings.update_setting(Settings.SettingNames.SOFT_FILTER_VALUE, new_value)
     return True

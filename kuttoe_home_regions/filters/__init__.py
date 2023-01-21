@@ -88,11 +88,16 @@ SnippetBase = vars(snippets)[snippet_name]
 
 
 class _DynamicFilterBase(SnippetBase):
-    SOFT_FILTER_VALUE = Tunable(tunable_type=float, default=0.1)
     LOT_TRAIT_INSTANCE = ZoneModifier.TunablePackSafeReference()
     INSTANCE_TUNABLES = {
         '_skipped_regions': HomeWorldIds.create_enum_set(optional=True),
     }
+
+    @classproperty
+    def soft_filter_value(cls) -> float:
+        from kuttoe_home_regions.settings import Settings
+
+        return Settings.soft_filter_value
 
     @classmethod
     def _get_region_list(cls, home_world: HomeWorldIds):
@@ -152,7 +157,7 @@ class SoftTunableLocationBasedFilterTermsSnippet(_DynamicFilterBase):
     @classmethod
     def _generate_value(cls):
         return {
-            world.region: cls._create_filter_term(world, cls.SOFT_FILTER_VALUE)
+            world.region: cls._create_filter_term(world, cls.soft_filter_value)
             for world
             in HomeWorldIds.available_worlds
         }
@@ -179,7 +184,7 @@ class DynamicTunableLocationBasedFilterTermsSnippet(_DynamicFilterBase):
 
     @classmethod
     def _get_soft_filter_value(cls, home_world: HomeWorldIds):
-        return cls.SOFT_FILTER_VALUE if cls.has_soft_filter(home_world) else 0.0
+        return cls.soft_filter_value if cls.has_soft_filter(home_world) else 0.0
 
     @classmethod
     def _generate_value(cls):

@@ -85,7 +85,7 @@ class WorldExemptionSuperInteraction(
         return resolver.get_participant(ParticipantType.TargetSim) or resolver.get_participant(ParticipantType.Actor)
 
     def _run_interaction_gen(self, timeline):
-        self._show_picker_dialog(self.sim, target_sim=self.target)
+        self._show_picker_dialog(self.target, target_sim=self.target)
 
         return True
 

@@ -201,7 +201,7 @@ class MoveTownieSuperInteraction(
             yield inst_or_cls.create_row(resolver, world)
 
     def _run_interaction_gen(self, timeline):
-        self._show_picker_dialog(self.sim, target_sim=self.target)
+        self._show_picker_dialog(self.target, target_sim=self.target)
 
         yield from super()._run_interaction_gen(timeline)
 

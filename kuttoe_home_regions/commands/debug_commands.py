@@ -165,6 +165,14 @@ def get_allowed_regions_by_sim_name(first_name: str, last_name: str = '', _conne
     return get_allowed_regions(opt_sim=opt_sim, _connection=_connection)
 
 
+@Command('kuttoe.get_soft_filter_value', command_type=CommandType.Cheat)
+def get_soft_filter_value(_connection=None):
+    from kuttoe_home_regions.settings import Settings
+
+    Output(_connection)(f'Soft filter value is currently: {Settings.soft_filter_value}')
+    return True
+
+
 #######################################################################################################################
 #  Dump Commands                                                                                                      #
 #######################################################################################################################
@@ -190,6 +198,7 @@ def dump_bypassed_situation_jobs(_connection=None):
     situation_jobs_info = {
         "high_school_filter": Settings.high_school_toggle,
         "soft_filter": SituationJobModifications.soft_list,
+        "soft_filter_value": Settings.soft_filter_value,
         "bypassed_jobs": SituationJobModifications._BYPASSED_JOBS,
         "high_school_situations": SituationJobModifications.high_school_situations,
         "tourists_situations": SituationJobModifications.tourists_situations,

@@ -10,11 +10,12 @@ This file details utility functions and classes.
 #######################################################################################################################
 
 # typing imports
-from typing import Set, NamedTuple, Dict, Any, Callable, Tuple
+from typing import Set, NamedTuple, Dict, Any, Callable, Tuple, Union
 
 # python imports
 from functools import wraps
 from collections import defaultdict
+import operator
 
 # game imports
 import enum
@@ -444,6 +445,13 @@ class InteractionTargetType(DynamicEnum):
         return self.update_affordance_list(*collected_affordances)
 
 
+class BoundTypes(enum.IntFlags):
+    NONE = 0
+    LEFT = 1
+    RIGHT = 2
+    BOTH = LEFT | RIGHT
+
+
 #######################################################################################################################
 #  Helper Functions                                                                                                   #
 #######################################################################################################################
@@ -573,6 +581,14 @@ def does_zone_have_modifiers(*modifiers: ZoneModifier, num_required: int = 1, zo
     return len(get_zone_modifiers(zone_id) & set(modifiers)) >= num_required
 
 
+def matches_bounds(value_to_test, bound_conditions: BoundTypes, bounds: Tuple[Union[int, float], Union[int, float]]):
+    left, right = bounds
+    left_op = operator.le if bound_conditions & BoundTypes.LEFT else operator.lt
+    right_op = operator.ge if bound_conditions & BoundTypes.RIGHT else operator.gt
+
+    return left_op(left, value_to_test) and right_op(right, value_to_test)
+
+
 #######################################################################################################################
 #  Mixins                                                                                                             #
 #######################################################################################################################
@@ -665,4 +681,5 @@ __all__ = (
     'SnippetMixin',
     'ManagedTuningMixin',
     'leroidetout_injector',
+    'matches_bounds', 'BoundTypes'
 )

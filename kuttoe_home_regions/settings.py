@@ -22,13 +22,12 @@ from sims4.utils import classproperty, exception_protected
 from sims4.tuning.tunable import AutoFactoryInit, HasTunableFactory, TunableMapping, TunableRange, Tunable
 from sims4.tuning.tunable import TunableEnumSet, TunableTuple, OptionalTunable
 from sims4.commands import Command, CommandType
-from sims4.math import MAX_FLOAT
 
 # local imports
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 from kuttoe_home_regions.tunable import TunableInteractionName
 from kuttoe_home_regions.ui import NotificationType
-from kuttoe_home_regions.utils import matches_bounds, BoundTypes
+from kuttoe_home_regions.utils import BoundTypes, validate_bool, validate_number, validate_list
 
 
 #######################################################################################################################
@@ -46,7 +45,6 @@ class TunableWorldSettings(HasTunableFactory, AutoFactoryInit):
     def get_dict_values(cls, home_world: HomeWorldIds, **values) -> Dict[str, Any]:
         dict_values = dict()
         base_name = home_world.settings_name_base
-        WorldSettingNames = Settings.WorldSettingNames
 
         dict_values['{}_{}'.format(base_name, WorldSettingNames.SOFT)] = values.get('soft', False)
         if home_world.has_tourists:
@@ -94,6 +92,53 @@ class TunableNotificationSettingsMapping(TunableMapping):
         super().__init__(*args, **kwargs)
 
 
+#######################################################################################################################
+# Setting Name Constants                                                                                              #
+#######################################################################################################################
+
+class WorldSettingNames:
+    SOFT = 'Soft'
+    WORLDS = 'Worlds'
+    TOURISTS = 'TouristsToggle'
+
+    @classmethod
+    def _names(cls, world: HomeWorldIds):
+        names = (cls.SOFT, cls.WORLDS)
+
+        if world.has_tourists:
+            names += (cls.TOURISTS,)
+
+        return names
+
+
+class SettingNames:
+    BIDIRECTIONAL_TOGGLE = 'bidirectional_toggle'
+    HIGH_SCHOOL_TOGGLE = 'high_school_toggle'
+    SOFT_FILTER_VALUE = 'soft_filter_value'
+
+    @staticmethod
+    def _filter(item):
+        key, value = item
+
+        return not key.startswith('_') and not isinstance(value, classmethod)
+
+    @classmethod
+    def values(cls) -> Dict[str, str]:
+        return dict(filter(cls._filter, vars(cls).items()))
+
+    @classmethod
+    def names(cls) -> Iterable[str]:
+        return cls.values().keys()
+
+    @classmethod
+    def items(cls):
+        return cls.values().items()
+
+
+#######################################################################################################################
+# Settings Class Definition                                                                                           #
+#######################################################################################################################
+
 class Settings:
     DEFAULT_WORLD_SETTINGS = TunableDefaultWorldSettingsMapping()
     COMMAND_NAME_BASES = TunableTuple(
@@ -107,44 +152,15 @@ class Settings:
     BIDIRECTIONAL_TOGGLE = Tunable(tunable_type=bool, default=False, allow_empty=False, needs_tuning=True)
     HIGH_SCHOOL_TOGGLE = Tunable(tunable_type=bool, default=True, allow_empty=False, needs_tuning=True)
     SOFT_FILTER_VALUE = TunableRange(tunable_type=float, default=0.1, minimum=0.0, maximum=1.0)
+
     _SETTINGS = None
 
-    class WorldSettingNames:
-        SOFT = 'Soft'
-        WORLDS = 'Worlds'
-        TOURISTS = 'TouristsToggle'
+    WorldSettingNames = WorldSettingNames
+    SettingNames = SettingNames
 
-        @classmethod
-        def _names(cls, world: HomeWorldIds):
-            names = (cls.SOFT, cls.WORLDS)
-
-            if world.has_tourists:
-                names += (cls.TOURISTS, )
-
-            return names
-
-    class SettingNames:
-        BIDIRECTIONAL_TOGGLE = 'bidirectional_toggle'
-        HIGH_SCHOOL_TOGGLE = 'high_school_toggle'
-        SOFT_FILTER_VALUE = 'soft_filter_value'
-
-        @staticmethod
-        def _filter(item):
-            key, value = item
-
-            return not key.startswith('_') and not isinstance(value, classmethod)
-
-        @classmethod
-        def values(cls) -> Dict[str, str]:
-            return dict(filter(cls._filter, vars(cls).items()))
-
-        @classmethod
-        def names(cls) -> Iterable[str]:
-            return cls.values().keys()
-
-        @classmethod
-        def items(cls):
-            return cls.values().items()
+    EXCEPTION_FILE_NAME = '[Kuttoe] HomeRegions_Exception.log'
+    SETTINGS_FILE_NAME = '[Kuttoe] HomeRegions_Settings.cfg'
+    DISCORD_LINK = 'https://discord.gg/RqPqCdBsdF'
 
     @classmethod
     def create_settings_console_command(cls, notification_type: NotificationType):
@@ -201,62 +217,18 @@ class Settings:
             log.write('Keep Sims in Home Region Error Log\n\n')
             log.write(f'Game version {gv_data.game_version}\n{timestamp.strftime("%m/%d/%Y %H:%M:%S")}\n\n')
             log.write(f'Received error: {error_message}\n\n')
-            log.write('Please join our Discord server and upload this file in a support channel.\n'
-                      'https://discord.gg/RqPqCdBsdF')
+            log.write(f'Please join our Discord server and upload this file in a support channel.\n{cls.DISCORD_LINK}')
 
         raise error_message
 
     @classmethod
-    def dump_settings(cls, settings_directory, settings: Dict[str, any]):
+    def dump_settings(cls, settings_directory, settings: Dict[str, Any]):
         try:
             with open(settings_directory, "w+") as settings_file:
                 dump(settings, settings_file, indent=4)
         except BaseException as ex:
             timestamp = datetime.now()
-            cls.report_error(ex, timestamp, '[Kuttoe] HomeRegions_Exception.log')
-
-    @classmethod
-    def validate_bool(cls, key: str, settings: Dict[str, Any], default: Dict[str, Any], settings_directory):
-        if not isinstance(settings[key], bool):
-            settings[key] = default[key]
-            cls.dump_settings(settings_directory, settings)
-
-    @classmethod
-    def validate_number(cls,
-                        key: str,
-                        settings: Dict[str, Any],
-                        default: Dict[str, Any],
-                        settings_directory,
-                        **constraints):
-        value = settings[key]
-        min_value = constraints.setdefault('min_value', 0.0)
-        max_value = constraints.setdefault('max_value', MAX_FLOAT)
-        include_bounds = constraints.setdefault('include_bounds', BoundTypes.BOTH)
-
-        value_type = constraints.setdefault('value_type', float)
-        value_type = float if not isinstance(value_type, (int, float, )) else value_type
-
-        if not isinstance(value, value_type) or not matches_bounds(value, include_bounds, (min_value, max_value)):
-            settings[key] = default[key]
-            cls.dump_settings(settings_directory, settings)
-
-    @classmethod
-    def validate_list(cls,
-                      key: str,
-                      settings: Dict[str, Any],
-                      default: Dict[str, Any],
-                      settings_directory,
-                      value_constraints=None):
-        try:
-            iter(settings[key])
-        except ValueError:
-            settings[key] = [settings[key], ]
-            cls.dump_settings(settings_directory, settings)
-
-        if value_constraints:
-            if not all(value_constraints(value) for value in settings[key]):
-                settings[key] = default[key]
-                cls.dump_settings(settings_directory, settings)
+            cls.report_error(ex, timestamp, cls.EXCEPTION_FILE_NAME)
 
     @classproperty
     def base_directory(cls):
@@ -284,7 +256,7 @@ class Settings:
     @classproperty
     def settings_directory(cls):
         gv_directory = cls.gv_directory.directory_path
-        base_path = path.abspath(path.join(gv_directory, 'saves', 'Kuttoe', '[Kuttoe] HomeRegions_Settings.cfg'))
+        base_path = path.abspath(path.join(gv_directory, 'saves', 'Kuttoe', cls.SETTINGS_FILE_NAME))
 
         try:
             mkdir(path.abspath(path.join(gv_directory, 'saves', 'Kuttoe')))
@@ -335,25 +307,30 @@ class Settings:
                            settings_dict: Dict[str, Any],
                            default_settings: Dict[str, Any],
                            settings_directory: str):
-        validate_args = dict(settings=settings_dict, default=default_settings, settings_directory=settings_directory)
+        def _dump_settings(new_settings: Dict[str, Any]):
+            cls.dump_settings(settings_directory, new_settings)
 
-        cls.validate_number(cls.SettingNames.SOFT_FILTER_VALUE, **validate_args, max_value=1.0, include_bounds=BoundTypes.NONE)
-        cls.validate_bool(cls.SettingNames.HIGH_SCHOOL_TOGGLE, **validate_args)
-        cls.validate_bool(cls.SettingNames.BIDIRECTIONAL_TOGGLE, **validate_args)
+            return False
+
+        validate_args = dict(settings=settings_dict, default=default_settings, callback=_dump_settings)
+
+        validate_number(SettingNames.SOFT_FILTER_VALUE, max_value=1.0, include_bounds=BoundTypes.NONE, **validate_args)
+        validate_bool(SettingNames.HIGH_SCHOOL_TOGGLE, **validate_args)
+        validate_bool(SettingNames.BIDIRECTIONAL_TOGGLE, **validate_args)
 
         for notification_type in NotificationType.exported_values:
-            cls.validate_bool(notification_type.setting_name, **validate_args)
+            validate_bool(notification_type.setting_name, **validate_args)
 
         for home_world in HomeWorldIds:
             if home_world == HomeWorldIds.DEFAULT:
                 continue
 
             base_name = home_world.settings_name_base
-            cls.validate_bool('{}_{}'.format(base_name, cls.WorldSettingNames.SOFT), **validate_args)
-            cls.validate_list('{}_{}'.format(base_name, cls.WorldSettingNames.WORLDS), **validate_args,
-                              value_constraints=lambda value: value in HomeWorldIds)
+            validate_bool('{}_{}'.format(base_name, cls.WorldSettingNames.SOFT), **validate_args)
+            validate_list('{}_{}'.format(base_name, cls.WorldSettingNames.WORLDS), **validate_args,
+                          value_constraints=lambda value: value in HomeWorldIds)
             if home_world.has_tourists:
-                cls.validate_bool('{}_{}'.format(base_name, cls.WorldSettingNames.TOURISTS), **validate_args)
+                validate_bool('{}_{}'.format(base_name, cls.WorldSettingNames.TOURISTS), **validate_args)
 
     @classmethod
     def _load_settings(cls):
@@ -385,7 +362,7 @@ class Settings:
     @classmethod
     def get_world_settings(cls, home_world: HomeWorldIds) -> Dict[str, Any]:
         name_base = home_world.settings_name_base
-        keys = cls.WorldSettingNames._names(home_world)
+        keys = WorldSettingNames._names(home_world)
 
         return {key: cls.settings['{}_{}'.format(name_base, key)] for key in keys}
 
@@ -398,22 +375,16 @@ class Settings:
         return {notif_type: cls.settings[notif_type.setting_name] for notif_type in NotificationType.exported_values}
 
     @classproperty
-    def bidirectional_toggle(cls) -> bool: return cls.settings[cls.SettingNames.BIDIRECTIONAL_TOGGLE]
+    def bidirectional_toggle(cls) -> bool:
+        return cls.settings[SettingNames.BIDIRECTIONAL_TOGGLE]
 
     @classproperty
-    def high_school_toggle(cls) -> bool: return cls.settings[cls.SettingNames.HIGH_SCHOOL_TOGGLE]
+    def high_school_toggle(cls) -> bool:
+        return cls.settings[SettingNames.HIGH_SCHOOL_TOGGLE]
 
     @classproperty
-    def soft_filter_value(cls) -> float: return cls.settings[cls.SettingNames.SOFT_FILTER_VALUE]
-
-    @classmethod
-    def get_token(cls, setting_key: str, enabled_token=None, disabled_token=None, *string_tokens):
-        value = cls.settings.get(setting_key, False)
-        token = enabled_token if value else disabled_token
-
-        if not token:
-            return token
-        return token(*string_tokens)
+    def soft_filter_value(cls) -> float:
+        return cls.settings[SettingNames.SOFT_FILTER_VALUE]
 
     @classmethod
     def update_setting(cls, setting_key: str, setting_value):
@@ -435,9 +406,18 @@ class Settings:
 
         return new_value
 
+    @classmethod
+    def get_token(cls, setting_key: str, enabled_token=None, disabled_token=None, *string_tokens):
+        value = cls.settings.get(setting_key, False)
+        token = enabled_token if value else disabled_token
+
+        if not token:
+            return token
+        return token(*string_tokens)
+
 
 #######################################################################################################################
 #  Module Exports                                                                                                     #
 #######################################################################################################################
 
-__all__ = ('Settings', )
+__all__ = ('Settings', 'SettingNames', 'WorldSettingNames', )

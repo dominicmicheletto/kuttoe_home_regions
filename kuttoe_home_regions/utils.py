@@ -27,6 +27,7 @@ from sims4.collections import make_immutable_slots_class as make_immutable_slots
 from sims4.resources import Types, get_resource_key
 from sims4.tuning.dynamic_enum import DynamicEnum
 from sims4.tuning.instance_manager import InstanceManager
+from sims4.math import MAX_FLOAT
 
 # miscellaneous
 import services
@@ -589,6 +590,49 @@ def matches_bounds(value_to_test, bound_conditions: BoundTypes, bounds: Tuple[Un
     return left_op(left, value_to_test) and right_op(right, value_to_test)
 
 
+def validate_bool(key: str, settings: Dict[str, Any], default: Dict[str, Any], callback=None):
+    if not isinstance(settings[key], bool):
+        settings[key] = default[key]
+        if callback is not None:
+            return callback(settings)
+        return False
+    return True
+
+
+def validate_number(key: str, settings: Dict[str, Any], default: Dict[str, Any], callback=None, **constraints):
+    value = settings[key]
+    min_value = constraints.setdefault('min_value', 0.0)
+    max_value = constraints.setdefault('max_value', MAX_FLOAT)
+    include_bounds = constraints.setdefault('include_bounds', BoundTypes.BOTH)
+
+    value_type = constraints.setdefault('value_type', float)
+    value_type = float if not isinstance(value_type, (int, float,)) else value_type
+
+    if not isinstance(value, value_type) or not matches_bounds(value, include_bounds, (min_value, max_value)):
+        settings[key] = default[key]
+        if callback is not None:
+            return callback(settings)
+        return False
+    return True
+
+
+def validate_list(key: str, settings: Dict[str, Any], default: Dict[str, Any], value_constraints=None, callback=None):
+    try:
+        iter(settings[key])
+    except ValueError:
+        settings[key] = [settings[key], ]
+        if callback is not None:
+            callback(settings)
+
+    if value_constraints:
+        if not all(value_constraints(value) for value in settings[key]):
+            settings[key] = default[key]
+            if callback is not None:
+                return callback(settings)
+            return False
+    return True
+
+
 #######################################################################################################################
 #  Mixins                                                                                                             #
 #######################################################################################################################
@@ -681,5 +725,5 @@ __all__ = (
     'SnippetMixin',
     'ManagedTuningMixin',
     'leroidetout_injector',
-    'matches_bounds', 'BoundTypes'
+    'matches_bounds', 'BoundTypes', 'validate_bool', 'validate_number', 'validate_list',
 )

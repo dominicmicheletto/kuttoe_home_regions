@@ -13,7 +13,7 @@ This file details mixins that are used amongst all the custom interactions.
 # sims4 imports
 from sims4.localization import TunableLocalizedStringFactory
 from sims4.utils import classproperty, flexmethod
-from sims4.tuning.tunable import OptionalTunable, Tunable, TunableMapping, TunableRange, TunableTuple
+from sims4.tuning.tunable import OptionalTunable, Tunable, TunableRange, TunableMapping
 
 # miscellaneous imports
 import services
@@ -23,24 +23,19 @@ from interactions import ParticipantType
 # local imports
 from kuttoe_home_regions.ui import InteractionType, NotificationType, TunableNotificationSnippet
 from kuttoe_home_regions.utils import construct_auto_init_factory
-from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
+from kuttoe_home_regions.enum.home_worlds import HomeWorldIds, WorldType
 
 
 #######################################################################################################################
-#  Tuning Definitions                                                                                                 #
+#  Helper Tunable Definitions                                                                                         #
 #######################################################################################################################
 
-class RegionPriorityMapping(TunableMapping):
+class TunablePieMenuPriorityMapping(TunableMapping):
     def __init__(self, *args, **kwargs):
-        kwargs['key_type'] = HomeWorldIds.create_enum_entry()
-        kwargs['key_name'] = 'region'
-
-        tuple_args = dict()
-        tuple_args['sort_order_value'] = Tunable(tunable_type=int, default=0, allow_empty=False, needs_tuning=True)
-        tuple_args['pie_menu_priority'] = TunableRange(tunable_type=int, default=8, maximum=10, minimum=0)
-
-        kwargs['value_type'] = TunableTuple(**tuple_args)
-        kwargs['value_name'] = 'priority'
+        kwargs['key_type'] = WorldType.to_enum_entry()
+        kwargs['key_name'] = 'world_type'
+        kwargs['value_type'] = TunableRange(tunable_type=int, default=0, maximum=10, minimum=0)
+        kwargs['value_name'] = 'pie_menu_priority'
 
         super().__init__(*args, **kwargs)
 
@@ -86,42 +81,41 @@ class DisplayNotificationMixin:
 class HomeWorldSortOrderMixin:
     INSTANCE_TUNABLES = {'bump_up_current_region': Tunable(tunable_type=bool, default=False)}
     REMOVE_INSTANCE_TUNABLES = ('pie_menu_priority', )
-    REGION_PRIORITY = RegionPriorityMapping()
+    REGION_PRIORITY = TunablePieMenuPriorityMapping()
     CURRENT_REGION_BUMP_UP_PRIORITY = TunableRange(tunable_type=int, default=8, maximum=10, minimum=0)
-
-    @classproperty
-    def _default_priority(cls):
-        from kuttoe_home_regions.utils import make_immutable_slots_class
-
-        return make_immutable_slots_class(sort_order_value=0, pie_menu_priority=0)
 
     @classproperty
     def has_region_bump_up(cls) -> bool:
         return getattr(cls, 'bump_up_current_region', False)
 
     @classmethod
-    def get_region_priority(cls, home_world: HomeWorldIds):
-        return cls.REGION_PRIORITY.get(home_world, cls._default_priority)
+    def _sort_worlds(cls, worlds_list, reverse: bool = False):
+        """
+        Sorts worlds_list by the following criteria:
+        - current region FIRST
+        - world type ( Base Game, Residential, Vacation, Hidden)
+        - region name (alphabetical)
+        """
 
-    @classmethod
-    def _get_sort_order_for_value(cls, home_world: HomeWorldIds):
         current_region = services.current_region()
 
-        if home_world in cls.REGION_PRIORITY:
-            return chr(cls.get_region_priority(home_world).sort_order_value)
-        elif cls.has_region_bump_up and current_region is home_world.region:
-            return chr(0)
-        else:
-            return home_world.desc.lower()
+        def key(world: HomeWorldIds):
+            if cls.has_region_bump_up and current_region is world.region:
+                return 0, 0, 0
+            return 1, int(world.world_type), str(world.name)
+
+        return sorted(worlds_list, key=key, reverse=reverse)
 
     @flexmethod
     def _get_allowed_worlds(cls, inst, resolver):
         inst_or_cls = inst if inst is not None else cls
+        worlds = inst_or_cls.allowed_worlds.get_worlds(resolver)
 
-        def key(world: HomeWorldIds):
-            return inst_or_cls._get_sort_order_for_value(world)
+        return inst_or_cls._sort_worlds(worlds)
 
-        return sorted(inst_or_cls.allowed_worlds.get_worlds(resolver), key=key)
+    @classmethod
+    def get_region_priority(cls, home_world: HomeWorldIds):
+        return cls.REGION_PRIORITY.get(home_world.world_type, 0)
 
 
 class HasHomeWorldMixin:

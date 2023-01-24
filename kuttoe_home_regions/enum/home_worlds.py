@@ -17,11 +17,12 @@ from typing import Dict, Any
 import enum
 from services import get_instance_manager
 from singletons import DEFAULT
+from world.region import RegionType
 
 # sims 4 imports
 from sims4.resources import Types
 from sims4.collections import frozendict
-from sims4.tuning.tunable import Tunable, TunablePackSafeReference, TunableWorldDescription
+from sims4.tuning.tunable import Tunable, TunablePackSafeReference, TunableWorldDescription, OptionalTunable
 from sims4.localization import TunableLocalizedStringFactory
 from sims4.common import Pack, is_available_pack
 from sims4.utils import classproperty
@@ -33,6 +34,19 @@ from kuttoe_home_regions.tunable.local_fixup import OptionalTunableLocalFixup, L
 from kuttoe_home_regions.tunable.icon_definition import TunableIconMappingVariant, IconSize
 from kuttoe_home_regions.tunable.pack_resources import PackDefinition
 from kuttoe_home_regions.tunable.bit_value import TunableBitValueVariant
+
+
+#######################################################################################################################
+#  Helper Enumeration  Declaration                                                                                    #
+#######################################################################################################################
+
+@enum_entry_factory(default='BASE_GAME', invalid=())
+class WorldType(enum.Int):
+    BASE_GAME = ...
+    RESIDENTIAL = ...
+    VACATION = ...
+    HIDDEN = ...
+
 
 #######################################################################################################################
 #  Factory Class Code                                                                                                 #
@@ -52,6 +66,7 @@ class RegionData:
             local_fixup: LocalFixup = None,
             has_tourists: bool = False,
             bit_value: TunableBitValueVariant._Wrapper = TunableBitValueVariant.DEFAULT,
+            world_type: WorldType = None,
     ):
         self._region_id = region_id
         self._name = name
@@ -65,6 +80,8 @@ class RegionData:
         if bit_value.value:
             self._LAST_BIT_VALUE = bit_value.value
         self._bit_value = bit_value.get_value(self._LAST_BIT_VALUE, self._pack)
+
+        self._world_type = world_type
 
     @property
     def raw_bit_value(self): return self._bit_value
@@ -113,6 +130,17 @@ class RegionData:
         else:
             return self.default_local_fixup.clear_all_data(sim_info)
 
+    @property
+    def world_type(self) -> WorldType:
+        if self._world_type is not None:
+            return self._world_type
+        if self._pack is Pack.BASE_GAME:
+            return WorldType.BASE_GAME
+        if self.region.region_type is RegionType.REGIONTYPE_RESIDENTIAL:
+            return WorldType.RESIDENTIAL
+        elif self.region.region_type is RegionType.REGIONTYPE_DESTINATION:
+            return WorldType.VACATION
+
 
 @EnumItemFactory.ReprMixin(name='region_name', region_id=None, region=DEFAULT)
 @EnumItemFactory.TunableReferenceMixin(region=('region_id', True))
@@ -126,6 +154,7 @@ class RegionDataFactory(EnumItemFactory):
         'local_fixup': OptionalTunableLocalFixup(),
         'has_tourists': Tunable(tunable_type=bool, default=False),
         'bit_value': TunableBitValueVariant(),
+        'world_type': OptionalTunable(WorldType.to_enum_entry()),
     }
     FACTORY_TYPE = RegionData
 
@@ -137,10 +166,10 @@ class RegionDataFactory(EnumItemFactory):
     def get_default(value):
         return RegionData()
 
+
 #######################################################################################################################
 #  Enumeration Code                                                                                                   #
 #######################################################################################################################
-
 
 @enum_entry_factory(default='DEFAULT', invalid=('DEFAULT', ), method_name='create_enum_entry')
 @enum_set_factory(default='DEFAULT', invalid=('DEFAULT', ), method_name='create_enum_set')
@@ -209,9 +238,9 @@ class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=
 
         return construct_auto_init_factory(LivesInRegionWithExceptions, **args)
 
+
 #######################################################################################################################
 #  Module Exports                                                                                                     #
 #######################################################################################################################
 
-
-__all__ = ('HomeWorldIds', 'IconSize', )
+__all__ = ('HomeWorldIds', 'IconSize', 'WorldType', )

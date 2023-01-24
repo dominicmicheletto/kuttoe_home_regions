@@ -43,10 +43,10 @@ class _HomeWorldPickerMenuProxyInteraction(_PickerPieMenuProxyInteraction):
 
         if home_region is None:
             return priority
-        elif home_region in cls.REGION_PRIORITY:
-            return cls.get_region_priority(home_region).pie_menu_priority
         elif cls.has_region_bump_up and current_region is home_region.region:
             return cls.CURRENT_REGION_BUMP_UP_PRIORITY
+        elif home_region.world_type in cls.REGION_PRIORITY:
+            return cls.get_region_priority(home_region)
         else:
             return priority
 

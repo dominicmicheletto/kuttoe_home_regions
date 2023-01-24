@@ -241,7 +241,7 @@ def dump_filter_progress_file_writer(_, value):
     return '\n'.join(str(row) for row in value)
 
 
-@Command('kuttoe.filters.toggle_tracking', command_type=CommandType.DebugOnly)
+@Command('kuttoe.filters.toggle_tracking', command_type=CommandType.Cheat)
 def toggle_filter_tracking(should_track: bool = None, _connection=None):
     import kuttoe_home_regions.filters.custom_filters as custom_filters
 

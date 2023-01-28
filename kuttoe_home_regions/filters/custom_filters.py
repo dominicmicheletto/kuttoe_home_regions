@@ -15,7 +15,7 @@ given regions, and 0 if neither of the two apply.
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # Python imports
@@ -35,7 +35,7 @@ from kuttoe_home_regions.filters.statistics import UsesAllowedRegionsBitsetMixin
 
 
 #######################################################################################################################
-#  Global Variable Declaration                                                                                        #
+# Global Variable Declaration                                                                                         #
 #######################################################################################################################
 
 with protected(globals()):
@@ -43,7 +43,7 @@ with protected(globals()):
 
 
 #######################################################################################################################
-#  Named Tuple Declarations                                                                                          #
+# Named Tuple Declarations                                                                                           #
 #######################################################################################################################
 
 class FilterProgress(NamedTuple):
@@ -55,9 +55,8 @@ class FilterProgress(NamedTuple):
 
 
 #######################################################################################################################
-#  Factory Declaration                                                                                                #
+# Factory Declaration                                                                                                 #
 #######################################################################################################################
-
 
 class LivesInRegionWithExceptions(LivesInRegion, UsesAllowedRegionsBitsetMixin):
     _FILTER_PROGRESS = list()
@@ -88,7 +87,7 @@ class LivesInRegionWithExceptions(LivesInRegion, UsesAllowedRegionsBitsetMixin):
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = ('LivesInRegionWithExceptions', )

@@ -8,7 +8,7 @@ filters that appear in a situation job. Both are exported as snippets for conven
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # sims 4 imports
@@ -35,9 +35,8 @@ from kuttoe_home_regions.utils import filtered_cached_property, SnippetMixin
 
 
 #######################################################################################################################
-#  Situation Job Template Factory                                                                                     #
+# Situation Job Template Factory                                                                                      #
 #######################################################################################################################
-
 
 class SituationJobTemplate(
     HasTunableFactory, AutoFactoryInit, SnippetMixin,
@@ -74,9 +73,8 @@ class SituationJobTemplate(
 
 
 #######################################################################################################################
-#  Situation Filter Replacement Factory                                                                               #
+# Situation Filter Replacement Factory                                                                                #
 #######################################################################################################################
-
 
 class FilterToSituationJobMapping(TunableMapping):
     def __init__(self, *args, **kwargs):
@@ -126,7 +124,7 @@ class SituationFilterReplacement(
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 (TunableSituationJobsTemplateSnippetReference, TunableSituationJobsTemplateSnippet) = SituationJobTemplate._snippet

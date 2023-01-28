@@ -7,7 +7,7 @@ This file details a special tunable snippet that is used for filtering out situa
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # python imports
@@ -34,7 +34,7 @@ from kuttoe_home_regions.tunable.searchable_whitelist_blacklist import TunableSe
 
 
 #######################################################################################################################
-#  Enumerations                                                                                                       #
+# Enumerations                                                                                                        #
 #######################################################################################################################
 
 @enum_entry_factory(default='GLOBAL', invalid=('NONE', ))
@@ -45,7 +45,7 @@ class BypassListType(enum.Int):
 
 
 #######################################################################################################################
-#  Situation Filter Result class                                                                                      #
+# Situation Filter Result class                                                                                       #
 #######################################################################################################################
 
 class SituationFilterResult(NamedTuple):
@@ -76,7 +76,7 @@ class SituationFilterResult(NamedTuple):
 
 
 #######################################################################################################################
-#  Tuning                                                                                                             #
+# Tuning                                                                                                              #
 #######################################################################################################################
 
 class SituationBypassMapping(TunableMapping):
@@ -129,9 +129,8 @@ class TunableSettingValueVariant(TunableVariant):
 
 
 #######################################################################################################################
-#  Factory Declaration                                                                                                #
+# Factory Declaration                                                                                                 #
 #######################################################################################################################
-
 
 class SituationJobsFilter(
     HasTunableSingletonFactory, AutoFactoryInit, SnippetMixin,
@@ -243,7 +242,7 @@ class SituationJobsFilter(
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 (TunableSituationJobsFilterSnippetReference, TunableSituationJobsFilterSnippet) = SituationJobsFilter._snippet

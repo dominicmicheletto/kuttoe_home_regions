@@ -8,9 +8,8 @@ ensures that the desired locked arguments are locked and that the desired Picker
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
-
 
 from sims4.utils import staticproperty
 from ui.ui_dialog_picker import UiItemPicker, UiDialogObjectPicker
@@ -18,7 +17,7 @@ from kuttoe_home_regions.utils import construct_auto_init_factory
 
 
 #######################################################################################################################
-#  Factory Tunables                                                                                                   #
+# Factory Tunables                                                                                                    #
 #######################################################################################################################
 
 class ToggleItemPicker:
@@ -36,7 +35,7 @@ class ToggleItemPicker:
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = ('ToggleItemPicker', )

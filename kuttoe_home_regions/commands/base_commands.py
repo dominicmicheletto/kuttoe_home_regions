@@ -7,7 +7,7 @@ code used for them.
 """
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # python imports
@@ -20,22 +20,39 @@ from sims4.commands import Output
 from kuttoe_home_regions.commands.utils import *
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 from kuttoe_home_regions.ui import NotificationType
+from kuttoe_home_regions.utils import matches_bounds, BoundTypes
 
 
 #######################################################################################################################
-#  Base Console Command                                                                                               #
+# Base Console Command                                                                                                #
 #######################################################################################################################
-
 
 def kuttoe_settings_soft_setting_toggle(home_world_id: HomeWorldIds, new_value: bool = None, _connection=None):
     from kuttoe_home_regions.settings import Settings
-    WorldSettingNames = Settings.WorldSettingNames
+    soft = Settings.WorldSettingNames.SOFT
 
-    new_value = new_value if new_value is not None else not Settings.get_world_settings(home_world_id)['Soft']
-    Settings.update_setting('{}_{}'.format(home_world_id.settings_name_base, WorldSettingNames.SOFT), new_value)
+    new_value = new_value if new_value is not None else not Settings.get_world_settings(home_world_id)[soft]
+    Settings.update_setting('{}_{}'.format(home_world_id.settings_name_base, soft), new_value)
     Output(_connection)('Soft filter setting for World {} set to {}'.format(home_world_id.desc, new_value))
 
     return True
+
+
+def kuttoe_set_region_soft_filter_value(home_world_id: HomeWorldIds, new_value: float, _connection=None):
+    from kuttoe_home_regions.settings import Settings
+    output = Output(_connection)
+
+    min_value, max_value = 0.0, 1.0
+    valid = matches_bounds(new_value, BoundTypes.NONE, (min_value, max_value))
+
+    if not valid:
+        output(f'Soft filter for {home_world_id.desc} value must be between '
+               f'{min_value} and {max_value} (exclusive), not: {new_value}')
+    else:
+        output(f'Soft filter value for {home_world_id.desc} updated to {new_value}')
+        Settings.update_world_setting(home_world_id, Settings.WorldSettingNames.SOFT_FILTER_VALUE, new_value)
+
+    return valid
 
 
 def kuttoe_settings_tourists_toggle(home_world_id: HomeWorldIds, new_value: bool = None, _connection=None):
@@ -48,7 +65,7 @@ def kuttoe_settings_tourists_toggle(home_world_id: HomeWorldIds, new_value: bool
         return False
 
     new_value = new_value if new_value is not None else not Settings.get_world_settings(home_world_id)[name]
-    Settings.update_setting('{}_{}'.format(home_world_id.settings_name_base, name), new_value)
+    Settings.update_world_setting(home_world_id, name, new_value)
     Output(_connection)('Tourists filter setting for World {} set to {}'.format(home_world_id.desc, new_value))
 
     return True
@@ -98,7 +115,7 @@ def _alter_worlds_list_helper(
     else:
         msg = '[[Invalid Alter Type]]'
 
-    Settings.update_setting('{}_Worlds'.format(source_world.settings_name_base), world_list)
+    Settings.update_world_setting(source_world, Settings.WorldSettingNames.WORLDS, world_list)
     output('World {} {} {}\'s list of Worlds Townies are allowed to come from'.format(
         target_world.desc, msg, source_world.desc
     ))
@@ -124,7 +141,7 @@ def kuttoe_settings_alter_worlds_list(source_world: HomeWorldIds,
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = (
@@ -132,5 +149,6 @@ __all__ = (
     'kuttoe_settings_tourists_toggle',
     'kuttoe_settings_alter_worlds_list',
     'kuttoe_notifications_toggle',
+    'kuttoe_set_region_soft_filter_value',
     '_alter_worlds_list_helper',
 )

@@ -7,7 +7,7 @@ This file details a special interaction which toggles the notification settings.
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                            #
 #######################################################################################################################
 
 # sims4 imports
@@ -36,7 +36,7 @@ from kuttoe_home_regions.utils import construct_auto_init_factory
 
 
 #######################################################################################################################
-#  Tunable Definitions                                                                                                #
+# Tunable Definitions                                                                                                #
 #######################################################################################################################
 
 class TunableEnumValueToDisplayDataMapping(TunableMapping):
@@ -52,7 +52,7 @@ class TunableEnumValueToDisplayDataMapping(TunableMapping):
 
 
 #######################################################################################################################
-#  Proxy Interactions                                                                                                 #
+# Proxy Interactions                                                                                                 #
 #######################################################################################################################
 
 class _NotificationSettingPickerMenuProxyInteraction(ToggleSuperInteraction, _PickerPieMenuProxyInteraction):
@@ -107,7 +107,7 @@ class _NotificationSettingPickerMenuProxyInteraction(ToggleSuperInteraction, _Pi
 
 
 #######################################################################################################################
-#  Super Interactions                                                                                                 #
+# Super Interactions                                                                                                 #
 #######################################################################################################################
 
 class NotificationSettingsPickerInteraction(PickerSuperInteraction, DisplayNotificationMixin):
@@ -194,7 +194,7 @@ class NotificationSettingsPickerInteraction(PickerSuperInteraction, DisplayNotif
 
 
 #######################################################################################################################
-#  Instance Tunable Locking                                                                                           #
+# Instance Tunable Locking                                                                                           #
 #######################################################################################################################
 
 lock_instance_tunables(NotificationSettingsPickerInteraction, interaction_type=InteractionType.NOTIFICATION)

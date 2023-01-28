@@ -6,8 +6,9 @@ This file details the HomeWorldIds enumeration which contains a ton of informati
 mod to function.
 """
 
+
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # python imports
@@ -37,7 +38,7 @@ from kuttoe_home_regions.tunable.bit_value import TunableBitValueVariant
 
 
 #######################################################################################################################
-#  Helper Enumeration  Declaration                                                                                    #
+# Helper Enumeration  Declaration                                                                                     #
 #######################################################################################################################
 
 @enum_entry_factory(default='BASE_GAME', invalid=())
@@ -49,9 +50,8 @@ class WorldType(enum.Int):
 
 
 #######################################################################################################################
-#  Factory Class Code                                                                                                 #
+# Factory Class Code                                                                                                  #
 #######################################################################################################################
-
 
 class RegionData:
     _LAST_BIT_VALUE = 0
@@ -168,7 +168,7 @@ class RegionDataFactory(EnumItemFactory):
 
 
 #######################################################################################################################
-#  Enumeration Code                                                                                                   #
+# Enumeration Code                                                                                                    #
 #######################################################################################################################
 
 @enum_entry_factory(default='DEFAULT', invalid=('DEFAULT', ), method_name='create_enum_entry')
@@ -240,7 +240,7 @@ class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = ('HomeWorldIds', 'IconSize', 'WorldType', )

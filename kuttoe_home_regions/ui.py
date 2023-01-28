@@ -5,8 +5,9 @@ https://kuttoe.itch.io/keep-sims-in-home-region#download
 This file details UI elements.
 """
 
+
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # python imports
@@ -37,9 +38,8 @@ from kuttoe_home_regions.utils import enum_entry_factory, SnippetMixin
 
 
 #######################################################################################################################
-#  Notification Colour Code                                                                                           #
+# Notification Colour Code                                                                                            #
 #######################################################################################################################
-
 
 _NotificationInfo = namedtuple('_NotificationInfo', ['information_level', 'urgency', 'visual_type'])
 
@@ -78,9 +78,8 @@ class NotificationColour(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factor
 
 
 #######################################################################################################################
-#  Enumerations                                                                                                       #
+# Enumerations                                                                                                        #
 #######################################################################################################################
-
 
 @enum_entry_factory(default='NONE', invalid=())
 class InteractionType(enum.Int):
@@ -92,6 +91,8 @@ class InteractionType(enum.Int):
     WORLD_SELECTION = 5
     TOURISTS_TOGGLE = 6
     NOTIFICATION = 7
+    RESET_SETTINGS = 8
+    SOFT_FILTER_VALUE = 9
 
 
 @enum_entry_factory(default='SUCCESS', invalid=())
@@ -119,10 +120,10 @@ class NotificationType(enum.Int):
     def pretty_name(self) -> str:
         return self.name.lower()
 
-#######################################################################################################################
-#  Icon Definition Variant Definition                                                                                 #
-#######################################################################################################################
 
+#######################################################################################################################
+# Icon Definition Variant Definition                                                                                  #
+#######################################################################################################################
 
 class TunableIconDefinitionVariant(TunableVariant):
     def __init__(self, *args, **kwargs):
@@ -131,13 +132,17 @@ class TunableIconDefinitionVariant(TunableVariant):
 
         super().__init__(*args, **kwargs)
 
-#######################################################################################################################
-#  Notification Tuning                                                                                                #
-#######################################################################################################################
 
+#######################################################################################################################
+# Notification Tuning                                                                                                 #
+#######################################################################################################################
 
 class _NotificationData(
-    namedtuple('_NotificationData', ('sim_infos', 'regions', 'toggle_value', ), defaults=(tuple(), tuple(), None))
+    namedtuple(
+        '_NotificationData',
+        ('sim_infos', 'regions', 'toggle_value', 'backup_text', 'filter_value', ),
+        defaults=(tuple(), tuple(), None, None, None, )
+    )
 ):
     @staticmethod
     def _sort_sim_infos(*sim_infos: SimInfo):
@@ -160,6 +165,12 @@ class _NotificationData(
 
     @property
     def has_toggle_value(self): return self.toggle_value is not None
+
+    @property
+    def has_backup_text(self): return self.backup_text is not None
+
+    @property
+    def has_filter_value(self): return self.filter_value is not None
 
 
 class Notification(HasTunableFactory, AutoFactoryInit, SnippetMixin, snippet_name='custom_notification'):
@@ -216,6 +227,13 @@ class Notification(HasTunableFactory, AutoFactoryInit, SnippetMixin, snippet_nam
         return LocalizationHelperTuning.get_bulleted_list(None, *region_names)
 
     @property
+    def region_name(self):
+        if not self._notification_data.has_regions:
+            return lambda *_, **__: None
+
+        return self.regions[0].region_name()
+
+    @property
     def display_name(self): return self._interaction._get_name()
 
     @property
@@ -230,6 +248,10 @@ class Notification(HasTunableFactory, AutoFactoryInit, SnippetMixin, snippet_nam
             return count, self.recipient, self.region_list
         elif self._interaction_type is InteractionType.NOTIFICATION:
             return self.toggle_value,
+        elif self._interaction_type is InteractionType.RESET_SETTINGS:
+            return (self.backup_text,) if self._notification_data.has_backup_text else tuple()
+        elif self._interaction_type is InteractionType.SOFT_FILTER_VALUE:
+            return self.region_name, self.filter_value
         return self.recipient, display_name
 
     @property
@@ -239,8 +261,7 @@ class Notification(HasTunableFactory, AutoFactoryInit, SnippetMixin, snippet_nam
     def notification_icon(self):
         if self.icon is True:
             icon = self._interaction.get_pie_menu_icon_info()
-
-            return lambda *_, **__: icon if icon is not None else icon
+            return (lambda *_, **__: icon) if icon is not None else None
         return self.icon
 
     @property
@@ -253,6 +274,7 @@ class Notification(HasTunableFactory, AutoFactoryInit, SnippetMixin, snippet_nam
     @property
     def params(self):
         params = dict()
+
         params['text'] = self._get_text_with_tokens('text')
         params['title'] = self._get_text_with_tokens('title')
         params['icon'] = self.notification_icon
@@ -263,10 +285,10 @@ class Notification(HasTunableFactory, AutoFactoryInit, SnippetMixin, snippet_nam
     @property
     def dialog(self): return UiDialogNotification.TunableFactory().default(None, resolver=self.resolver, **self.params)
 
-#######################################################################################################################
-#  Module Exports                                                                                                     #
-#######################################################################################################################
 
+#######################################################################################################################
+# Module Exports                                                                                                      #
+#######################################################################################################################
 
 (TunableNotificationSnippetReference, TunableNotificationSnippet) = Notification._snippet
 __all__ = (

@@ -6,8 +6,9 @@ This file details settings. These settings have defaults defined in tunable but 
 can be accessed after tunable is loaded.
 """
 
+
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # python imports
@@ -27,11 +28,11 @@ from sims4.commands import Command, CommandType
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 from kuttoe_home_regions.tunable import TunableInteractionName
 from kuttoe_home_regions.ui import NotificationType
-from kuttoe_home_regions.utils import BoundTypes, validate_bool, validate_number, validate_list
+from kuttoe_home_regions.utils import BoundTypes, validate_bool, validate_number, validate_list, cached_classproperty
 
 
 #######################################################################################################################
-#  Settings Tuning                                                                                                    #
+# Settings Tuning                                                                                                     #
 #######################################################################################################################
 
 class TunableWorldSettings(HasTunableFactory, AutoFactoryInit):
@@ -39,6 +40,7 @@ class TunableWorldSettings(HasTunableFactory, AutoFactoryInit):
         'soft': Tunable(tunable_type=bool, default=False, allow_empty=False),
         'world_list': TunableEnumSet(enum_type=HomeWorldIds, enum_default=HomeWorldIds.DEFAULT, allow_empty_set=True),
         'tourist_toggle': OptionalTunable(Tunable(tunable_type=bool, default=True, allow_empty=False)),
+        'soft_filter_value': TunableRange(tunable_type=float, default=0.1, minimum=0.0, maximum=1.0),
     }
 
     @classmethod
@@ -52,6 +54,7 @@ class TunableWorldSettings(HasTunableFactory, AutoFactoryInit):
         dict_values['{}_{}'.format(base_name, WorldSettingNames.WORLDS)] = list(
             world.name for world in values.get('world_list', list())
         )
+        dict_values['{}_{}'.format(base_name, WorldSettingNames.SOFT_FILTER_VALUE)] = values.get('soft_filter_value', 0.1)
 
         return dict_values
 
@@ -100,13 +103,32 @@ class WorldSettingNames:
     SOFT = 'Soft'
     WORLDS = 'Worlds'
     TOURISTS = 'TouristsToggle'
+    SOFT_FILTER_VALUE = 'SoftFilterValue'
+
+    @staticmethod
+    def _filter(item):
+        key, value = item
+
+        return not key.startswith('_') and not isinstance(value, classmethod)
 
     @classmethod
-    def _names(cls, world: HomeWorldIds):
-        names = (cls.SOFT, cls.WORLDS)
+    def values(cls) -> Dict[str, str]:
+        return dict(filter(cls._filter, vars(cls).items()))
 
-        if world.has_tourists:
-            names += (cls.TOURISTS,)
+    @classmethod
+    def names(cls) -> Iterable[str]:
+        return cls.values().keys()
+
+    @classmethod
+    def items(cls):
+        return cls.values().items()
+
+    @classmethod
+    def get_names_for_world(cls, world: HomeWorldIds):
+        names = set(cls.values().values())
+
+        if not world.has_tourists:
+            names.remove(cls.TOURISTS)
 
         return names
 
@@ -114,7 +136,6 @@ class WorldSettingNames:
 class SettingNames:
     BIDIRECTIONAL_TOGGLE = 'bidirectional_toggle'
     HIGH_SCHOOL_TOGGLE = 'high_school_toggle'
-    SOFT_FILTER_VALUE = 'soft_filter_value'
 
     @staticmethod
     def _filter(item):
@@ -147,11 +168,11 @@ class Settings:
         allow_world=TunableInteractionName(),
         disallow_world=TunableInteractionName(),
         notification=TunableInteractionName(),
+        soft_filter_value=TunableInteractionName(),
     )
     NOTIFICATION_SETTINGS = TunableNotificationSettingsMapping()
     BIDIRECTIONAL_TOGGLE = Tunable(tunable_type=bool, default=False, allow_empty=False, needs_tuning=True)
     HIGH_SCHOOL_TOGGLE = Tunable(tunable_type=bool, default=True, allow_empty=False, needs_tuning=True)
-    SOFT_FILTER_VALUE = TunableRange(tunable_type=float, default=0.1, minimum=0.0, maximum=1.0)
 
     _SETTINGS = None
 
@@ -160,6 +181,7 @@ class Settings:
 
     EXCEPTION_FILE_NAME = '[Kuttoe] HomeRegions_Exception.log'
     SETTINGS_FILE_NAME = '[Kuttoe] HomeRegions_Settings.cfg'
+    BACKUP_SETTINGS_FILE_NAME = '[Kuttoe] HomeRegions_Settings_Backup_{}.cfg'
     DISCORD_LINK = 'https://discord.gg/RqPqCdBsdF'
 
     @classmethod
@@ -205,6 +227,12 @@ class Settings:
             return kuttoe_settings_alter_worlds_list(home_world, *home_world_name, alter_type=AlterType.DISALLOW_WORLD,
                                                      _connection=_connection)
 
+        @Command(command_name['soft_filter_value'], command_type=CommandType.Live)
+        def _kuttoe_set_soft_filter_value(new_value: float, _connection=None):
+            from kuttoe_home_regions.commands import kuttoe_set_region_soft_filter_value
+
+            return kuttoe_set_region_soft_filter_value(home_world, new_value=new_value, _connection=_connection)
+
         return _kuttoe_soft_toggle, _kuttoe_allow_world, _kuttoe_disallow_world
 
     @classmethod
@@ -229,6 +257,10 @@ class Settings:
         except BaseException as ex:
             timestamp = datetime.now()
             cls.report_error(ex, timestamp, cls.EXCEPTION_FILE_NAME)
+
+            return False
+        else:
+            return True
 
     @classproperty
     def base_directory(cls):
@@ -270,6 +302,7 @@ class Settings:
         values.setdefault('soft', False)
         values.setdefault('tourist_toggle', True if home_world.has_tourists else None)
         values.setdefault('worlds_list', tuple())
+        values.setdefault('soft_filter_value', 0.1)
 
         return TunableWorldSettings.get_dict_values(home_world, **values)
 
@@ -285,12 +318,13 @@ class Settings:
     def additional_settings(cls):
         return {value: getattr(cls, key) for (key, value) in cls.SettingNames.items()}
 
-    @classproperty
+    @cached_classproperty
     def default_settings(cls):
         dict_values = dict()
 
         dict_values.update(cls.notification_settings)
         dict_values.update(cls.additional_settings)
+
         for home_world in HomeWorldIds:
             if home_world is HomeWorldIds.DEFAULT:
                 continue
@@ -314,7 +348,6 @@ class Settings:
 
         validate_args = dict(settings=settings_dict, default=default_settings, callback=_dump_settings)
 
-        validate_number(SettingNames.SOFT_FILTER_VALUE, max_value=1.0, include_bounds=BoundTypes.NONE, **validate_args)
         validate_bool(SettingNames.HIGH_SCHOOL_TOGGLE, **validate_args)
         validate_bool(SettingNames.BIDIRECTIONAL_TOGGLE, **validate_args)
 
@@ -326,9 +359,11 @@ class Settings:
                 continue
 
             base_name = home_world.settings_name_base
-            validate_bool('{}_{}'.format(base_name, cls.WorldSettingNames.SOFT), **validate_args)
-            validate_list('{}_{}'.format(base_name, cls.WorldSettingNames.WORLDS), **validate_args,
+            validate_bool('{}_{}'.format(base_name, WorldSettingNames.SOFT), **validate_args)
+            validate_list('{}_{}'.format(base_name, WorldSettingNames.WORLDS), **validate_args,
                           value_constraints=lambda value: value in HomeWorldIds)
+            validate_number('{}_{}'.format(base_name, WorldSettingNames.SOFT_FILTER_VALUE),
+                            max_value=1.0, include_bounds=BoundTypes.NONE, **validate_args)
             if home_world.has_tourists:
                 validate_bool('{}_{}'.format(base_name, cls.WorldSettingNames.TOURISTS), **validate_args)
 
@@ -338,6 +373,8 @@ class Settings:
         default_settings = cls.default_settings
 
         cls._SETTINGS = dict(**default_settings)
+        # attempt to load the settings. if the file does not already exist, create it
+        # validate all the settings to be valid
         try:
             with open(settings_directory) as settings_file:
                 loaded_settings = load(settings_file)
@@ -347,10 +384,14 @@ class Settings:
         except (FileNotFoundError, JSONDecodeError):
             cls.dump_settings(settings_directory, cls._SETTINGS)
 
+        # remove any setting keys that are no longer valid (i.e. setting names changed; user edited file badly; etc.)
         if cls._SETTINGS.keys() != default_settings.keys():
             keys = (key for key in set(cls._SETTINGS) if key not in default_settings)
+
             for key in keys:
                 cls._SETTINGS.pop(key)
+
+            cls.dump_settings(settings_directory, cls._SETTINGS)
 
     @classproperty
     def settings(cls) -> dict:
@@ -362,7 +403,7 @@ class Settings:
     @classmethod
     def get_world_settings(cls, home_world: HomeWorldIds) -> Dict[str, Any]:
         name_base = home_world.settings_name_base
-        keys = WorldSettingNames._names(home_world)
+        keys = WorldSettingNames.get_names_for_world(home_world)
 
         return {key: cls.settings['{}_{}'.format(name_base, key)] for key in keys}
 
@@ -382,10 +423,6 @@ class Settings:
     def high_school_toggle(cls) -> bool:
         return cls.settings[SettingNames.HIGH_SCHOOL_TOGGLE]
 
-    @classproperty
-    def soft_filter_value(cls) -> float:
-        return cls.settings[SettingNames.SOFT_FILTER_VALUE]
-
     @classmethod
     def update_setting(cls, setting_key: str, setting_value):
         if setting_key not in cls.settings:
@@ -395,6 +432,10 @@ class Settings:
         cls.dump_settings(cls.settings_directory, cls.settings)
 
         return True
+
+    @classmethod
+    def update_world_setting(cls, home_world: HomeWorldIds, setting_key: str, setting_value):
+        return cls.update_setting(f'{home_world.settings_name_base}_{setting_key}', setting_value)
 
     @classmethod
     def toggle_setting(cls, setting_key: str, setting_value: bool = None):
@@ -415,9 +456,33 @@ class Settings:
             return token
         return token(*string_tokens)
 
+    @classmethod
+    def reset(cls, backup: bool = False):
+        success = None
+
+        if backup:
+            timestamp = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            filename = cls.BACKUP_SETTINGS_FILE_NAME.format(timestamp)
+            full_path = path.join(cls.gv_directory.directory_path, filename)
+
+            try:
+                cls.dump_settings(full_path, cls._SETTINGS)
+            except (FileNotFoundError, FileExistsError, OSError):
+                success = None
+            except BaseException as ex:
+                raise ex
+            else:
+                success = full_path
+
+        cls._SETTINGS.clear()
+        cls._SETTINGS.update(cls.default_settings)
+        cls.dump_settings(cls.settings_directory, cls._SETTINGS)
+
+        return success
+
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = ('Settings', 'SettingNames', 'WorldSettingNames', )

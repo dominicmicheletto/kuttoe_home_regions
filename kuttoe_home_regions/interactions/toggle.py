@@ -8,7 +8,7 @@ a variety of known values and after a selection sends the value to a given conso
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                            #
 #######################################################################################################################
 
 # sims4 imports
@@ -30,7 +30,7 @@ from kuttoe_home_regions.ui import InteractionType, NotificationType
 
 
 #######################################################################################################################
-#  Super Interactions                                                                                                 #
+# Super Interactions                                                                                                 #
 #######################################################################################################################
 
 class ToggleSuperInteraction(PickerSuperInteraction, DisplayNotificationMixin):
@@ -74,14 +74,14 @@ class ToggleSuperInteraction(PickerSuperInteraction, DisplayNotificationMixin):
 
 
 #######################################################################################################################
-#  Instance Tunable Locking                                                                                           #
+# Instance Tunable Locking                                                                                           #
 #######################################################################################################################
 
 lock_instance_tunables(ToggleSuperInteraction, interaction_type=InteractionType.COMMAND)
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                     #
 #######################################################################################################################
 
 __all__ = ('ToggleSuperInteraction', )

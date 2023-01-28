@@ -1,5 +1,14 @@
+"""
+For Home Regions mod by Kuttoe & LeRoiDeTout
+https://kuttoe.itch.io/keep-sims-in-home-region#download
+
+This file details the metaclass nuts and bolts needed for dynamic enumerations that are built around a tuple instead
+of a simple name/value pair.
+"""
+
+
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # python imports
@@ -21,17 +30,15 @@ from sims4.resources import get_resource_key
 from sims4.repr_utils import standard_repr
 
 #######################################################################################################################
-#  Named Tuples                                                                                                       #
+# Named Tuples                                                                                                        #
 #######################################################################################################################
-
 
 EnumItem = namedtuple('EnumItem', ('enum_name', 'enum_value', 'enum_info'))
 
 
 #######################################################################################################################
-#  Mixins                                                                                                             #
+# Mixins                                                                                                              #
 #######################################################################################################################
-
 
 class DynamicFactoryEnumMixin:
     @property
@@ -49,9 +56,8 @@ class DynamicFactoryEnumMixin:
 
 
 #######################################################################################################################
-#  Tunables                                                                                                           #
+# Tunables                                                                                                            #
 #######################################################################################################################
-
 
 class EnumItemFactory(TunableSingletonFactory):
     class TunableReferenceMixin:
@@ -240,3 +246,10 @@ class DynamicFactoryEnumMetaclass(enum.Metaclass):
     @property
     def factory_values(cls):
         return tuple(cls._tuned_values_mapping)
+
+
+#######################################################################################################################
+# Module exports                                                                                                      #
+#######################################################################################################################
+
+__all__ = ('DynamicFactoryEnumMixin', 'EnumItemFactory', 'DynamicFactoryEnumMetaclass', )

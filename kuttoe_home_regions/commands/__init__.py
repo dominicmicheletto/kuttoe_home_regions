@@ -6,7 +6,7 @@ This file details console commands and helpful utility functions used to run the
 """
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # sims4 imports
@@ -19,10 +19,10 @@ from server_commands.argument_helpers import OptionalSimInfoParam, get_optional_
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 from kuttoe_home_regions.commands.base_commands import *
 from kuttoe_home_regions.commands.utils import *
-from kuttoe_home_regions.utils import matches_bounds, BoundTypes
+
 
 #######################################################################################################################
-#  Set Assigned World                                                                                                 #
+# Set Assigned World                                                                                                  #
 #######################################################################################################################
 
 
@@ -192,7 +192,7 @@ def disallow_in_all_regions_by_sim_name(first_name: str, last_name: str = '', _c
 
 
 #######################################################################################################################
-#  Remove Assigned World                                                                                              #
+# Remove Assigned World                                                                                               #
 #######################################################################################################################
 
 
@@ -279,21 +279,21 @@ def kuttoe_toggle_high_school(new_value: bool = None, _connection=None):
 
 
 #######################################################################################################################
-# Soft Filter Value                                                                                                   #
+# Miscellaneous                                                                                                       #
 #######################################################################################################################
 
-@Command('kuttoe.set_soft_filter_value', command_type=CommandType.Live)
-def kuttoe_set_soft_filter_value(new_value: float, _connection=None):
+@Command('kuttoe.settings.reset', command_type=CommandType.Live)
+def kuttoe_reset_settings(backup: bool = False, _connection=None):
     from kuttoe_home_regions.settings import Settings
 
     output = Output(_connection)
-    min_value = 0.0
-    max_value = 1.0
+    file_path = Settings.reset(backup=backup)
 
-    if not matches_bounds(new_value, BoundTypes.NONE, (min_value, max_value)):
-        output(f'Soft filter value must be between {min_value} and {max_value} (exclusive)')
-        return False
+    output(f'All settings have been reset to their defaults')
+    if backup:
+        if file_path is not None:
+            output(f'Your previous settings have been backed up to the following file: {file_path}')
+        else:
+            output(f'An error occurred while attempting to backup your previous settings file.')
 
-    output(f'Soft filter value updated to {new_value}')
-    Settings.update_setting(Settings.SettingNames.SOFT_FILTER_VALUE, new_value)
-    return True
+    return file_path

@@ -6,7 +6,7 @@ This file details debug console commands. These are for dev-use only and are loc
 """
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # python imports
@@ -23,9 +23,8 @@ from kuttoe_home_regions.commands.utils import get_sim_household_data, get_sim_i
 
 
 #######################################################################################################################
-#  Helper Functions                                                                                                   #
+# Helper Functions                                                                                                    #
 #######################################################################################################################
-
 
 def dump_data_to_file(
         file_name: str, data: dict, file_path: str = None, _connection=None,
@@ -108,9 +107,8 @@ class DebugDumpCommand:
 
 
 #######################################################################################################################
-#  World Getter Commands                                                                                              #
+# World Getter Commands                                                                                               #
 #######################################################################################################################
-
 
 @Command('kuttoe.get_world_id', command_type=CommandType.Cheat)
 def get_world_id(opt_sim: OptionalSimInfoParam = None, _connection=None):
@@ -176,7 +174,6 @@ def get_soft_filter_value(_connection=None):
 #######################################################################################################################
 #  Dump Commands                                                                                                      #
 #######################################################################################################################
-
 
 @DebugDumpCommand('Kuttoe_Filter_Dump', 'dump_filters', 'df')
 def dump_filters(_connection=None):
@@ -255,9 +252,8 @@ def toggle_filter_tracking(should_track: bool = None, _connection=None):
 
 
 #######################################################################################################################
-#  Miscellaneous Commands                                                                                             #
+# Miscellaneous Commands                                                                                              #
 #######################################################################################################################
-
 
 @Command('kuttoe.show_settings', command_type=CommandType.Cheat)
 def show_settings(_connection=None):

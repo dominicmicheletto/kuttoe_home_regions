@@ -8,7 +8,7 @@ include the code that creates the UI.
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # python imports
@@ -49,9 +49,8 @@ from kuttoe_home_regions.injections.home_regions_hooks import TunableHomeRegionI
 
 
 #######################################################################################################################
-#  Venue Modifications                                                                                                #
+# Venue Modifications                                                                                                 #
 #######################################################################################################################
-
 
 class InviteOverVariant(TunableVariant):
     def __init__(self, *args, **kwargs):
@@ -91,9 +90,8 @@ class VenueModifications:
 
 
 #######################################################################################################################
-#  Situation Job Modifications                                                                                        #
+# Situation Job Modifications                                                                                         #
 #######################################################################################################################
-
 
 class SituationJobModifications:
     TEMPLATE = TunableSituationJobsTemplateSnippet()
@@ -258,9 +256,8 @@ class SituationJobModifications:
 
 
 #######################################################################################################################
-#  Filter Modifications                                                                                               #
+# Filter Modifications                                                                                                #
 #######################################################################################################################
-
 
 class ReplacementPolicy(enum.Int):
     COMBINE = 0
@@ -358,9 +355,8 @@ class FilterModifications:
 
 
 #######################################################################################################################
-#  Injection Registration                                                                                             #
+# Injection Registration                                                                                              #
 #######################################################################################################################
-
 
 @on_load_complete(Types.SNIPPET, safe=False)
 def _register_all_injections(snippet_manager):

@@ -8,7 +8,7 @@ in or denied from a given world's soft filter, should that world already have a 
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                            #
 #######################################################################################################################
 
 # sims4 imports
@@ -20,7 +20,6 @@ from sims4.commands import execute as execute_command
 
 # miscellaneous imports
 from singletons import DEFAULT
-from services import client_manager
 from ui.ui_dialog_picker import UiItemPicker, BasePickerRow
 from event_testing.tests import TestList
 
@@ -41,7 +40,7 @@ from kuttoe_home_regions.utils import create_tunable_factory_with_overrides
 
 
 #######################################################################################################################
-#  Proxy Interactions                                                                                                 #
+# Proxy Interactions                                                                                                 #
 #######################################################################################################################
 
 class _RegionExpansionWorldSelectorPickerMenuProxyInteraction(_HomeWorldPickerMenuProxyInteraction):
@@ -50,9 +49,6 @@ class _RegionExpansionWorldSelectorPickerMenuProxyInteraction(_HomeWorldPickerMe
 
     @classproperty
     def picker_dialog(cls): return cls.world_selector_dialog
-
-    @classproperty
-    def client_id(cls): return client_manager().get_first_client_id()
 
     @classmethod
     def has_valid_choice(cls, target, context, **kwargs):
@@ -142,7 +138,7 @@ class _RegionExpansionWorldSelectorPickerMenuProxyInteraction(_HomeWorldPickerMe
 
 
 #######################################################################################################################
-#  Super Interactions                                                                                                 #
+# Super Interactions                                                                                                 #
 #######################################################################################################################
 
 class RegionExpansionWorldSelectorSuperInteraction(PickerSuperInteraction, DisplayNotificationMixin, HomeWorldSortOrderMixin):
@@ -270,7 +266,7 @@ class RegionExpansionWorldSelectorSuperInteraction(PickerSuperInteraction, Displ
 
 
 #######################################################################################################################
-#  Instance Tunable Locking                                                                                           #
+# Instance Tunable Locking                                                                                           #
 #######################################################################################################################
 
 lock_instance_tunables(RegionExpansionWorldSelectorSuperInteraction, interaction_type=InteractionType.SETTING_WORLD_PICKER)

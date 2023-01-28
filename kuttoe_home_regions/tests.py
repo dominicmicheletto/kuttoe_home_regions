@@ -8,7 +8,7 @@ Python instead of in tuning. It also details custom test set instances used by i
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # python imports
@@ -35,9 +35,8 @@ from kuttoe_home_regions.interactions.mixins import HasHomeWorldMixin
 
 
 #######################################################################################################################
-#  Factories                                                                                                          #
+# Factories                                                                                                           #
 #######################################################################################################################
-
 
 class _WorldsTestsBase(HasTunableSingletonFactory, AutoFactoryInit, BaseTest):
     FACTORY_TUNABLES = {
@@ -146,9 +145,8 @@ class HasHomeRegionTest(HasTunableSingletonFactory, AutoFactoryInit, BaseTest, H
 
 
 #######################################################################################################################
-#  Test Set Instances                                                                                                 #
+# Test Set Instances                                                                                                  #
 #######################################################################################################################
-
 
 class HomeRegionsTestSet(_TunableTestSetBase, is_fragment=True):
     MY_TEST_VARIANTS = {
@@ -167,9 +165,8 @@ class HomeRegionsTestSetInstance(TestSetInstance):
 
 
 #######################################################################################################################
-#  Functions                                                                                                          #
+# Functions                                                                                                           #
 #######################################################################################################################
-
 
 def get_is_world_available_test(
         source_world: HomeWorldIds,
@@ -199,7 +196,7 @@ def get_worlds_available_left_test(
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = (

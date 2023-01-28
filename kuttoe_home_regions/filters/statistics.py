@@ -7,8 +7,9 @@ statistic and offers several convenience methods used for determining which regi
 (set in the bitset) and for toggling region exemptions by setting and unsetting specific bits.
 """
 
+
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # sims 4 imports
@@ -27,9 +28,8 @@ from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 
 
 #######################################################################################################################
-#  Tuning Definitions                                                                                                 #
+# Tuning Definitions                                                                                                  #
 #######################################################################################################################
-
 
 class AllowedRegionsBitset(Statistic):
     @flexmethod
@@ -96,14 +96,14 @@ class UsesAllowedRegionsBitsetMixin:
 
 
 #######################################################################################################################
-#  Instance Tunable Locking                                                                                           #
+# Instance Tunable Locking                                                                                            #
 #######################################################################################################################
 
 lock_instance_tunables(AllowedRegionsBitset, max_value_tuning=HomeWorldIds.max_bit_value)
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = ('AllowedRegionsBitset', 'UsesAllowedRegionsBitsetMixin', )

@@ -6,8 +6,9 @@ This file details special filter tuning. This allows for the filters to be gener
 are automatically plugged-in as soon as the HomeWorldIds enum is updated.
 """
 
+
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # typing imports
@@ -33,9 +34,8 @@ from kuttoe_home_regions.utils import does_zone_have_modifiers
 
 
 #######################################################################################################################
-#  Filter Tuning                                                                                                      #
+# Filter Tuning                                                                                                       #
 #######################################################################################################################
-
 
 class LocationBasedFilterTermsWithLotTraitExceptions(LocationBasedFilterTerms):
     """
@@ -74,18 +74,16 @@ class LocationBasedFilterTermsWithLotTraitExceptions(LocationBasedFilterTerms):
 
 
 #######################################################################################################################
-#  Snippet Class Information                                                                                          #
+# Snippet Class Information                                                                                           #
 #######################################################################################################################
-
 
 snippet_name = snippets.SNIPPET_CLASS_NAMES['location_based_filter_terms']
 SnippetBase = vars(snippets)[snippet_name]
 
 
 #######################################################################################################################
-#  Base Tuning Class                                                                                                  #
+# Base Tuning Class                                                                                                   #
 #######################################################################################################################
-
 
 class _DynamicFilterBase(SnippetBase):
     LOT_TRAIT_INSTANCE = ZoneModifier.TunablePackSafeReference()
@@ -93,11 +91,11 @@ class _DynamicFilterBase(SnippetBase):
         '_skipped_regions': HomeWorldIds.create_enum_set(optional=True),
     }
 
-    @classproperty
-    def soft_filter_value(cls) -> float:
+    @classmethod
+    def soft_filter_value(cls, home_world: HomeWorldIds) -> float:
         from kuttoe_home_regions.settings import Settings
 
-        return Settings.soft_filter_value
+        return Settings.get_world_settings(home_world)[Settings.WorldSettingNames.SOFT_FILTER_VALUE]
 
     @classmethod
     def _get_region_list(cls, home_world: HomeWorldIds):
@@ -149,15 +147,14 @@ class _DynamicFilterBase(SnippetBase):
 
 
 #######################################################################################################################
-#  Tuning Classes                                                                                                     #
+# Tuning Classes                                                                                                      #
 #######################################################################################################################
-
 
 class SoftTunableLocationBasedFilterTermsSnippet(_DynamicFilterBase):
     @classmethod
     def _generate_value(cls):
         return {
-            world.region: cls._create_filter_term(world, cls.soft_filter_value)
+            world.region: cls._create_filter_term(world, cls.soft_filter_value(world))
             for world
             in HomeWorldIds.available_worlds
         }
@@ -184,7 +181,7 @@ class DynamicTunableLocationBasedFilterTermsSnippet(_DynamicFilterBase):
 
     @classmethod
     def _get_soft_filter_value(cls, home_world: HomeWorldIds):
-        return cls.soft_filter_value if cls.has_soft_filter(home_world) else 0.0
+        return cls.soft_filter_value(home_world) if cls.has_soft_filter(home_world) else 0.0
 
     @classmethod
     def _generate_value(cls):
@@ -196,7 +193,7 @@ class DynamicTunableLocationBasedFilterTermsSnippet(_DynamicFilterBase):
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = (

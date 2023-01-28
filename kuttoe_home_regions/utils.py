@@ -5,8 +5,9 @@ https://kuttoe.itch.io/keep-sims-in-home-region#download
 This file details utility functions and classes.
 """
 
+
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # typing imports
@@ -53,7 +54,6 @@ from objects.game_object import GameObject
 #######################################################################################################################
 # Decorators                                                                                                          #
 #######################################################################################################################
-
 
 class on_load_complete:
     __slots__ = ('_manager_type', '_safe',)
@@ -388,7 +388,6 @@ class enum_set_factory:
 # Named Tuples                                                                                                        #
 #######################################################################################################################
 
-
 class FunctionArgs(NamedTuple):
     args: tuple = tuple()
     kwargs: Dict[str, Any] = dict()
@@ -400,7 +399,6 @@ class FunctionArgs(NamedTuple):
 #######################################################################################################################
 # Enumerations                                                                                                        #
 #######################################################################################################################
-
 
 @enum_entry_factory(default='INVALID', invalid=('INVALID', ))
 class InteractionTargetType(DynamicEnum):
@@ -454,9 +452,8 @@ class BoundTypes(enum.IntFlags):
 
 
 #######################################################################################################################
-#  Helper Functions                                                                                                   #
+# Helper Functions                                                                                                    #
 #######################################################################################################################
-
 
 def create_tunable_reference(tuning_type: Types, pack_safe: bool = True, class_restrictions=(), *args, **kwargs):
     from sims4.tuning.tunable import TunableReference
@@ -593,8 +590,10 @@ def matches_bounds(value_to_test, bound_conditions: BoundTypes, bounds: Tuple[Un
 def validate_bool(key: str, settings: Dict[str, Any], default: Dict[str, Any], callback=None):
     if not isinstance(settings[key], bool):
         settings[key] = default[key]
+
         if callback is not None:
             return callback(settings)
+
         return False
     return True
 
@@ -610,8 +609,10 @@ def validate_number(key: str, settings: Dict[str, Any], default: Dict[str, Any],
 
     if not isinstance(value, value_type) or not matches_bounds(value, include_bounds, (min_value, max_value)):
         settings[key] = default[key]
+
         if callback is not None:
             return callback(settings)
+
         return False
     return True
 
@@ -621,20 +622,23 @@ def validate_list(key: str, settings: Dict[str, Any], default: Dict[str, Any], v
         iter(settings[key])
     except ValueError:
         settings[key] = [settings[key], ]
+
         if callback is not None:
             callback(settings)
 
-    if value_constraints:
+    if value_constraints is not None:
         if not all(value_constraints(value) for value in settings[key]):
             settings[key] = default[key]
+
             if callback is not None:
                 return callback(settings)
+
             return False
     return True
 
 
 #######################################################################################################################
-#  Mixins                                                                                                             #
+# Mixins                                                                                                              #
 #######################################################################################################################
 
 class SnippetMixin:
@@ -703,7 +707,7 @@ class ManagedTuningMixin:
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = (

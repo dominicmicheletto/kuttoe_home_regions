@@ -7,7 +7,7 @@ This file details interactions that move townies around, assigning them a given 
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # sims4 imports
@@ -39,7 +39,7 @@ from kuttoe_home_regions.ui import InteractionType
 
 
 #######################################################################################################################
-#  Proxy Interactions                                                                                                 #
+# Proxy Interactions                                                                                                  #
 #######################################################################################################################
 
 class _MoveMultipleTowniesPickerPieMenuProxyInteraction(_HomeWorldPickerMenuProxyInteraction, SimPickerInteraction):
@@ -106,7 +106,7 @@ class _MoveMultipleTowniesPickerPieMenuProxyInteraction(_HomeWorldPickerMenuProx
 
 
 #######################################################################################################################
-#  Super Interactions                                                                                                 #
+# Super Interactions                                                                                                  #
 #######################################################################################################################
 
 class MoveTownieSuperInteraction(
@@ -250,7 +250,7 @@ class MoveMultipleTowniesSuperInteraction(MoveTownieSuperInteraction):
 
 
 #######################################################################################################################
-#  Instance Tunable Locking                                                                                           #
+# Instance Tunable Locking                                                                                            #
 #######################################################################################################################
 
 lock_instance_tunables(MoveTownieSuperInteraction, interaction_type=InteractionType.COMMAND)

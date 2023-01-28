@@ -8,7 +8,7 @@ the list of worlds is to be generated.
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 from sims4.tuning.tunable import TunableVariant, Tunable, HasTunableSingletonFactory, AutoFactoryInit
@@ -18,7 +18,7 @@ from kuttoe_home_regions.filters.statistics import UsesAllowedRegionsBitsetMixin
 
 
 #######################################################################################################################
-#  Tunable Definitions                                                                                                #
+# Tunable Definitions                                                                                                 #
 #######################################################################################################################
 
 class TunableAllowedWorldsList(TunableVariant):
@@ -75,7 +75,7 @@ class TunableAllowedWorldsList(TunableVariant):
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = ('TunableAllowedWorldsList', )

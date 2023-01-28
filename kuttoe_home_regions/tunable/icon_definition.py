@@ -5,8 +5,9 @@ https://kuttoe.itch.io/keep-sims-in-home-region#download
 This file details tuning used for icons.
 """
 
+
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # misc imports
@@ -25,9 +26,8 @@ from interactions.utils.tunable_icon import TunableIconVariant, IconInfoData
 
 
 #######################################################################################################################
-#  Helper Enumerations                                                                                                #
+# Helper Enumerations                                                                                                 #
 #######################################################################################################################
-
 
 class IconSize(enum.Int):
     SMALL = 32
@@ -36,9 +36,8 @@ class IconSize(enum.Int):
 
 
 #######################################################################################################################
-#  Factories                                                                                                          #
+# Factories                                                                                                           #
 #######################################################################################################################
-
 
 class IconDefinition(HasTunableFactory, AutoFactoryInit):
     FACTORY_TUNABLES = dict(icon_size=TunableEnumEntry(tunable_type=IconSize, default=IconSize.SMALL))
@@ -58,9 +57,8 @@ class IconDefinition(HasTunableFactory, AutoFactoryInit):
 
 
 #######################################################################################################################
-#  Tuning Definitions                                                                                                 #
+# Tuning Definitions                                                                                                  #
 #######################################################################################################################
-
 
 class IconMapping(TunableMapping):
     def __init__(self, *args, **kwargs):
@@ -133,7 +131,7 @@ class TunableIconMappingVariant(TunableVariant):
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = ('IconSize', 'IconDefinition', 'TunableIconMappingVariant', 'TunableIconDefinition', )

@@ -6,8 +6,9 @@ This file details the LocalFixup tuning that is used in conjunction with the Hom
 information that needs to occur to make a Sim a "proper" resident of a given World.
 """
 
+
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # misc imports
@@ -23,7 +24,7 @@ from kuttoe_home_regions.utils import cached_property
 
 
 #######################################################################################################################
-#  Factory Declaration                                                                                                #
+# Factory Declaration                                                                                                 #
 #######################################################################################################################
 
 class LocalFixup(AutoFactoryInit, HasTunableFactory):
@@ -100,7 +101,7 @@ class LocalFixup(AutoFactoryInit, HasTunableFactory):
 
 
 #######################################################################################################################
-#  Other Tunables                                                                                                     #
+# Other Tunables                                                                                                      #
 #######################################################################################################################
 
 class OptionalTunableLocalFixup(OptionalTunable):
@@ -109,7 +110,7 @@ class OptionalTunableLocalFixup(OptionalTunable):
 
 
 #######################################################################################################################
-#  Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = ('OptionalTunableLocalFixup', 'LocalFixup', )

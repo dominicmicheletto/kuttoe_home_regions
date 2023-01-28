@@ -8,7 +8,7 @@ per-Sim and a per-World basis, wherein certain Sims can bypass the mod's filters
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                            #
 #######################################################################################################################
 
 # sims4 imports
@@ -38,7 +38,7 @@ from kuttoe_home_regions.tunable.allowed_worlds_list import TunableAllowedWorlds
 
 
 #######################################################################################################################
-#  Base Super Interaction                                                                                             #
+# Base Super Interaction                                                                                             #
 #######################################################################################################################
 
 class WorldExemptionSuperInteraction(
@@ -157,7 +157,7 @@ class WorldExemptionSuperInteraction(
 
 
 #######################################################################################################################
-#  Instance Tuning Locking                                                                                            #
+# Instance Tuning Locking                                                                                            #
 #######################################################################################################################
 
 lock_instance_tunables(WorldExemptionSuperInteraction, interaction_type=InteractionType.WORLD_SELECTION)

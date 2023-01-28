@@ -2,8 +2,7 @@
 For Home Regions mod by Kuttoe & LeRoiDeTout
 https://kuttoe.itch.io/keep-sims-in-home-region#download
 
-This file details interactions that toggle on and off a given world's soft filter. This is the global soft filter
-setting which needs to be enabled for a world to softly allow Sims from other worlds to "pass through".
+This file details an interaction that allows for setting the soft filter value for specific worlds.
 """
 
 
@@ -13,13 +12,16 @@ setting which needs to be enabled for a world to softly allow Sims from other wo
 
 # sims4 imports
 from sims4.tuning.instances import lock_instance_tunables
-from sims4.tuning.tunable import Tunable
-from sims4.utils import classproperty, flexmethod
-from sims4.commands import execute as execute_command
+from sims4.tuning.tunable import TunableVariant, OptionalTunable, Tunable
+from sims4.utils import classproperty, flexmethod, exception_protected
+from sims4.localization import TunableLocalizedStringFactory, LocalizationHelperTuning
 
 # miscellaneous imports
 from singletons import DEFAULT
+
+# ui imports
 from ui.ui_dialog_picker import BasePickerRow
+from ui.ui_dialog_generic import UiDialogTextInputOk, UiDialogTextInputOkCancel
 
 # interaction imports
 from interactions.base.picker_interaction import PickerSuperInteraction
@@ -28,99 +30,93 @@ from interactions.context import InteractionSource
 # local imports
 from kuttoe_home_regions.interactions.home_world_picker_menu_proxy_interaction import _HomeWorldPickerMenuProxyInteraction
 from kuttoe_home_regions.interactions.mixins import *
-from kuttoe_home_regions.tunable.toggle_item import TunableToggleEntrySnippet
 from kuttoe_home_regions.tunable.allowed_worlds_list import TunableAllowedWorldsList
 from kuttoe_home_regions.ui import InteractionType, NotificationType
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
-from kuttoe_home_regions.tunable.toggle_item_picker import ToggleItemPicker
 from kuttoe_home_regions.utils import create_tunable_factory_with_overrides
+from kuttoe_home_regions.commands import kuttoe_set_region_soft_filter_value
 
 
 #######################################################################################################################
-# Proxy Interactions                                                                                                 #
+# Proxy Interactions                                                                                                  #
 #######################################################################################################################
 
-class _SoftFilterTogglePickerMenuProxyInteraction(_HomeWorldPickerMenuProxyInteraction):
+class _SetSoftFilterValuePickerMenuProxyInteraction(_HomeWorldPickerMenuProxyInteraction):
     @classmethod
     def use_pie_menu(cls): return False
 
     @classproperty
-    def command_name(cls):
+    def text_input_overrides(cls):
         from kuttoe_home_regions.settings import Settings
 
-        base = getattr(Settings.COMMAND_NAME_BASES, 'soft')
+        overrides = dict()
+        value = str(cls.world_settings[Settings.WorldSettingNames.SOFT_FILTER_VALUE])
+        overrides[cls.TEXT_INPUT_SOFT_FILTER_VALUE] = lambda *_, **__: LocalizationHelperTuning.get_raw_text(value)
 
-        return base(cls.home_world)[0]
+        return overrides
 
-    @classmethod
-    def has_valid_choice(cls, target, context, **kwargs):
-        choices_count = 0
-
-        for _ in cls.picker_rows_gen(target, context, **kwargs):
-            choices_count += 1
-
-            if choices_count >= cls.picker_dialog.min_selectable:
-                return True
-
+    @exception_protected
+    def _on_response(self, dialog):
+        if not dialog.accepted:
             return False
 
-    @flexmethod
-    def picker_rows_gen(cls, inst, target=DEFAULT, context=DEFAULT, **kwargs):
-        inst_or_cls = inst if inst is not None else cls
-        target = target if target is not DEFAULT else inst.target
-        context = context if context is not DEFAULT else inst.context
-        resolver = inst_or_cls.get_resolver(target=target, context=context, **kwargs)
+        soft_filter_value = dialog.text_input_responses.get(self.TEXT_INPUT_SOFT_FILTER_VALUE)
+        try:
+            soft_filter_value = float(soft_filter_value)
+            valid = kuttoe_set_region_soft_filter_value(self.home_world, soft_filter_value, _connection=self.client_id)
 
-        yield from inst_or_cls.toggle_items(cls.setting_key, home_world=inst_or_cls.home_world).picker_rows_gen(resolver)
-
-    def on_choice_selected(self, picked_choice, **kwargs):
-        if picked_choice is None or type(picked_choice) is HomeWorldIds:
-            return
-
-        execute_command(f'{self.command_name} {picked_choice}', self.client_id)
-        self.display_notification(notification_type=NotificationType.SETTINGS_CHANGED)
-
-    @classproperty
-    def _picker_dialog(cls):
-        region_text = cls.home_world_name
-        base_text = cls.picker_dialog.text
-
-        def new_text(*args, **kwargs):
-            return base_text(region_text, *args, **kwargs)
-
-        return create_tunable_factory_with_overrides(cls.picker_dialog, text=new_text)
-
-    def _create_dialog(self, owner, target_sim=None, target=None, **kwargs):
-        if self.picker_dialog.title is None:
-            title = lambda *_, **__: self.get_name(apply_name_modifiers=False)
+            if not valid:
+                raise ValueError(f'Invalid soft toggle value: {valid}')
+        except ValueError:
+            self._show_input_dialog(is_error=True)
         else:
-            title = self.picker_dialog.title
+            args = dict(regions=(self.home_world, ), filter_value=soft_filter_value)
+            self.display_notification(notification_type=NotificationType.SETTINGS_CHANGED, **args)
 
-        dialog = self._picker_dialog(owner, title=title, resolver=self.get_resolver())
-        self._setup_dialog(dialog, **kwargs)
-        dialog.set_target_sim(target_sim)
-        dialog.set_target(target)
-        dialog.current_selected = self._get_current_selected_count()
-        dialog.add_listener(self._on_picker_selected)
+        return True
 
-        return dialog
+    def _show_input_dialog(self, is_error: bool = False):
+        def new_text(*tokens, **_tokens):
+            base_text = self.set_value_dialog.text(self.MIN_VALUE, self.MAX_VALUE, *tokens, **_tokens)
+
+            if is_error and self.invalid_entry_warning is not None:
+                return self.invalid_entry_warning(base_text)
+            return base_text
+
+        def new_title(*tokens, **_tokens):
+            region_text = self.home_world.region_name()
+            return self.set_value_dialog.title(region_text, *tokens, **_tokens)
+
+        dialog_cls = create_tunable_factory_with_overrides(self.set_value_dialog, text=new_text, title=new_title)
+        dialog = dialog_cls(None, self.get_resolver())
+        dialog.show_dialog(on_response=self._on_response, text_input_overrides=self.text_input_overrides)
+
+    def _run_interaction_gen(self, timeline):
+        self._show_input_dialog(False)
+        return True
 
 
 #######################################################################################################################
-# Super Interactions                                                                                                 #
+# Super Interactions                                                                                                  #
 #######################################################################################################################
 
-class SoftFilterToggleSuperInteraction(PickerSuperInteraction, DisplayNotificationMixin, HomeWorldSortOrderMixin):
+class SetSoftFilterValueImmediateSuperInteraction(PickerSuperInteraction, DisplayNotificationMixin, HomeWorldSortOrderMixin):
+    TEXT_INPUT_SOFT_FILTER_VALUE = 'soft_filter_value'
+    MIN_VALUE = Tunable(tunable_type=float, default=0.0)
+    MAX_VALUE = Tunable(tunable_type=float, default=1.0)
+
     INSTANCE_TUNABLES = {
+        'set_value_dialog': TunableVariant(
+            ok_dialog=UiDialogTextInputOk.TunableFactory(text_inputs=(TEXT_INPUT_SOFT_FILTER_VALUE,)),
+            ok_cancel_dialog=UiDialogTextInputOkCancel.TunableFactory(text_inputs=(TEXT_INPUT_SOFT_FILTER_VALUE,)),
+        ),
         'allowed_worlds': TunableAllowedWorldsList(),
-        'picker_dialog': ToggleItemPicker()(),
-        'toggle_items': TunableToggleEntrySnippet(),
-        'setting_key': Tunable(tunable_type=str, default=None, allow_empty=False),
+        'invalid_entry_warning': OptionalTunable(TunableLocalizedStringFactory()),
     }
 
     @classmethod
     def _make_potential_interaction(cls, row_data):
-        inst = _SoftFilterTogglePickerMenuProxyInteraction.generate(cls, picker_row_data=row_data)
+        inst = _SetSoftFilterValuePickerMenuProxyInteraction.generate(cls, picker_row_data=row_data)
 
         for tunable_name in cls.INSTANCE_TUNABLES.keys():
             setattr(inst, tunable_name, getattr(cls, tunable_name))
@@ -179,7 +175,7 @@ class SoftFilterToggleSuperInteraction(PickerSuperInteraction, DisplayNotificati
 
 
 #######################################################################################################################
-# Instance Tunable Locking                                                                                           #
+# Instance Tunable Locking                                                                                            #
 #######################################################################################################################
 
-lock_instance_tunables(SoftFilterToggleSuperInteraction, interaction_type=InteractionType.SOFT_FILTER)
+lock_instance_tunables(SetSoftFilterValueImmediateSuperInteraction, interaction_type=InteractionType.SOFT_FILTER_VALUE)

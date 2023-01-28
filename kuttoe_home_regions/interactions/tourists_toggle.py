@@ -8,7 +8,7 @@ from other worlds to visit.
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                            #
 #######################################################################################################################
 
 # sims4 imports
@@ -19,7 +19,6 @@ from sims4.tuning.tunable import Tunable
 
 # miscellaneous imports
 from singletons import DEFAULT
-from services import client_manager
 from ui.ui_dialog_picker import BasePickerRow
 
 # interaction imports
@@ -38,16 +37,13 @@ from kuttoe_home_regions.ui import NotificationType, InteractionType
 
 
 #######################################################################################################################
-#  Proxy Interactions                                                                                                 #
+# Proxy Interactions                                                                                                 #
 #######################################################################################################################
 
 
 class _TouristTogglePickerMenuProxyInteraction(_HomeWorldPickerMenuProxyInteraction):
     @classmethod
     def use_pie_menu(cls): return False
-
-    @classproperty
-    def client_id(cls): return client_manager().get_first_client_id()
 
     @classproperty
     def command_name(cls):
@@ -112,7 +108,7 @@ class _TouristTogglePickerMenuProxyInteraction(_HomeWorldPickerMenuProxyInteract
 
 
 #######################################################################################################################
-#  Super Interactions                                                                                                 #
+# Super Interactions                                                                                                 #
 #######################################################################################################################
 
 class TouristsToggleSuperInteraction(PickerSuperInteraction, DisplayNotificationMixin, HomeWorldSortOrderMixin):
@@ -184,7 +180,7 @@ class TouristsToggleSuperInteraction(PickerSuperInteraction, DisplayNotification
 
 
 #######################################################################################################################
-#  Instance Tunable Locking                                                                                           #
+# Instance Tunable Locking                                                                                           #
 #######################################################################################################################
 
 lock_instance_tunables(TouristsToggleSuperInteraction, interaction_type=InteractionType.TOURISTS_TOGGLE)

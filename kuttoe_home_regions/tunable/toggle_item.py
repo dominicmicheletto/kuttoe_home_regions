@@ -7,7 +7,7 @@ This file details tunables used for creating the information that defines the pi
 
 
 #######################################################################################################################
-#  Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # sims4 imports
@@ -26,7 +26,7 @@ from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 
 
 #######################################################################################################################
-#  Tuning Definitions                                                                                                 #
+# Tuning Definitions                                                                                                  #
 #######################################################################################################################
 
 class ToggleItemMapping(TunableMapping):
@@ -45,7 +45,7 @@ class ToggleItemMapping(TunableMapping):
 
 
 #######################################################################################################################
-#  Factory Definitions                                                                                                #
+# Factory Definitions                                                                                                 #
 #######################################################################################################################
 
 class ToggleEntry(HasTunableFactory, AutoFactoryInit, SnippetMixin, snippet_name='toggle_entry'):

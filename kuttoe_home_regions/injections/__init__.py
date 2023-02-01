@@ -46,6 +46,7 @@ from kuttoe_home_regions.utils import *
 from kuttoe_home_regions.injections.situation_job_filters import *
 from kuttoe_home_regions.injections.situation_filter_replacement import *
 from kuttoe_home_regions.injections.home_regions_hooks import TunableHomeRegionInjectionHook, ListType
+from world.street import Street
 
 
 #######################################################################################################################
@@ -355,6 +356,42 @@ class FilterModifications:
 
 
 #######################################################################################################################
+# Demographic Modifications                                                                                           #
+#######################################################################################################################
+
+class TunableTargetPopulationMapping(TunableMapping):
+    def __init__(self, *args, **kwargs):
+        kwargs['key_type'] = Street.TunablePackSafeReference()
+        kwargs['key_name'] = 'street'
+        kwargs['value_type'] = Tunable(tunable_type=float, default=1.0, allow_empty=False, needs_tuning=True)
+
+        super().__init__(*args, **kwargs)
+
+
+class DemographicModifications:
+    STREET_BYPASS_LIST = TunableSet(Street.TunablePackSafeReference())
+    TARGET_POPULATION_MAPPING = TunableTargetPopulationMapping()
+
+    @classmethod
+    def __class_getitem__(cls, street: Street):
+        return cls.TARGET_POPULATION_MAPPING.get(street, 1.0)
+
+    @classmethod
+    def _inject_into_street_demographics(cls, street: Street):
+        street.townie_demographics = street.townie_demographics.clone_with_overrides(target_population=cls[street])
+
+    @classmethod
+    def _modify_streets(cls, _manager):
+        street_manager: InstanceManager = get_instance_manager(Types.STREET)
+
+        for street in street_manager.get_ordered_types():
+            if street in cls.STREET_BYPASS_LIST:
+                continue
+
+            cls._inject_into_street_demographics(street)
+
+
+#######################################################################################################################
 # Injection Registration                                                                                              #
 #######################################################################################################################
 
@@ -363,4 +400,4 @@ def _register_all_injections(snippet_manager):
     VenueModifications._modify_venues(snippet_manager)
     SituationJobModifications._do_injections(snippet_manager)
     FilterModifications._inject_into_filters(snippet_manager)
-
+    DemographicModifications._modify_streets(snippet_manager)

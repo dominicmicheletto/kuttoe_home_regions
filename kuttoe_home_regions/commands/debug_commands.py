@@ -223,6 +223,8 @@ def dump_registered_injection_hooks(_connection=None):
     for key in keys:
         values[key] = regions[key]
 
+    values[-1] = set(HomeWorldIds) - set(values.values())
+
     return values
 
 

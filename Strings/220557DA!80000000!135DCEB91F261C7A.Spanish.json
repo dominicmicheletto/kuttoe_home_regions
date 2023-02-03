@@ -9,15 +9,15 @@
   },
   {
     "key": "0xA7D9AF58",
-    "value": "Realoja la unidad doméstica de este Sim en {0.String}. No afecta a Sims ya alojados."
+    "value": "Realoja la unidad doméstica de {0.SimFirstName} en {1.String}. No afecta a Sims ya alojados."
   },
   {
     "key": "0x0DC8628E",
-    "value": "¡Este Sim ya vive allí!"
+    "value": "¡{1.SimFirstName} ya vive allí!"
   },
   {
     "key": "0x63D8438C",
-    "value": "¡Este Sim ya está alojad{M0.o}{F0.a}!"
+    "value": "¡{1.SimFirstName} ya está alojad{M0.o}{F0.a}!"
   },
   {
     "key": "0xD419A218",
@@ -29,7 +29,7 @@
   },
   {
     "key": "0x22534F94",
-    "value": "{S0.Un{F3.a} Sim}{P0.{M3.Todos los}{F3.{M4.Todos los}{F4.Todas las}} {0.Number} Sims} ha{P0.n} sido realojad{S0.{M3.o}{F3.a}}{P0.{M3.os}{F3.{M4.os}{F4.as}}} con éxito en <strong><u>{1.String}</u></strong>, incluid{S0.{M3.o}{F3.a}}{P0.{M3.os}{F3.{M4.os}{F4.as}}}:\\n{2.String}"
+    "value": "{S0.Un{F3.a} Sim}{P0.{M3.Todos los}{F3.{M4.Todos los}{F4.Todas las}} {0.Number} Sims} ha{P0.n} sido realojad{S0.{M3.o}{F3.a}}{P0.{M3.os}{F3.{M4.os}{F4.as}}} con éxito en <strong><u>{1.String}</u></strong>, incluido:\\n{2.String}"
   },
   {
     "key": "0x12107DE4",
@@ -89,7 +89,7 @@
   },
   {
     "key": "0x0C9B1750",
-    "value": "Quitar de la lista blanca actual de <b><u>{0.String}</u></b> uno o más mundos."
+    "value": "\\nQuitar de la lista blanca actual de <b><u>{0.String}</u></b> uno o más mundos."
   },
   {
     "key": "0x6B983963",
@@ -125,7 +125,7 @@
   },
   {
     "key": "0x342B134B",
-    "value": "Determina si o no hay un \"filtro suave\" activado para {0.String}."
+    "value": "Determina si o no hay un \"filtro suave\" activado para {0.String}.\\n\\nMundos sin un filtro suave generará un nuevo Sim si no hay ningún Sim local que ya existe.\\n\\nMundos con un filtro suave todavía preferirá Sims locales pero les permitirán presentarse allí si no esté disponbile ningún Sim local.\\n\\nActivar el Filtro suave es útil para los jugantes que desean limitar la generación de PNJs."
   },
   {
     "key": "0x569E0240",
@@ -142,14 +142,6 @@
   {
     "key": "0x7DEBD073",
     "value": "¡El grupo de Sims que se permiten asistir escuela secundaria activa es en el momento {0.String}!"
-  },
-  {
-    "key": "0x34B7F1A3",
-    "value": "restringido para los que viven en Copperdale"
-  },
-  {
-    "key": "0x8A521D26",
-    "value": "irrestricto"
   },
   {
     "key": "0x3860C08C",
@@ -190,5 +182,257 @@
   {
     "key": "0x9DC29ABA",
     "value": "Este solar está muy bien viajado: Sims en todas partes del mundo se viajarán aquí.\\n\\nLos filtros del mod Home Regions no serán aplicados a este solar."
+  },
+  {
+    "key": "0x8B5DB8D4",
+    "value": "Exenciones de filtros mundiales"
+  },
+  {
+    "key": "0x1970FF45",
+    "value": "Añadir exenciones de filtros mundiales"
+  },
+  {
+    "key": "0x66CF9E9A",
+    "value": "Permitir a {0.SimFirstName} evitar los filtros del mod Home Regions y por eso estar en {1.String}."
+  },
+  {
+    "key": "0xC2ECF1C5",
+    "value": "{0.SimFirstName} ya exent{M0.o}{F0.a} de los filtros del mod Home Regions y se le permite estar en {1.String}."
+  },
+  {
+    "key": "0x969024E1",
+    "value": "Elegir los mundos en los que {1.SimFirstName} se le permite estar. {1.SimFirstName} evitará los filtros del mod Home Regions y se le permite ir a las región(es) si {M0.él}{F0.ella} tiene un rol apropiado a hacerlo. "
+  },
+  {
+    "key": "0x078B3453",
+    "value": "Exenciones de filtros mundiales applicadas"
+  },
+  {
+    "key": "0xFF458370",
+    "value": "{1.SimName} ahora se permite visitar {S0.el siguiente mundo}{P0.los siguientes {0.Number} mundos}:\\n{2.String}\\n\\n{1.SimFirstName} podrá presentarse en {S0.este mundo}{P0.estos mundos}, incluso si no vive allí. "
+  },
+  {
+    "key": "0x4BEDA492",
+    "value": "Quitar exenciones de filtros mundiales"
+  },
+  {
+    "key": "0xD36EF9D2",
+    "value": "Exenciones de filtros mundiales quitadas"
+  },
+  {
+    "key": "0xE795645F",
+    "value": "{1.SimName} no se le permite más en {S0.el siguiente mundo}{P0.los siguientes {0.Number} mundos}:\\n{2.String}"
+  },
+  {
+    "key": "0xAC2F581E",
+    "value": "Evitar que {0.SimFirstName} pueda evitar los filtros del Home Region en {1.String}."
+  },
+  {
+    "key": "0x1D4BE654",
+    "value": "Elegir cualquier Mundo en el que tiene permiso especial a visitar {1.SimFirstName}. {1.SimFirstName} no evitará más los filtros del Home Regions puestos allí."
+  },
+  {
+    "key": "0x69DBC9BD",
+    "value": "Ajuste de turistas"
+  },
+  {
+    "key": "0x9C9B013E",
+    "value": "Al establecerse en Irrestricto, a Sims de todos los Mundos se les permitirá asistir acontecimientos turísticos, tal como Festivales.\\n\\nAl establecerse en Restringido a Sims locales, roles turísticos principalmente se limitarán a Sims que están viviendo en {0.String} o que son parte de cualquier Mundo en el filtro regional de {0.String}."
+  },
+  {
+    "key": "0xC507320B",
+    "value": "¡El ajuste de turistas para {0.String} ya está {0.String}!"
+  },
+  {
+    "key": "0xA8A411CA",
+    "value": "Se ha eliminado el Mundo natal de {0.SimName} asignado anteriormente."
+  },
+  {
+    "key": "0xFC0C24B7",
+    "value": "El Mundo natal, el cual fue asignado anteriormente a ellos, ha sido quitado de {S0.un{F3.a} Sim}{P0.{M3.todos los}{F3.{M4.todos los}{F4.todas las}} {0.Number} Sims}, incluido:\\n{2.String}"
+  },
+  {
+    "key": "0xF5E09BA5",
+    "value": "Quita cualquier Mundo natal asignado a la unidad doméstica de {1.SimFirstName}. Esto no afectará a Sims que ya viven en una casa."
+  },
+  {
+    "key": "0xED248B7A",
+    "value": "Quita cualquier Mundo natal asignado a ellos de uno o más Sims. Esto también afectará a todos los Sims en sus unidades domésticas."
+  },
+  {
+    "key": "0x24F972DE",
+    "value": "Elegir Sims que se harán quitar de ellos cualquier Mundo natal asignado. Esto afectará a todos los compañeros de casa."
+  },
+  {
+    "key": "0x3CC92E86",
+    "value": "Quitar mundo natal asignado"
+  },
+  {
+    "key": "0xBB3A3526",
+    "value": "Mundo natal asignado quitado"
+  },
+  {
+    "key": "0x5871617B",
+    "value": "¡{0.SimFirstName} ya vive en {1.String}!"
+  },
+  {
+    "key": "0xF5919B93",
+    "value": "Ningún lugar"
+  },
+  {
+    "key": "0xF482ADC6",
+    "value": "Ajustes de notificaciones"
+  },
+  {
+    "key": "0x77BC1927",
+    "value": "Notificaciones al mudar a un Sim"
+  },
+  {
+    "key": "0xFCFE74A2",
+    "value": "Controlar si están mostradas notificaciones cuando hace asignar o quitar un Mundo natal a/de un Sim."
+  },
+  {
+    "key": "0xA6AF59FB",
+    "value": "Notificaciones de ajustes al cambiarse"
+  },
+  {
+    "key": "0x0FA50DDE",
+    "value": "Controlar si están mostradas notificaciones al cambiarse un ajuste del Home Regions."
+  },
+  {
+    "key": "0x99F3CF22",
+    "value": "Al activar, cada vez que se cambie el Mundo natal asignado a un Sim, se mostrará una notificación que detalla qué Sim(s) fueron afectados y a dónde se mudaron.\\n\\nAl desactivar, no se mostrará tal notificación."
+  },
+  {
+    "key": "0xD90A2988",
+    "value": "Al activar, cada vez que se cambie un ajuste del Home Regions, se mostrará una notificación.\\n\\nAl desactivar, no se mostrará tal notificación.\\n\\n<b>¡AVISO!</b> Esto <u>no</u> afecta las notificaciones para los ajustes en sí: una notificación en este caso se mostrará todavía."
+  },
+  {
+    "key": "0xF9F03411",
+    "value": "Los ajustes para notificaciones de <strong><u>{0.String}</u></strong> han sido cambiados con éxito."
+  },
+  {
+    "key": "0xBDE89087",
+    "value": "activado"
+  },
+  {
+    "key": "0x92B05789",
+    "value": "desactivado"
+  },
+  {
+    "key": "0x387F3F32",
+    "value": "Ajustes cambiados"
+  },
+  {
+    "key": "0xE77CE524",
+    "value": "Al activar, cada vez que a un Sim haga añadir a él o quitar de él una Exención de filtros mundiales, se mostrará una notificación que detalla qué región(es) fueron añadidas/quitadas.\\n\\nAl desactivar, no se mostrará tal notificación."
+  },
+  {
+    "key": "0x16C9A861",
+    "value": "Notificaciones de las Exenciones de filtros mundiales"
+  },
+  {
+    "key": "0x56D56D78",
+    "value": "Controlar si están mostradas notificaciones cuando hace añadir o quitar una Exención de filtros mundiales a/de un Sim."
+  },
+  {
+    "key": "0xE2889279",
+    "value": "Irrestricto"
+  },
+  {
+    "key": "0x66E146B9",
+    "value": "Restringido a Sims locales"
+  },
+  {
+    "key": "0x71F00D90",
+    "value": "{1.SimFirstName} no tiene ahora mismo un Mundo natal asignado a {M0.él}{F0.ella} que se pueda quitar."
+  },
+  {
+    "key": "0x16EC87F2",
+    "value": "Restablecer los ajustes del Home Regions"
+  },
+  {
+    "key": "0x16D334F9",
+    "value": "¿Restablecer todos los ajustes del Home Regions?"
+  },
+  {
+    "key": "0xD2F1BB41",
+    "value": "¿Desea restablecer por defecto todos los ajustes del Home Regions?\\n\\n<b>¡AVISO!</b> Este no se puede deshacer, pero es <i>posibile</i> elegir hacer copia de seguridad de los ajustes actuales."
+  },
+  {
+    "key": "0x92CF3408",
+    "value": "Restablecer y hacer copia de seguridad"
+  },
+  {
+    "key": "0x5F188520",
+    "value": "Restablecer"
+  },
+  {
+    "key": "0x3FABD7BF",
+    "value": "\\n\\nSe han hecho copia de seguridad de los ajustes anteriores en el siguiente archivo, el cual se encuentre en la <b>carpeta raíz de los Sims 4</b>:\\n{0.String}"
+  },
+  {
+    "key": "0x13BA6EE4",
+    "value": "Todos los ajustes del mod Home Regions se han restablecido en los valores por defecto.\\n\\n<b>¡AVISO!</b> Esto no afecto las Exenciones de filtros mundiales, las cuales son específican para cada Sim. Estas se deben cambiar de forma manual sobre una base por Sim.{0.String}"
+  },
+  {
+    "key": "0x26B863A6",
+    "value": "Todos los ajustes restablecidos"
+  },
+  {
+    "key": "0x3335A062",
+    "value": "Establecer el valor del Filtro suave"
+  },
+  {
+    "key": "0x82C91283",
+    "value": "Valores para el Filtro suave"
+  },
+  {
+    "key": "0xC99C0E74",
+    "value": "Ajustes del Filtro suave"
+  },
+  {
+    "key": "0x44B17D78",
+    "value": "{0.String}\\n\\n<font color='#b10005'><b>Se ha ingresado un valor inválido para el Filtro suave</b></font>"
+  },
+  {
+    "key": "0x13E1F5FD",
+    "value": "El Valor del Filtro suave determine la probabilidad de que el juege elija un Sim, el cual es local a este mundo natal, al cumplir un rol. Valores pequeños hace ser más probable que Sims locales se elijan. Valores grandes hace ser más probable que se elijan Sims extranjeros.\\n\\nSe debe ingresar un número decimal entre {0.Number} y {1.Number}, exclusivo.\\n\\n¡AVISO! Valores numéricos deben estar en forma de <b>0.1</b>, usando un punto en lugar de una coma, como se hace en inglés."
+  },
+  {
+    "key": "0x108565C0",
+    "value": "Valor del filtro suave para {0.String}"
+  },
+  {
+    "key": "0xA57E64CD",
+    "value": "El Valor del filtro suave del mundo <b>{0.String}</b> se he establecido en <b><u>{1.Number}</u></b>."
+  },
+  {
+    "key": "0x181DB936",
+    "value": "¡El Filtro suave de {0.String} ahora mismo no está activado!"
+  },
+  {
+    "key": "0xC50165F1",
+    "value": "The behaviour of Home Region's World Exemption settings has been changed.\\n\\nThis setting is <b>not</b> retroactive: only new Sims who are henceforth uploaded to and downloaded from the Gallery will be affected by this change."
+  },
+  {
+    "key": "0x3C429046",
+    "value": "¡Los ajustes de las Exenciones de filtros mundiales ahora mismo están {0.String} para los Sims que se cargan a/descargan desde la Galería!"
+  },
+  {
+    "key": "0x9E205784",
+    "value": "activados"
+  },
+  {
+    "key": "0x3CD89C54",
+    "value": "desactivados"
+  },
+  {
+    "key": "0x44517020",
+    "value": "When enabled, Sims who are uploaded to or downloaded from the Gallery will keep their World Exemption settings. When disabled, these settings will not be kept when saving a Sim to or getting one from the Gallery.\\n\\nThis means that Sims who already have World Exemption settings will retain those settings. While this allows for Sims who are transferred from one save to another to retain their World Exemptions, this also means that Sims from the Gallery who are from saves with World Exemptions will also retain those settings.\\n\\n<b>Note</b>: This is <b>not</b> retroactive; this setting will only apply to new Sims henceforth saved to or loaded from the Gallery."
+  },
+  {
+    "key": "0x8AB10E75",
+    "value": "Comportamiento de las Exenciones de filtros mundiales"
   }
 ]

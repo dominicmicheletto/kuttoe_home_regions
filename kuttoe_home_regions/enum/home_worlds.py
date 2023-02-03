@@ -233,6 +233,7 @@ class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=
         args = dict()
         args['minimum_filter_score'] = minimum_filter_score
         args['region'] = tuple({self.region, *additional_regions})
+        # args['street_for_creation'] = None
         args['street_for_creation'] = self.street_for_creation
         args.update(overrides)
 

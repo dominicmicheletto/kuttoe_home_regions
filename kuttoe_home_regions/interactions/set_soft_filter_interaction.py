@@ -18,6 +18,7 @@ from sims4.localization import TunableLocalizedStringFactory, LocalizationHelper
 
 # miscellaneous imports
 from singletons import DEFAULT
+from event_testing.tests import TestList
 
 # ui imports
 from ui.ui_dialog_picker import BasePickerRow
@@ -35,6 +36,7 @@ from kuttoe_home_regions.ui import InteractionType, NotificationType
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 from kuttoe_home_regions.utils import create_tunable_factory_with_overrides
 from kuttoe_home_regions.commands import kuttoe_set_region_soft_filter_value
+from kuttoe_home_regions.tests import get_soft_filter_enabled_test
 
 
 #######################################################################################################################
@@ -112,6 +114,7 @@ class SetSoftFilterValueImmediateSuperInteraction(PickerSuperInteraction, Displa
         ),
         'allowed_worlds': TunableAllowedWorldsList(),
         'invalid_entry_warning': OptionalTunable(TunableLocalizedStringFactory()),
+        'soft_filter_disabled_tooltip': OptionalTunable(TunableLocalizedStringFactory()),
     }
 
     @classmethod
@@ -144,11 +147,22 @@ class SetSoftFilterValueImmediateSuperInteraction(PickerSuperInteraction, Displa
             yield from super().potential_interactions(target, context, **kwargs)
 
     @classmethod
+    def _row_tests(cls, resolver, home_world: HomeWorldIds):
+        soft_filter_enabled_test = get_soft_filter_enabled_test(home_world, cls.soft_filter_disabled_tooltip)
+        tests = TestList((soft_filter_enabled_test, ))
+
+        return tests.run_tests(resolver)
+
+    @classmethod
     def create_row(cls, resolver, home_world: HomeWorldIds):
+        test_results = cls._row_tests(resolver, home_world)
         args = dict()
+
+        args['is_enable'] = test_results.result
         args['name'] = home_world.region_name()
         args['icon_info'] = home_world.get_icon()(resolver)
         args['tag'] = home_world
+        args['row_tooltip'] = test_results.tooltip
 
         return BasePickerRow(**args)
 

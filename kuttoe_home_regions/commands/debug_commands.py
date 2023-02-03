@@ -171,6 +171,16 @@ def get_soft_filter_value(_connection=None):
     return True
 
 
+@Command('kuttoe.get_gallery_behaviour', command_type=CommandType.Cheat)
+def get_gallery_behaviour(_connection=None):
+    from kuttoe_home_regions.settings import Settings
+
+    value = Settings.save_across_gallery_toggle
+    Output(_connection)(f'World Exemption settings do {"" if value else "not "}save from the gallery')
+
+    return True
+
+
 #######################################################################################################################
 #  Dump Commands                                                                                                      #
 #######################################################################################################################

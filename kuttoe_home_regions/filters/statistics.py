@@ -15,10 +15,12 @@ statistic and offers several convenience methods used for determining which regi
 # sims 4 imports
 from sims4.tuning.instances import lock_instance_tunables
 from sims4.utils import flexmethod, classproperty
+from sims4.tuning.tunable import Tunable, TunableMapping, TunableEnumEntry
 
 # statistics imports
 from statistics.statistic import Statistic
 from statistics.statistic_tracker import StatisticTracker
+from statistics.base_statistic import GalleryLoadBehavior
 
 # miscellaneous imports
 from sims.sim_info import SimInfo
@@ -31,7 +33,29 @@ from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 # Tuning Definitions                                                                                                  #
 #######################################################################################################################
 
+class TunableGalleryLoadBehaviourMapping(TunableMapping):
+    def __init__(self, *args, **kwargs):
+        kwargs['key_type'] = Tunable(tunable_type=bool, default=False, allow_empty=False, needs_tuning=True)
+        kwargs['value_type'] = TunableEnumEntry(tunable_type=GalleryLoadBehavior, default=GalleryLoadBehavior.DONT_LOAD)
+
+        super().__init__(*args, **kwargs)
+
+
+#######################################################################################################################
+# Instance Tuning Definitions                                                                                         #
+#######################################################################################################################
+
 class AllowedRegionsBitset(Statistic):
+    REMOVE_INSTANCE_TUNABLES = ('gallery_load_behavior', )
+    GALLERY_LOAD_BEHAVIOUR_MAPPING = TunableGalleryLoadBehaviourMapping()
+
+    @classproperty
+    def gallery_load_behavior(cls):
+        from kuttoe_home_regions.settings import Settings
+
+        default = GalleryLoadBehavior.LOAD_ONLY_FOR_SIM
+        return cls.GALLERY_LOAD_BEHAVIOUR_MAPPING.get(Settings.save_across_gallery_toggle, default)
+
     @flexmethod
     def get_value(cls, inst):
         return int(super(__class__, inst if inst is not None else cls).get_value())

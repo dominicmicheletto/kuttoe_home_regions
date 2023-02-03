@@ -262,7 +262,7 @@ def toggle_notification_setting_internal(setting_name: str, new_value: bool = No
 def toggle_bidirectional(new_value: bool = None, _connection=None):
     from kuttoe_home_regions.settings import Settings
 
-    response = 'on' if Settings.toggle_setting('bidirectional_toggle', new_value) else 'off'
+    response = 'on' if Settings.toggle_setting(Settings.SettingNames.BIDIRECTIONAL_TOGGLE, new_value) else 'off'
     Output(_connection)('Bidirectional toggle for Allow and Disallow World pickers is now turned {}'.format(response))
 
     return True
@@ -272,8 +272,18 @@ def toggle_bidirectional(new_value: bool = None, _connection=None):
 def kuttoe_toggle_high_school(new_value: bool = None, _connection=None):
     from kuttoe_home_regions.settings import Settings
 
-    response = 'on' if Settings.toggle_setting('high_school_toggle', new_value) else 'off'
+    response = 'on' if Settings.toggle_setting(Settings.SettingNames.HIGH_SCHOOL_TOGGLE, new_value) else 'off'
     Output(_connection)('Region filter for Active High School situations is now turned {}'.format(response))
+
+    return True
+
+
+@Command('kuttoe.toggle_gallery_behaviour', command_type=CommandType.Live)
+def kuttoe_toggle_gallery_behaviour(new_value: bool = None, _connection=None):
+    from kuttoe_home_regions.settings import Settings, SettingNames
+
+    response = 'now ' if Settings.toggle_setting(SettingNames.SAVE_ACROSS_GALLERY_TOGGLE, new_value) else 'not '
+    Output(_connection)('World Exemption settings will {}be saved across the gallery'.format(response))
 
     return True
 

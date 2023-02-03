@@ -12,15 +12,16 @@ This file details an interaction that resets all of Home Region's settings.
 
 # sims4 imports
 from sims4.tuning.instances import lock_instance_tunables
-from sims4.localization import TunableLocalizedStringFactory
+from sims4.localization import TunableLocalizedStringFactory, LocalizationHelperTuning
 from sims4.tuning.tunable import OptionalTunable
-from sims4.utils import classproperty
+from sims4.utils import classproperty, flexmethod
 
 # miscellaneous imports
 from ui.ui_dialog import UiEndSituationDialogOkCancel
 from services import client_manager
 from interactions.base.immediate_interaction import ImmediateSuperInteraction
 from os.path import basename
+from singletons import DEFAULT
 
 # local imports
 from kuttoe_home_regions.interactions.mixins import DisplayNotificationMixin
@@ -37,6 +38,17 @@ class ResetSettingsImmediateSuperInteraction(ImmediateSuperInteraction, DisplayN
         'ok_cancel_dialog': UiEndSituationDialogOkCancel.TunableFactory(),
         'backup_text': OptionalTunable(TunableLocalizedStringFactory()),
     }
+
+    @flexmethod
+    def get_name(cls, inst, target=DEFAULT, context=DEFAULT, apply_name_modifiers=True, **interaction_parameters):
+        inst_or_cls = inst if inst is not None else cls
+
+        interaction_parameters['target'] = target
+        interaction_parameters['context'] = context
+        interaction_parameters['apply_name_modifiers'] = apply_name_modifiers
+        display_name = super(__class__, inst_or_cls)._get_name(**interaction_parameters)
+
+        return LocalizationHelperTuning.get_ellipsized_text(display_name)
 
     @classproperty
     def client_id(cls): return client_manager().get_first_client_id()

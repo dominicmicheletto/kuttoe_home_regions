@@ -136,6 +136,7 @@ class WorldSettingNames:
 class SettingNames:
     BIDIRECTIONAL_TOGGLE = 'bidirectional_toggle'
     HIGH_SCHOOL_TOGGLE = 'high_school_toggle'
+    SAVE_ACROSS_GALLERY_TOGGLE = 'save_across_gallery_toggle'
 
     @staticmethod
     def _filter(item):
@@ -173,6 +174,7 @@ class Settings:
     NOTIFICATION_SETTINGS = TunableNotificationSettingsMapping()
     BIDIRECTIONAL_TOGGLE = Tunable(tunable_type=bool, default=False, allow_empty=False, needs_tuning=True)
     HIGH_SCHOOL_TOGGLE = Tunable(tunable_type=bool, default=True, allow_empty=False, needs_tuning=True)
+    SAVE_ACROSS_GALLERY_TOGGLE = Tunable(tunable_type=bool, default=True, allow_empty=False, needs_tuning=True)
 
     _SETTINGS = None
 
@@ -350,6 +352,7 @@ class Settings:
 
         validate_bool(SettingNames.HIGH_SCHOOL_TOGGLE, **validate_args)
         validate_bool(SettingNames.BIDIRECTIONAL_TOGGLE, **validate_args)
+        validate_bool(SettingNames.SAVE_ACROSS_GALLERY_TOGGLE, **validate_args)
 
         for notification_type in NotificationType.exported_values:
             validate_bool(notification_type.setting_name, **validate_args)
@@ -416,12 +419,13 @@ class Settings:
         return {notif_type: cls.settings[notif_type.setting_name] for notif_type in NotificationType.exported_values}
 
     @classproperty
-    def bidirectional_toggle(cls) -> bool:
-        return cls.settings[SettingNames.BIDIRECTIONAL_TOGGLE]
+    def bidirectional_toggle(cls) -> bool: return cls.settings[SettingNames.BIDIRECTIONAL_TOGGLE]
 
     @classproperty
-    def high_school_toggle(cls) -> bool:
-        return cls.settings[SettingNames.HIGH_SCHOOL_TOGGLE]
+    def high_school_toggle(cls) -> bool: return cls.settings[SettingNames.HIGH_SCHOOL_TOGGLE]
+
+    @classproperty
+    def save_across_gallery_toggle(cls) -> bool: return cls.settings[SettingNames.SAVE_ACROSS_GALLERY_TOGGLE]
 
     @classmethod
     def update_setting(cls, setting_key: str, setting_value):

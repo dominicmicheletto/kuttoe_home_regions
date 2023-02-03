@@ -16,10 +16,10 @@ from collections import namedtuple
 # misc imports
 import enum
 import services
+from sims.sim_info_manager import SimInfoManager
 
 # sims4 imports
 from sims4.commands import CheatOutput as Output
-from sims.sim_info_manager import SimInfoManager
 
 # local imports
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds

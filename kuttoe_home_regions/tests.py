@@ -108,6 +108,38 @@ class IsWorldAvailableTest(_WorldsTestsBase):
                               self.source_world.name, reason, self.target_home_world.name)
 
 
+class WorldHasSoftFilterEnabledTest(HasTunableSingletonFactory, AutoFactoryInit, BaseTest):
+    FACTORY_TUNABLES = {
+        'source_world': HomeWorldIds.create_enum_entry(),
+        'negate': Tunable(tunable_type=bool, default=False)
+    }
+
+    def get_expected_args(self):
+        return {}
+
+    @property
+    def world_value_source(self):
+        return self.source_world
+
+    @property
+    def world_settings(self):
+        from kuttoe_home_regions.settings import Settings
+
+        return Settings.get_world_settings(self.world_value_source)
+
+    @property
+    def soft_filter_value(self) -> bool:
+        from kuttoe_home_regions.settings import Settings
+
+        return self.world_settings[Settings.WorldSettingNames.SOFT]
+
+    def __call__(self):
+        result = self.soft_filter_value
+        msg = f'World {self.world_value_source} does not have expected soft filter setting'
+
+        return TestResult(not result if self.negate else result, msg, tooltip=self.tooltip)
+
+
 class HasHomeRegionTest(HasTunableSingletonFactory, AutoFactoryInit, BaseTest, HasHomeWorldMixin):
     FACTORY_TUNABLES = {
         'participant': TunableEnumEntry(tunable_type=ParticipantTypeSingle, default=ParticipantTypeActorTargetSim.Actor),
@@ -195,11 +227,25 @@ def get_worlds_available_left_test(
     return construct_auto_init_factory(WorldsAvailableLeftTest, **args)
 
 
+def get_soft_filter_enabled_test(
+        source_home_world: HomeWorldIds,
+        disabled_tooltip=None,
+        negate: bool = False,
+):
+    args = dict()
+    args['source_world'] = source_home_world
+    args['negate'] = negate
+    if disabled_tooltip:
+        args['tooltip'] = lambda *tokens: disabled_tooltip(source_home_world.region_name(), *tokens)
+
+    return construct_auto_init_factory(WorldHasSoftFilterEnabledTest, **args)
+
+
 #######################################################################################################################
 # Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = (
-    'get_is_world_available_test', 'get_worlds_available_left_test',
-    'WorldsAvailableLeftTest', 'IsWorldAvailableTest',
+    'get_is_world_available_test', 'get_worlds_available_left_test', 'get_soft_filter_enabled_test',
+    'WorldsAvailableLeftTest', 'IsWorldAvailableTest', 'WorldHasSoftFilterEnabledTest',
 )

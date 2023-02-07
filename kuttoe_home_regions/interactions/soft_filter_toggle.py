@@ -8,7 +8,7 @@ setting which needs to be enabled for a world to softly allow Sims from other wo
 
 
 #######################################################################################################################
-# Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # sims4 imports
@@ -37,10 +37,10 @@ from kuttoe_home_regions.utils import create_tunable_factory_with_overrides
 
 
 #######################################################################################################################
-# Proxy Interactions                                                                                                 #
+# Proxy Interactions                                                                                                  #
 #######################################################################################################################
 
-class _SoftFilterTogglePickerMenuProxyInteraction(_HomeWorldPickerMenuProxyInteraction):
+class _SoftFilterTogglePickerMenuProxyInteraction(HasEllipsizedNamedMixin, _HomeWorldPickerMenuProxyInteraction):
     @classmethod
     def use_pie_menu(cls): return False
 
@@ -73,7 +73,7 @@ class _SoftFilterTogglePickerMenuProxyInteraction(_HomeWorldPickerMenuProxyInter
 
         yield from inst_or_cls.toggle_items(cls.setting_key, home_world=inst_or_cls.home_world).picker_rows_gen(resolver)
 
-    def on_choice_selected(self, picked_choice, **kwargs):
+    def on_choice_selected(self, picked_choice, **_kwargs):
         if picked_choice is None or type(picked_choice) is HomeWorldIds:
             return
 
@@ -107,9 +107,10 @@ class _SoftFilterTogglePickerMenuProxyInteraction(_HomeWorldPickerMenuProxyInter
 
 
 #######################################################################################################################
-# Super Interactions                                                                                                 #
+# Super Interactions                                                                                                  #
 #######################################################################################################################
 
+@HasPickerProxyInteractionMixin(_SoftFilterTogglePickerMenuProxyInteraction)
 class SoftFilterToggleSuperInteraction(PickerSuperInteraction, DisplayNotificationMixin, HomeWorldSortOrderMixin):
     INSTANCE_TUNABLES = {
         'allowed_worlds': TunableAllowedWorldsList(),
@@ -117,35 +118,6 @@ class SoftFilterToggleSuperInteraction(PickerSuperInteraction, DisplayNotificati
         'toggle_items': TunableToggleEntrySnippet(),
         'setting_key': Tunable(tunable_type=str, default=None, allow_empty=False),
     }
-
-    @classmethod
-    def _make_potential_interaction(cls, row_data):
-        inst = _SoftFilterTogglePickerMenuProxyInteraction.generate(cls, picker_row_data=row_data)
-
-        for tunable_name in cls.INSTANCE_TUNABLES.keys():
-            setattr(inst, tunable_name, getattr(cls, tunable_name))
-
-        return inst
-
-    @classmethod
-    def potential_interactions(cls, target, context, **kwargs):
-        if cls.use_pie_menu():
-            if context.source == InteractionSource.AUTONOMY and not cls.allow_autonomous:
-                return
-
-            recipe_ingredients_map = {}
-            funds_source = cls.funds_source if hasattr(cls, 'funds_source') else None
-            kwargs['recipe_ingredients_map'] = recipe_ingredients_map
-
-            for row_data in cls.picker_rows_gen(target, context, funds_source=funds_source, **kwargs):
-                if not row_data.available_as_pie_menu:
-                    pass
-                else:
-                    affordance = cls._make_potential_interaction(row_data)
-                    for aop in affordance.potential_interactions(target, context, **kwargs):
-                        yield aop
-        else:
-            yield from super().potential_interactions(target, context, **kwargs)
 
     @classmethod
     def create_row(cls, resolver, home_world: HomeWorldIds):
@@ -179,7 +151,14 @@ class SoftFilterToggleSuperInteraction(PickerSuperInteraction, DisplayNotificati
 
 
 #######################################################################################################################
-# Instance Tunable Locking                                                                                           #
+# Instance Tunable Locking                                                                                            #
 #######################################################################################################################
 
 lock_instance_tunables(SoftFilterToggleSuperInteraction, interaction_type=InteractionType.SOFT_FILTER)
+
+
+#######################################################################################################################
+# Module Exports                                                                                                      #
+#######################################################################################################################
+
+__all__ = ('SoftFilterToggleSuperInteraction', )

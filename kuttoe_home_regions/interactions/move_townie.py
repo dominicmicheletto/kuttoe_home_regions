@@ -109,6 +109,7 @@ class _MoveMultipleTowniesPickerPieMenuProxyInteraction(_HomeWorldPickerMenuProx
 # Super Interactions                                                                                                  #
 #######################################################################################################################
 
+@HasPickerProxyInteractionMixin(_HomeWorldPickerMenuProxyInteraction, forward_tuning=False)
 class MoveTownieSuperInteraction(
     PickerSuperInteraction, DisplayNotificationMixin, HomeWorldSortOrderMixin, HasHomeWorldMixin
 ):
@@ -119,33 +120,8 @@ class MoveTownieSuperInteraction(
         'row_tooltip': OptionalTunable(TunableLocalizedStringFactory()),
     }
 
-    @classmethod
-    def _make_potential_interaction(cls, row_data):
-        return _HomeWorldPickerMenuProxyInteraction.generate(cls, picker_row_data=row_data)
-
-    @classmethod
-    def potential_interactions(cls, target, context, **kwargs):
-        if cls.use_pie_menu():
-            if context.source == InteractionSource.AUTONOMY and not cls.allow_autonomous:
-                return
-
-            recipe_ingredients_map = {}
-            funds_source = cls.funds_source if hasattr(cls, 'funds_source') else None
-            kwargs['recipe_ingredients_map'] = recipe_ingredients_map
-
-            for row_data in cls.picker_rows_gen(target, context, funds_source=funds_source, **kwargs):
-                if not row_data.available_as_pie_menu:
-                    pass
-                else:
-                    affordance = cls._make_potential_interaction(row_data)
-                    for aop in affordance.potential_interactions(target, context, **kwargs):
-                        yield aop
-        else:
-            yield from super().potential_interactions(target, context, **kwargs)
-
     @classproperty
-    def client_id(cls):
-        return client_manager().get_first_client_id()
+    def client_id(cls): return client_manager().get_first_client_id()
 
     @classmethod
     def has_valid_choice(cls, target, context, **kwargs):
@@ -255,3 +231,10 @@ class MoveMultipleTowniesSuperInteraction(MoveTownieSuperInteraction):
 
 lock_instance_tunables(MoveTownieSuperInteraction, interaction_type=InteractionType.COMMAND)
 lock_instance_tunables(MoveMultipleTowniesSuperInteraction, interaction_type=InteractionType.PICKER)
+
+
+#######################################################################################################################
+# Module Exports                                                                                                      #
+#######################################################################################################################
+
+__all__ = ('MoveTownieSuperInteraction', 'MoveMultipleTowniesSuperInteraction', )

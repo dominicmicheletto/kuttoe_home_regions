@@ -53,6 +53,10 @@ def set_world_id_by_sim_id(sim_id: str, *home_world_name, _connection=None):
     return set_world_id(*home_world_name, opt_sim=opt_sim, _connection=_connection)
 
 
+#######################################################################################################################
+# Region Exemptions                                                                                                   #
+#######################################################################################################################
+
 @Command('kuttoe.allow_in_region', command_type=CommandType.Live)
 def allow_in_region(*home_world_name, opt_sim: OptionalSimInfoParam = None, _connection=None):
     sim_info = get_optional_target(opt_sim, target_type=OptionalSimInfoParam, _connection=_connection)

@@ -76,9 +76,9 @@ class WorldsAvailableLeftTest(_WorldsTestsBase):
         return self.all_worlds - {self.target_home_world.name}
 
     def __call__(self):
-        if self.alter_type == AlterType.ALLOW_WORLD and self.get_available_worlds():
+        if self.alter_type == AlterType.ALLOW_VALUE and self.get_available_worlds():
             return TestResult.TRUE
-        elif self.alter_type == AlterType.DISALLOW_WORLD and self.worlds_list:
+        elif self.alter_type == AlterType.DISALLOW_VALUE and self.worlds_list:
             return TestResult.TRUE
         else:
             return TestResult(False, 'World {} does not fit the required constraints', self.target_home_world.name,
@@ -97,12 +97,12 @@ class IsWorldAvailableTest(_WorldsTestsBase):
     def __call__(self):
         result = self.target_home_world.name in self.worlds_list
 
-        if self.alter_type == AlterType.DISALLOW_WORLD and result:
+        if self.alter_type == AlterType.DISALLOW_VALUE and result:
             return TestResult.TRUE
-        elif self.alter_type == AlterType.ALLOW_WORLD and not result:
+        elif self.alter_type == AlterType.ALLOW_VALUE and not result:
             return TestResult.TRUE
         else:
-            reason = 'already' if self.alter_type == AlterType.ALLOW_WORLD else 'not currently'
+            reason = 'already' if self.alter_type == AlterType.ALLOW_VALUE else 'not currently'
 
             return TestResult(False, 'World {} {} in {}\'s allow list',
                               self.source_world.name, reason, self.target_home_world.name)
@@ -203,7 +203,7 @@ class HomeRegionsTestSetInstance(TestSetInstance):
 def get_is_world_available_test(
         source_world: HomeWorldIds,
         target_world: HomeWorldIds,
-        alter_type: AlterType = AlterType.ALLOW_WORLD
+        alter_type: AlterType = AlterType.ALLOW_VALUE
 ):
     args = dict()
     args['source_world'] = source_world

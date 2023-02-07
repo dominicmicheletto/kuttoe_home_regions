@@ -71,7 +71,7 @@ class _HomeWorldPickerMenuProxyInteraction(_PickerPieMenuProxyInteraction):
 
 
 #######################################################################################################################
-# Module Exports                                                                                                     #
+# Module Exports                                                                                                      #
 #######################################################################################################################
 
 __all__ = ('_HomeWorldPickerMenuProxyInteraction', )

@@ -598,6 +598,25 @@ def validate_bool(key: str, settings: Dict[str, Any], default: Dict[str, Any], c
     return True
 
 
+def validate_mapping(key: str, settings: Dict[str, Any], default: Dict[str, Any], callback=None, **constraints):
+    value = settings[key]
+    key_constraints = constraints.setdefault('key_constraints', lambda *_, **__: True)
+    value_constraints = constraints.setdefault('value_constraints', lambda *_, **__: True)
+    total_constraints = constraints.setdefault('total_constraints', lambda *_, **__: True)
+
+    if not isinstance(value, dict) or \
+            not all(key_constraints(item) for item in value.keys()) or \
+            not all(value_constraints(item) for item in value.values()) or \
+            not total_constraints(value):
+        settings[key] = default[key]
+
+        if callback is not None:
+            return callback(settings)
+
+        return False
+    return True
+
+
 def validate_number(key: str, settings: Dict[str, Any], default: Dict[str, Any], callback=None, **constraints):
     value = settings[key]
     min_value = constraints.setdefault('min_value', 0.0)
@@ -729,5 +748,5 @@ __all__ = (
     'SnippetMixin',
     'ManagedTuningMixin',
     'leroidetout_injector',
-    'matches_bounds', 'BoundTypes', 'validate_bool', 'validate_number', 'validate_list',
+    'matches_bounds', 'BoundTypes', 'validate_bool', 'validate_number', 'validate_list', 'validate_mapping',
 )

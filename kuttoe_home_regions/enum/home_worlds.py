@@ -18,15 +18,17 @@ from typing import Dict, Any
 import enum
 from services import get_instance_manager
 from singletons import DEFAULT
-from world.region import RegionType
 
 # sims 4 imports
 from sims4.resources import Types
 from sims4.collections import frozendict
-from sims4.tuning.tunable import Tunable, TunablePackSafeReference, TunableWorldDescription, OptionalTunable
+from sims4.tuning.tunable import Tunable, TunablePackSafeReference, OptionalTunable
 from sims4.localization import TunableLocalizedStringFactory
 from sims4.common import Pack, is_available_pack
 from sims4.utils import classproperty
+
+# world imports
+from world.region import RegionType
 
 # local imports
 from kuttoe_home_regions.enum import DynamicFactoryEnumMetaclass, EnumItemFactory
@@ -35,6 +37,7 @@ from kuttoe_home_regions.tunable.local_fixup import OptionalTunableLocalFixup, L
 from kuttoe_home_regions.tunable.icon_definition import TunableIconMappingVariant, IconSize
 from kuttoe_home_regions.tunable.pack_resources import PackDefinition
 from kuttoe_home_regions.tunable.bit_value import TunableBitValueVariant
+from kuttoe_home_regions.tunable.street_selector import TunableStreetSelectorVariant
 
 
 #######################################################################################################################
@@ -60,7 +63,7 @@ class RegionData:
             self,
             region_id: int = 0,
             name=None,
-            street_for_creation: int = None,
+            street_for_creation=None,
             pack: Pack = Pack.BASE_GAME,
             icon_mapping=frozendict(),
             local_fixup: LocalFixup = None,
@@ -141,6 +144,23 @@ class RegionData:
         elif self.region.region_type is RegionType.REGIONTYPE_DESTINATION:
             return WorldType.VACATION
 
+    @property
+    def supports_multiple_creation_streets(self):
+        if self._street_for_creation is None:
+            return False
+
+        return self._street_for_creation.supports_multiple_streets
+
+    @property
+    def creation_streets(self):
+        if self._street_for_creation is None:
+            return frozenset()
+
+        return self._street_for_creation.street_ids
+
+    def has_street(self, street_id: int):
+        return street_id in self._street_for_creation
+
 
 @EnumItemFactory.ReprMixin(name='region_name', region_id=None, region=DEFAULT)
 @EnumItemFactory.TunableReferenceMixin(region=('region_id', True))
@@ -150,7 +170,7 @@ class RegionDataFactory(EnumItemFactory):
         'name': TunableLocalizedStringFactory(),
         'pack': PackDefinition(),
         'icon_mapping': TunableIconMappingVariant(),
-        'street_for_creation': TunableWorldDescription(pack_safe=True),
+        'street_for_creation': TunableStreetSelectorVariant(),
         'local_fixup': OptionalTunableLocalFixup(),
         'has_tourists': Tunable(tunable_type=bool, default=False),
         'bit_value': TunableBitValueVariant(),
@@ -171,6 +191,7 @@ class RegionDataFactory(EnumItemFactory):
 # Enumeration Code                                                                                                    #
 #######################################################################################################################
 
+
 @enum_entry_factory(default='DEFAULT', invalid=('DEFAULT', ), method_name='create_enum_entry')
 @enum_set_factory(default='DEFAULT', invalid=('DEFAULT', ), method_name='create_enum_set')
 class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=RegionDataFactory,):
@@ -190,6 +211,10 @@ class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=
     @classproperty
     def tourist_worlds(cls):
         return frozenset(world for world in cls if world.has_tourists and world.is_available)
+
+    @classproperty
+    def worlds_that_support_multiple_streets(cls):
+        return frozenset(world for world in cls if world.supports_multiple_creation_streets and world.is_available)
 
     @classproperty
     def available_worlds(cls):
@@ -233,7 +258,6 @@ class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=
         args = dict()
         args['minimum_filter_score'] = minimum_filter_score
         args['region'] = tuple({self.region, *additional_regions})
-        # args['street_for_creation'] = None
         args['street_for_creation'] = self.street_for_creation
         args.update(overrides)
 

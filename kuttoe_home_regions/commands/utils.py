@@ -23,6 +23,7 @@ from sims4.commands import CheatOutput as Output
 
 # local imports
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
+from kuttoe_home_regions.enum.neighbourhood_streets import NeighbourhoodStreets
 from kuttoe_home_regions.ui import NotificationType
 from kuttoe_home_regions.utils import enum_entry_factory
 
@@ -31,10 +32,10 @@ from kuttoe_home_regions.utils import enum_entry_factory
 # Enumerations                                                                                                        #
 #######################################################################################################################
 
-@enum_entry_factory(default='ALLOW_WORLD', invalid=())
+@enum_entry_factory(default='ALLOW_VALUE', invalid=())
 class AlterType(enum.Int):
-    ALLOW_WORLD = 0
-    DISALLOW_WORLD = 1
+    ALLOW_VALUE = 0
+    DISALLOW_VALUE = 1
 
 
 #######################################################################################################################
@@ -125,7 +126,7 @@ def kuttoe_disallow_sim_in_all_worlds(sim_info, _connection=None):
 
 def get_home_world_from_name(*home_world_name, _connection=None) -> Optional[HomeWorldIds]:
     output = Output(_connection)
-    world_key = ' '.join(home_world_name).upper().replace(' ', '_')
+    world_key = '_'.join(home_world_name).upper()
 
     if len(home_world_name) == 0:
         output('Missing World name!')
@@ -170,7 +171,7 @@ def get_sim_household_data(sim_info, _connection=None):
 
 def get_notification_type_from_name(*notification_type_name, _connection=None) -> Optional[NotificationType]:
     output = Output(_connection)
-    notif_key = ' '.join(notification_type_name).upper().replace(' ', '_')
+    notif_key = '_'.join(notification_type_name).upper()
 
     if len(notif_key) == 0:
         output('Missing notification name!')
@@ -183,6 +184,22 @@ def get_notification_type_from_name(*notification_type_name, _connection=None) -
     return NotificationType[notif_key]
 
 
+def get_street_from_name(*street_name, _connection=None) -> Optional[NeighbourhoodStreets]:
+    output = Output(_connection)
+    street_key = '_'.join(street_name).upper()
+
+    if len(street_key) == 0:
+        output('Missing street name!')
+        return None
+
+    if street_key not in NeighbourhoodStreets:
+        street_list = NeighbourhoodStreets.streets_list
+        output(f'Invalid street name: {street_key}\n\nStreet Names: {street_list}')
+        return None
+
+    return NeighbourhoodStreets[street_key]
+
+
 #######################################################################################################################
 # Module Exports                                                                                                      #
 #######################################################################################################################
@@ -193,6 +210,7 @@ __all__ = (
     'kuttoe_allow_sim_in_all_worlds', 'kuttoe_disallow_sim_in_all_worlds',
     'kuttoe_set_world_id',
     'get_notification_type_from_name',
+    'get_street_from_name',
     'SimHouseholdData',
     'AlterType',
 )

@@ -11,16 +11,22 @@ code used for them.
 #######################################################################################################################
 
 # python imports
-from typing import List
+from typing import List, Dict
 
 # sims4 imports
 from sims4.commands import Output
+from sims4.math import almost_equal
+from sims4.utils import Result
+
+# miscellaneous imports
+from enum import Int
 
 # local imports
 from kuttoe_home_regions.commands.utils import *
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
+from kuttoe_home_regions.enum.neighbourhood_streets import NeighbourhoodStreets
 from kuttoe_home_regions.ui import NotificationType
-from kuttoe_home_regions.utils import matches_bounds, BoundTypes
+from kuttoe_home_regions.utils import matches_bounds, BoundTypes, enum_entry_factory
 
 
 #######################################################################################################################
@@ -86,25 +92,24 @@ def _alter_worlds_list_helper(
         target_world: HomeWorldIds,
         alter_type: AlterType,
         _connection=None):
-    from kuttoe_home_regions.settings import Settings
-    WorldSettingNames = Settings.WorldSettingNames
-
+    from kuttoe_home_regions.settings import Settings, WorldSettingNames
     output = Output(_connection)
+
     if target_world == source_world:
-        words = {alter_type.ALLOW_WORLD: ('add', 'to'), alter_type.DISALLOW_WORLD: ('remove', 'from')}
+        words = {alter_type.ALLOW_VALUE: ('add', 'to'), alter_type.DISALLOW_VALUE: ('remove', 'from')}
         output('Cannot {} a World {} its own list'.format(*words[alter_type]))
 
         return False
 
     world_list: List[str] = Settings.get_world_settings(source_world)[WorldSettingNames.WORLDS]
-    if alter_type == AlterType.ALLOW_WORLD:
+    if alter_type is AlterType.ALLOW_VALUE:
         if target_world.name in world_list:
             output('{} is already in {}\'s allowed Worlds list!'.format(target_world.desc, source_world.desc))
             return False
 
         world_list.append(target_world.name)
         msg = 'added to'
-    elif alter_type == AlterType.DISALLOW_WORLD:
+    elif alter_type is AlterType.DISALLOW_VALUE:
         if target_world.name not in world_list:
             output('{} cannot be removed from {}\'s allowed Worlds list as it\'s not currently in it!'.format(
                 target_world.desc, source_world.desc))
@@ -140,6 +145,50 @@ def kuttoe_settings_alter_worlds_list(source_world: HomeWorldIds,
     return True
 
 
+@enum_entry_factory(default='INVALID_VALUE', invalid=())
+class AlterStreetWeightReasons(Int):
+    INVALID_VALUE = 0
+    NEED_NON_ZERO_VALUE = 1
+
+
+def kuttoe_alter_street_weights(
+        street: NeighbourhoodStreets,
+        world: HomeWorldIds,
+        weight: float,
+        _connection=None):
+    from kuttoe_home_regions.settings import Settings, WorldSettingNames
+    output = Output(_connection)
+
+    if not world.supports_multiple_creation_streets:
+        output(f'World {world.desc} only has one street a Sim can be assigned to')
+        return Result(False, reason=AlterStreetWeightReasons.INVALID_VALUE)
+
+    if not world.has_street(street.value):
+        output(f'World {world.desc} does not have street {street.desc}!')
+        return Result(False, reason=AlterStreetWeightReasons.INVALID_VALUE)
+
+    if 0 > weight:
+        output(f'Street weights must be a positive value.')
+        return Result(False, reason=AlterStreetWeightReasons.INVALID_VALUE)
+
+    default_weight = world.street_for_creation.get_default_weight(street)
+    weights: Dict[str, float] = Settings.get_world_settings(world)[WorldSettingNames.STREET_WEIGHTS]
+
+    if almost_equal(default_weight, weight):
+        weights.pop(street.dict_key)
+    else:
+        weights[street.dict_key] = weight
+
+    if all(almost_equal(weight, 0) for weight in weights.values()):
+        output(f'There must be one street with a non-zero weight!')
+        return Result(False, reason=AlterStreetWeightReasons.NEED_NON_ZERO_VALUE)
+
+    Settings.update_world_setting(world, WorldSettingNames.STREET_WEIGHTS, weights)
+    output(f'Street {street.desc} in World {world.desc} has had its weight updated to {weight}')
+
+    return Result.TRUE
+
+
 #######################################################################################################################
 # Module Exports                                                                                                      #
 #######################################################################################################################
@@ -150,5 +199,7 @@ __all__ = (
     'kuttoe_settings_alter_worlds_list',
     'kuttoe_notifications_toggle',
     'kuttoe_set_region_soft_filter_value',
+    'kuttoe_alter_street_weights',
     '_alter_worlds_list_helper',
+    'AlterStreetWeightReasons',
 )

@@ -26,12 +26,14 @@ from sims4.reload import protected
 
 # miscellaneous imports
 import services
+from sims4.tuning.tunable import OptionalTunable
 from world.region import get_region_instance_from_zone_id
 from filters.tunable import LivesInRegion, FilterResult
 from sims.sim_info import SimInfo
 
 # local imports
 from kuttoe_home_regions.filters.statistics import UsesAllowedRegionsBitsetMixin
+from kuttoe_home_regions.tunable.street_selector import TunableStreetSelectorVariant
 
 
 #######################################################################################################################
@@ -60,6 +62,25 @@ class FilterProgress(NamedTuple):
 
 class LivesInRegionWithExceptions(LivesInRegion, UsesAllowedRegionsBitsetMixin):
     _FILTER_PROGRESS = list()
+    FACTORY_TUNABLES = {
+        'street_for_creation': OptionalTunable(TunableStreetSelectorVariant()),
+    }
+
+    def get_valid_world_ids(self):
+        if self.street_for_creation is None:
+            return None, None
+
+        street = self.street_for_creation()
+        if street is None:
+            return None, None
+
+        world_id = services.get_world_id(street.value)
+        value = [(world_id, ), None]
+
+        if self.invert_score:
+            value.reverse()
+
+        return tuple(value)
 
     def _track_progress(self, sim_info: SimInfo, score: FilterResult, has_exemptions: bool):
         global _TRACK_FILTER_PROGRESS

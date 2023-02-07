@@ -93,6 +93,7 @@ class InteractionType(enum.Int):
     NOTIFICATION = 7
     RESET_SETTINGS = 8
     SOFT_FILTER_VALUE = 9
+    STREET_WEIGHTS = 10
 
 
 @enum_entry_factory(default='SUCCESS', invalid=())
@@ -140,8 +141,8 @@ class TunableIconDefinitionVariant(TunableVariant):
 class _NotificationData(
     namedtuple(
         '_NotificationData',
-        ('sim_infos', 'regions', 'toggle_value', 'backup_text', 'filter_value', ),
-        defaults=(tuple(), tuple(), None, None, None, )
+        ('sim_infos', 'regions', 'toggle_value', 'backup_text', 'form_value', 'street', ),
+        defaults=(tuple(), tuple(), None, None, None, None)
     )
 ):
     @staticmethod
@@ -170,7 +171,10 @@ class _NotificationData(
     def has_backup_text(self): return self.backup_text is not None
 
     @property
-    def has_filter_value(self): return self.filter_value is not None
+    def has_form_value(self): return self.form_value is not None
+
+    @property
+    def has_street_value(self): return self.street is not None
 
 
 class Notification(HasTunableFactory, AutoFactoryInit, SnippetMixin, snippet_name='custom_notification'):
@@ -234,6 +238,13 @@ class Notification(HasTunableFactory, AutoFactoryInit, SnippetMixin, snippet_nam
         return self.regions[0].region_name()
 
     @property
+    def street_name(self):
+        if not self._notification_data.has_street_value:
+            return lambda *_, **__: None
+
+        return self.street.street_name()
+
+    @property
     def display_name(self): return self._interaction._get_name()
 
     @property
@@ -251,7 +262,9 @@ class Notification(HasTunableFactory, AutoFactoryInit, SnippetMixin, snippet_nam
         elif self._interaction_type is InteractionType.RESET_SETTINGS:
             return (self.backup_text,) if self._notification_data.has_backup_text else tuple()
         elif self._interaction_type is InteractionType.SOFT_FILTER_VALUE:
-            return self.region_name, self.filter_value
+            return self.region_name, self.form_value
+        elif self._interaction_type is InteractionType.STREET_WEIGHTS:
+            return self.region_name, self.street_name, self.form_value
         return self.recipient, display_name
 
     @property

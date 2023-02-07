@@ -26,9 +26,11 @@ from sims4.commands import Command, CommandType
 
 # local imports
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
+from kuttoe_home_regions.enum.neighbourhood_streets import NeighbourhoodStreets
 from kuttoe_home_regions.tunable import TunableInteractionName
 from kuttoe_home_regions.ui import NotificationType
-from kuttoe_home_regions.utils import BoundTypes, validate_bool, validate_number, validate_list, cached_classproperty
+from kuttoe_home_regions.utils import *
+from kuttoe_home_regions.tunable.street_selector import TunableStreetSelectorVariant
 
 
 #######################################################################################################################
@@ -41,6 +43,7 @@ class TunableWorldSettings(HasTunableFactory, AutoFactoryInit):
         'world_list': TunableEnumSet(enum_type=HomeWorldIds, enum_default=HomeWorldIds.DEFAULT, allow_empty_set=True),
         'tourist_toggle': OptionalTunable(Tunable(tunable_type=bool, default=True, allow_empty=False)),
         'soft_filter_value': TunableRange(tunable_type=float, default=0.1, minimum=0.0, maximum=1.0),
+        'street_weights': TunableStreetSelectorVariant(),
     }
 
     @classmethod
@@ -49,12 +52,15 @@ class TunableWorldSettings(HasTunableFactory, AutoFactoryInit):
         base_name = home_world.settings_name_base
 
         dict_values['{}_{}'.format(base_name, WorldSettingNames.SOFT)] = values.get('soft', False)
-        if home_world.has_tourists:
-            dict_values['{}_{}'.format(base_name, WorldSettingNames.TOURISTS)] = values.get('tourist_toggle', True)
         dict_values['{}_{}'.format(base_name, WorldSettingNames.WORLDS)] = list(
             world.name for world in values.get('world_list', list())
         )
         dict_values['{}_{}'.format(base_name, WorldSettingNames.SOFT_FILTER_VALUE)] = values.get('soft_filter_value', 0.1)
+
+        if home_world.supports_multiple_creation_streets:
+            dict_values['{}_{}'.format(base_name, WorldSettingNames.STREET_WEIGHTS)] = values.get('street_weights', dict())
+        if home_world.has_tourists:
+            dict_values['{}_{}'.format(base_name, WorldSettingNames.TOURISTS)] = values.get('tourist_toggle', True)
 
         return dict_values
 
@@ -104,6 +110,7 @@ class WorldSettingNames:
     WORLDS = 'Worlds'
     TOURISTS = 'TouristsToggle'
     SOFT_FILTER_VALUE = 'SoftFilterValue'
+    STREET_WEIGHTS = 'StreetWeights'
 
     @staticmethod
     def _filter(item):
@@ -129,6 +136,8 @@ class WorldSettingNames:
 
         if not world.has_tourists:
             names.remove(cls.TOURISTS)
+        if not world.supports_multiple_creation_streets:
+            names.remove(cls.STREET_WEIGHTS)
 
         return names
 
@@ -170,6 +179,7 @@ class Settings:
         disallow_world=TunableInteractionName(),
         notification=TunableInteractionName(),
         soft_filter_value=TunableInteractionName(),
+        street_weights=TunableInteractionName(),
     )
     NOTIFICATION_SETTINGS = TunableNotificationSettingsMapping()
     BIDIRECTIONAL_TOGGLE = Tunable(tunable_type=bool, default=False, allow_empty=False, needs_tuning=True)
@@ -219,14 +229,14 @@ class Settings:
         def _kuttoe_allow_world(*home_world_name, _connection=None):
             from kuttoe_home_regions.commands import kuttoe_settings_alter_worlds_list, AlterType
 
-            return kuttoe_settings_alter_worlds_list(home_world, *home_world_name, alter_type=AlterType.ALLOW_WORLD,
+            return kuttoe_settings_alter_worlds_list(home_world, *home_world_name, alter_type=AlterType.ALLOW_VALUE,
                                                      _connection=_connection)
 
         @Command(command_name['disallow_world'], command_type=CommandType.Live)
         def _kuttoe_disallow_world(*home_world_name, _connection=None):
             from kuttoe_home_regions.commands import kuttoe_settings_alter_worlds_list, AlterType
 
-            return kuttoe_settings_alter_worlds_list(home_world, *home_world_name, alter_type=AlterType.DISALLOW_WORLD,
+            return kuttoe_settings_alter_worlds_list(home_world, *home_world_name, alter_type=AlterType.DISALLOW_VALUE,
                                                      _connection=_connection)
 
         @Command(command_name['soft_filter_value'], command_type=CommandType.Live)
@@ -234,6 +244,17 @@ class Settings:
             from kuttoe_home_regions.commands import kuttoe_set_region_soft_filter_value
 
             return kuttoe_set_region_soft_filter_value(home_world, new_value=new_value, _connection=_connection)
+
+        @Command(command_name['street_weights'], command_type=CommandType.Live)
+        def _kuttoe_set_street_weight(weight: float, *street_name, _connection=None):
+            from kuttoe_home_regions.commands.utils import get_street_from_name
+            from kuttoe_home_regions.commands.base_commands import kuttoe_alter_street_weights
+
+            street = get_street_from_name(*street_name, _connection=_connection)
+            if street is None:
+                return False
+
+            return kuttoe_alter_street_weights(street, home_world, weight, _connection=_connection)
 
         return _kuttoe_soft_toggle, _kuttoe_allow_world, _kuttoe_disallow_world
 
@@ -305,6 +326,7 @@ class Settings:
         values.setdefault('tourist_toggle', True if home_world.has_tourists else None)
         values.setdefault('worlds_list', tuple())
         values.setdefault('soft_filter_value', 0.1)
+        values.setdefault('street_weights', dict())
 
         return TunableWorldSettings.get_dict_values(home_world, **values)
 
@@ -348,6 +370,19 @@ class Settings:
 
             return False
 
+        def mapping_key_constraints(key: str, world: HomeWorldIds):
+            try:
+                value = int(key, 0)
+
+                return value in NeighbourhoodStreets.value_to_name and world.has_street(value)
+            except ValueError:
+                return False
+
+        def mapping_value_constraint(value): return type(value) in (int, float)
+
+        def mapping_total_constraint(dict_value: dict):
+            return not all(value == 0 for value in dict_value.values())
+
         validate_args = dict(settings=settings_dict, default=default_settings, callback=_dump_settings)
 
         validate_bool(SettingNames.HIGH_SCHOOL_TOGGLE, **validate_args)
@@ -358,7 +393,7 @@ class Settings:
             validate_bool(notification_type.setting_name, **validate_args)
 
         for home_world in HomeWorldIds:
-            if home_world == HomeWorldIds.DEFAULT:
+            if home_world is HomeWorldIds.DEFAULT:
                 continue
 
             base_name = home_world.settings_name_base
@@ -368,7 +403,12 @@ class Settings:
             validate_number('{}_{}'.format(base_name, WorldSettingNames.SOFT_FILTER_VALUE),
                             max_value=1.0, include_bounds=BoundTypes.NONE, **validate_args)
             if home_world.has_tourists:
-                validate_bool('{}_{}'.format(base_name, cls.WorldSettingNames.TOURISTS), **validate_args)
+                validate_bool('{}_{}'.format(base_name, WorldSettingNames.TOURISTS), **validate_args)
+            if home_world.supports_multiple_creation_streets:
+                setting_key = '{}_{}'.format(base_name, WorldSettingNames.STREET_WEIGHTS)
+                validate_mapping(setting_key, **validate_args, value_constraints=mapping_value_constraint,
+                                 key_constraints=lambda key: mapping_key_constraints(key, home_world),
+                                 total_constraints=mapping_total_constraint)
 
     @classmethod
     def _load_settings(cls):
@@ -483,6 +523,15 @@ class Settings:
         cls.dump_settings(cls.settings_directory, cls._SETTINGS)
 
         return success
+
+    @classproperty
+    def street_weights(cls):
+        street_weights = dict()
+
+        for home_world in HomeWorldIds.worlds_that_support_multiple_streets:
+            street_weights.update(cls.get_world_settings(home_world)[WorldSettingNames.STREET_WEIGHTS])
+
+        return street_weights
 
 
 #######################################################################################################################

@@ -33,7 +33,7 @@ class TunableAllowedWorldsList(TunableVariant):
         def _get_sim_info(resolver):
             return resolver.get_participant(ParticipantType.TargetSim) or resolver.get_participant(ParticipantType.Actor)
 
-        def _should_include_world(self, world, sim_info):
+        def _should_include_world(self, world: HomeWorldIds, sim_info):
             if self.restrict_to_exempt_worlds:
                 return self._is_world_allowed(sim_info, world)
             else:
@@ -43,6 +43,17 @@ class TunableAllowedWorldsList(TunableVariant):
             sim_info = self._get_sim_info(resolver)
 
             return (world for world in HomeWorldIds.available_worlds if self._should_include_world(world, sim_info))
+
+    class _SupportsMultipleCreationStreetsWorlds(_AllowedWorldsListBase):
+        FACTORY_TUNABLES = {'must_support_multiple_creation_streets': Tunable(tunable_type=bool, default=True)}
+
+        def _should_include_world(self, world: HomeWorldIds):
+            supports = world in world.worlds_that_support_multiple_streets
+
+            return supports is self.must_support_multiple_creation_streets
+
+        def get_worlds(self, _resolver):
+            return (world for world in HomeWorldIds.available_worlds if self._should_include_world(world))
 
     class _AllAllowedWorlds(_AllowedWorldsListBase):
         def get_worlds(self, _resolver):
@@ -62,6 +73,7 @@ class TunableAllowedWorldsList(TunableVariant):
         factories = dict()
         factories['all_worlds'] = self._AllAllowedWorlds, True
         factories['exempt_worlds'] = self._ExemptWorlds, False
+        factories['creation_streets'] = self._SupportsMultipleCreationStreetsWorlds, False
         factories['tourist_worlds'] = self._TouristWorlds, False
         factories['specify_worlds'] = self._SpecifyWorlds, False
 

@@ -6,7 +6,7 @@ This file details interactions that remove an assigned home world from Sims.
 """
 
 #######################################################################################################################
-# Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # sims4 imports
@@ -28,7 +28,7 @@ from kuttoe_home_regions.ui import NotificationType, InteractionType
 
 
 #######################################################################################################################
-# Super Interactions                                                                                                 #
+# Super Interactions                                                                                                  #
 #######################################################################################################################
 
 
@@ -73,8 +73,15 @@ class RemoveAssignedWorldPickerSuperInteration(SimPickerInteraction, DisplayNoti
 
 
 #######################################################################################################################
-# Instance Tunable Locking                                                                                           #
+# Instance Tunable Locking                                                                                            #
 #######################################################################################################################
 
 lock_instance_tunables(RemoveAssignedWorldImmediateSuperInteraction, interaction_type=InteractionType.COMMAND)
 lock_instance_tunables(RemoveAssignedWorldPickerSuperInteration, interaction_type=InteractionType.PICKER)
+
+
+#######################################################################################################################
+# Module Exports                                                                                                      #
+#######################################################################################################################
+
+__all__ = ('RemoveAssignedWorldImmediateSuperInteraction', 'RemoveAssignedWorldPickerSuperInteration', )

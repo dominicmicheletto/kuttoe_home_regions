@@ -19,7 +19,7 @@ from sims4.commands import Command, CommandType, CheatOutput as Output
 from server_commands.argument_helpers import OptionalSimInfoParam, get_optional_target
 
 # local imports
-from kuttoe_home_regions.commands.utils import get_sim_household_data, get_sim_info_by_name
+from kuttoe_home_regions.commands.utils import get_sim_household_data, get_sim_info_by_name, get_home_world_from_name
 
 
 #######################################################################################################################
@@ -185,6 +185,7 @@ def get_gallery_behaviour(_connection=None):
 #  Dump Commands                                                                                                      #
 #######################################################################################################################
 
+
 @DebugDumpCommand('Kuttoe_Filter_Dump', 'dump_filters', 'df')
 def dump_filters(_connection=None):
     from kuttoe_home_regions.injections import SituationJobModifications
@@ -263,6 +264,41 @@ def toggle_filter_tracking(should_track: bool = None, _connection=None):
     output(f'Tracking of filter exemptions has been {"enabled" if is_tracking else "disabled"}')
 
 
+@DebugDumpCommand('Kuttoe_StreetWeights', 'get_street_weights')
+def get_street_weights(_connection=None):
+    from kuttoe_home_regions.settings import Settings
+
+    return Settings.street_weights
+
+
+@DebugDumpCommand('Kuttoe_NeighbourhoodStreets', 'get_neighbourhood_streets', 'gns')
+def get_neighbourhood_streets(_connection=None):
+    from kuttoe_home_regions.enum.neighbourhood_streets import NeighbourhoodStreets
+    from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
+
+    Output(_connection)(f'{len(NeighbourhoodStreets)} entries in the NeighbourhoodStreets enum')
+    data = {street: (street.value, street.street_guid64) for street in NeighbourhoodStreets}
+    data.pop(NeighbourhoodStreets.DEFAULT)
+
+    for world in HomeWorldIds:
+        creation_streets = world.street_for_creation
+        if creation_streets is None:
+            continue
+
+        for street in creation_streets.streets:
+            data[street] = (*data[street], creation_streets[street])
+
+    return data
+
+
+@DebugDumpCommand('Kuttoe_HomeWorldIds', 'get_home_world_ids', 'ghwi')
+def get_home_world_ids(_connection=None):
+    from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
+
+    Output(_connection)(f'{len(HomeWorldIds)} entries in the HomeWorldIds enum')
+    return {world.name: world for world in HomeWorldIds}
+
+
 #######################################################################################################################
 # Miscellaneous Commands                                                                                              #
 #######################################################################################################################
@@ -278,4 +314,21 @@ def show_settings(_connection=None):
         raise ex
     else:
         Output(_connection)('Successfully opened settings file for Home Regions')
+    return True
+
+
+@Command('kuttoe.get_random_street', command_type=CommandType.Cheat)
+def get_random_street(*home_world_name: str, _connection=None):
+    home_world = get_home_world_from_name(*home_world_name, _connection=_connection)
+    output = Output(_connection)
+
+    if home_world is None:
+        return False
+    elif home_world.street_for_creation is None:
+        output(f'World {home_world.desc} does not have any given street_for_creation')
+        return False
+
+    street = home_world.street_for_creation()
+    output(f'Random street generated for world {home_world.desc}: {street} ({street.value}); {street.street_tuning}')
+
     return True

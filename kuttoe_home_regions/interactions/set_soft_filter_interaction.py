@@ -7,7 +7,7 @@ This file details an interaction that allows for setting the soft filter value f
 
 
 #######################################################################################################################
-# Imports                                                                                                            #
+# Imports                                                                                                             #
 #######################################################################################################################
 
 # sims4 imports
@@ -43,7 +43,7 @@ from kuttoe_home_regions.tests import get_soft_filter_enabled_test
 # Proxy Interactions                                                                                                  #
 #######################################################################################################################
 
-class _SetSoftFilterValuePickerMenuProxyInteraction(_HomeWorldPickerMenuProxyInteraction):
+class _SetSoftFilterValuePickerMenuProxyInteraction(HasEllipsizedNamedMixin, _HomeWorldPickerMenuProxyInteraction):
     @classmethod
     def use_pie_menu(cls): return False
 
@@ -102,6 +102,7 @@ class _SetSoftFilterValuePickerMenuProxyInteraction(_HomeWorldPickerMenuProxyInt
 # Super Interactions                                                                                                  #
 #######################################################################################################################
 
+@HasPickerProxyInteractionMixin(_SetSoftFilterValuePickerMenuProxyInteraction)
 class SetSoftFilterValueImmediateSuperInteraction(PickerSuperInteraction, DisplayNotificationMixin, HomeWorldSortOrderMixin):
     TEXT_INPUT_SOFT_FILTER_VALUE = 'soft_filter_value'
     MIN_VALUE = Tunable(tunable_type=float, default=0.0)
@@ -116,35 +117,6 @@ class SetSoftFilterValueImmediateSuperInteraction(PickerSuperInteraction, Displa
         'invalid_entry_warning': OptionalTunable(TunableLocalizedStringFactory()),
         'soft_filter_disabled_tooltip': OptionalTunable(TunableLocalizedStringFactory()),
     }
-
-    @classmethod
-    def _make_potential_interaction(cls, row_data):
-        inst = _SetSoftFilterValuePickerMenuProxyInteraction.generate(cls, picker_row_data=row_data)
-
-        for tunable_name in cls.INSTANCE_TUNABLES.keys():
-            setattr(inst, tunable_name, getattr(cls, tunable_name))
-
-        return inst
-
-    @classmethod
-    def potential_interactions(cls, target, context, **kwargs):
-        if cls.use_pie_menu():
-            if context.source == InteractionSource.AUTONOMY and not cls.allow_autonomous:
-                return
-
-            recipe_ingredients_map = {}
-            funds_source = cls.funds_source if hasattr(cls, 'funds_source') else None
-            kwargs['recipe_ingredients_map'] = recipe_ingredients_map
-
-            for row_data in cls.picker_rows_gen(target, context, funds_source=funds_source, **kwargs):
-                if not row_data.available_as_pie_menu:
-                    pass
-                else:
-                    affordance = cls._make_potential_interaction(row_data)
-                    for aop in affordance.potential_interactions(target, context, **kwargs):
-                        yield aop
-        else:
-            yield from super().potential_interactions(target, context, **kwargs)
 
     @classmethod
     def _row_tests(cls, resolver, home_world: HomeWorldIds):
@@ -193,3 +165,10 @@ class SetSoftFilterValueImmediateSuperInteraction(PickerSuperInteraction, Displa
 #######################################################################################################################
 
 lock_instance_tunables(SetSoftFilterValueImmediateSuperInteraction, interaction_type=InteractionType.SOFT_FILTER_VALUE)
+
+
+#######################################################################################################################
+# Module Exports                                                                                                      #
+#######################################################################################################################
+
+__all__ = ('SetSoftFilterValueImmediateSuperInteraction', )

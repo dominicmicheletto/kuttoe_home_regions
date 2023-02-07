@@ -11,14 +11,17 @@ This file details mixins that are used amongst all the custom interactions.
 #######################################################################################################################
 
 # sims4 imports
-from sims4.localization import TunableLocalizedStringFactory
+from sims4.localization import TunableLocalizedStringFactory, LocalizationHelperTuning
 from sims4.utils import classproperty, flexmethod
 from sims4.tuning.tunable import OptionalTunable, Tunable, TunableRange, TunableMapping
 
 # miscellaneous imports
 import services
 from singletons import DEFAULT
+
+# interaction imports
 from interactions import ParticipantType
+from interactions.context import InteractionSource
 
 # local imports
 from kuttoe_home_regions.ui import InteractionType, NotificationType, TunableNotificationSnippet
@@ -79,7 +82,9 @@ class DisplayNotificationMixin:
 
 
 class HomeWorldSortOrderMixin:
-    INSTANCE_TUNABLES = {'bump_up_current_region': Tunable(tunable_type=bool, default=False)}
+    INSTANCE_TUNABLES = {
+        'bump_up_current_region': Tunable(tunable_type=bool, default=False),
+    }
     REMOVE_INSTANCE_TUNABLES = ('pie_menu_priority', )
     REGION_PRIORITY = TunablePieMenuPriorityMapping()
     CURRENT_REGION_BUMP_UP_PRIORITY = TunableRange(tunable_type=int, default=8, maximum=10, minimum=0)
@@ -134,8 +139,68 @@ class HasHomeWorldMixin:
         return construct_auto_init_factory(HomeRegionTest, **args)
 
 
+class HasEllipsizedNamedMixin:
+    @flexmethod
+    def get_name(cls, inst, target=DEFAULT, context=DEFAULT, apply_name_modifiers=True, **interaction_parameters):
+        inst_or_cls = inst if inst is not None else cls
+
+        interaction_parameters['target'] = target
+        interaction_parameters['context'] = context
+        interaction_parameters['apply_name_modifiers'] = apply_name_modifiers
+        display_name = super(__class__, inst_or_cls)._get_name(**interaction_parameters)
+
+        return LocalizationHelperTuning.get_ellipsized_text(display_name)
+
+
+class HasPickerProxyInteractionMixin:
+    def __init__(self, picker_proxy_cls, forward_tuning: bool = True):
+        self._picker_proxy_cls = picker_proxy_cls
+        self._forward_tuning = forward_tuning
+
+    def __call__(self, cls):
+        setattr(cls, '_picker_proxy_cls', self._picker_proxy_cls)
+        setattr(cls, '_forward_tuning', self._forward_tuning)
+        setattr(cls, '_make_potential_interaction', classmethod(self._make_potential_interaction))
+        setattr(cls, 'potential_interactions', classmethod(self.potential_interactions))
+
+        return cls
+
+    @staticmethod
+    def _make_potential_interaction(cls, row_data):
+        inst = cls._picker_proxy_cls.generate(cls, picker_row_data=row_data)
+        tunable_names = cls.INSTANCE_TUNABLES.keys() if cls._forward_tuning else tuple()
+
+        for tunable_name in tunable_names:
+            setattr(inst, tunable_name, getattr(cls, tunable_name))
+
+        return inst
+
+    @staticmethod
+    def potential_interactions(cls, target, context, **kwargs):
+        if cls.use_pie_menu():
+            if context.source == InteractionSource.AUTONOMY and not cls.allow_autonomous:
+                return
+
+            recipe_ingredients_map = {}
+            funds_source = cls.funds_source if hasattr(cls, 'funds_source') else None
+            kwargs['recipe_ingredients_map'] = recipe_ingredients_map
+
+            for row_data in cls.picker_rows_gen(target, context, funds_source=funds_source, **kwargs):
+                if not row_data.available_as_pie_menu:
+                    pass
+                else:
+                    affordance = cls._make_potential_interaction(row_data)
+                    for aop in affordance.potential_interactions(target, context, **kwargs):
+                        yield aop
+        else:
+            yield from super().potential_interactions(target, context, **kwargs)
+
+
 #######################################################################################################################
 # Module Exports                                                                                                     #
 #######################################################################################################################
 
-__all__ = ('HasHomeWorldMixin', 'DisplayNotificationMixin', 'HomeWorldSortOrderMixin',)
+__all__ = (
+    'HasHomeWorldMixin', 'DisplayNotificationMixin', 'HomeWorldSortOrderMixin', 'HasEllipsizedNamedMixin',
+    'HasPickerProxyInteractionMixin',
+)

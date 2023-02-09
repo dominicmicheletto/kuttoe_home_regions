@@ -292,6 +292,16 @@ def kuttoe_toggle_gallery_behaviour(new_value: bool = None, _connection=None):
     return True
 
 
+@Command('kuttoe.toggle_spa', command_type=CommandType.Live)
+def kuttoe_toggle_spa(new_value: bool = None, _connection=None):
+    from kuttoe_home_regions.settings import Settings, SettingNames
+
+    response = 'everyone ' if Settings.toggle_setting(SettingNames.SPA_TOGGLE, new_value) else 'only locals'
+    Output(_connection)('Spas will now accept {}'.format(response))
+
+    return True
+
+
 #######################################################################################################################
 # Miscellaneous                                                                                                       #
 #######################################################################################################################

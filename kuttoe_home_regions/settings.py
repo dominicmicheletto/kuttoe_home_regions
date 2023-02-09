@@ -146,6 +146,7 @@ class SettingNames:
     BIDIRECTIONAL_TOGGLE = 'bidirectional_toggle'
     HIGH_SCHOOL_TOGGLE = 'high_school_toggle'
     SAVE_ACROSS_GALLERY_TOGGLE = 'save_across_gallery_toggle'
+    SPA_TOGGLE = 'spa_toggle'
 
     @staticmethod
     def _filter(item):
@@ -185,6 +186,7 @@ class Settings:
     BIDIRECTIONAL_TOGGLE = Tunable(tunable_type=bool, default=False, allow_empty=False, needs_tuning=True)
     HIGH_SCHOOL_TOGGLE = Tunable(tunable_type=bool, default=True, allow_empty=False, needs_tuning=True)
     SAVE_ACROSS_GALLERY_TOGGLE = Tunable(tunable_type=bool, default=True, allow_empty=False, needs_tuning=True)
+    SPA_TOGGLE = Tunable(tunable_type=bool, default=True, allow_empty=False, needs_tuning=True)
 
     _SETTINGS = None
 
@@ -466,6 +468,9 @@ class Settings:
 
     @classproperty
     def save_across_gallery_toggle(cls) -> bool: return cls.settings[SettingNames.SAVE_ACROSS_GALLERY_TOGGLE]
+
+    @classproperty
+    def spa_toggle(cls) -> bool: return cls.settings[SettingNames.SPA_TOGGLE]
 
     @classmethod
     def update_setting(cls, setting_key: str, setting_value):

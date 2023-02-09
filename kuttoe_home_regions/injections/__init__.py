@@ -40,13 +40,14 @@ from tag import TunableTags
 import enum
 from sims.sim_info_types import Species
 from services import get_instance_manager
+from world.street import Street
 
 # local imports
 from kuttoe_home_regions.utils import *
 from kuttoe_home_regions.injections.situation_job_filters import *
 from kuttoe_home_regions.injections.situation_filter_replacement import *
 from kuttoe_home_regions.injections.home_regions_hooks import TunableHomeRegionInjectionHook, ListType
-from world.street import Street
+from kuttoe_home_regions.injections.situation_job_filters import BypassListType
 
 
 #######################################################################################################################
@@ -106,7 +107,7 @@ class SituationJobModifications:
     FILTER_REPLACEMENT_LIST = TunableSituationFilterReplacementSnippet()
     FILTERS_TO_BYPASS = TunableSet(tunable=TunableSimFilter.TunablePackSafeReference())
     BYPASS_TAGS = TunableTags(filter_prefixes=['situation'], pack_safe=True)
-    HIGH_SCHOOL_SITUATION_JOBS_INFO = TunableSituationJobsFilterSnippet()
+    ADDITIONAL_SITUATION_JOB_INFOS = TunableSituationJobsFilterSnippet()
     TOURISTS_SITUATION_JOBS_INFO = TunableTouristsJobsFilterSnippet()
 
     _BYPASSED_JOBS = set()
@@ -130,11 +131,19 @@ class SituationJobModifications:
         return frozendict({key: tuple(value) for (key, value) in situations.items()})
 
     @classproperty
-    def _has_high_school_info(cls): return cls.HIGH_SCHOOL_SITUATION_JOBS_INFO is not None
+    def _has_additional_situation_infos(cls): return cls.ADDITIONAL_SITUATION_JOB_INFOS is not None
 
-    @conditional_cached_classproperty(condition=lambda cls: cls._has_high_school_info, fallback=SituationFilterResult())
-    def high_school_situations(cls):
-        return cls.HIGH_SCHOOL_SITUATION_JOBS_INFO.value()
+    @conditional_cached_classproperty(condition=lambda cls: cls._has_additional_situation_infos, fallback=frozendict())
+    def additional_situations(cls):
+        situations = defaultdict(set)
+
+        for factory in cls.ADDITIONAL_SITUATION_JOB_INFOS:
+            value = factory()
+
+            situations[BypassListType.SOFT].update(value.soft_)
+            situations[BypassListType.GLOBAL].update(value.global_)
+
+        return situations
 
     @cached_classproperty
     def filters_to_bypass(cls):
@@ -146,8 +155,8 @@ class SituationJobModifications:
     @cached_classproperty
     def soft_list(cls):
         primary_list = {situation_job for situation_job in cls.SOFT_LIST if situation_job is not None}
-        primary_list.update(cls.high_school_situations.soft_)
         primary_list.update(TunableHomeRegionInjectionHook.update_from_list(ListType.SOFT_LIST, *cls._HOOKS))
+        primary_list.update(cls.additional_situations[BypassListType.SOFT])
 
         for (world, values) in cls.tourists_situations.items():
             if not world.has_tourists:
@@ -161,8 +170,8 @@ class SituationJobModifications:
     @cached_classproperty
     def bypass_list(cls):
         primary_list = {situation_job for situation_job in cls.BYPASS_LIST if situation_job is not None}
-        primary_list.update(cls.high_school_situations.global_)
         primary_list.update(TunableHomeRegionInjectionHook.update_from_list(ListType.BYPASS_LIST, *cls._HOOKS))
+        primary_list.update(cls.additional_situations[BypassListType.GLOBAL])
 
         for (world, values) in cls.tourists_situations.items():
             if not world.has_tourists:

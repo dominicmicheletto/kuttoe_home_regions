@@ -55,8 +55,7 @@ class WorldExemptionSuperInteraction(
     }
 
     @classproperty
-    def client_id(cls):
-        return client_manager().get_first_client_id()
+    def client_id(cls): return client_manager().get_first_client_id()
 
     @classmethod
     def has_valid_choice(cls, target, context, **kwargs):

@@ -4,8 +4,7 @@ https://kuttoe.itch.io/keep-sims-in-home-region#download
 
 This file details mixins that are used amongst all the custom interactions.
 """
-
-
+import enum
 #######################################################################################################################
 # Imports                                                                                                            #
 #######################################################################################################################
@@ -160,6 +159,7 @@ class HasPickerProxyInteractionMixin:
     def __call__(self, cls):
         setattr(cls, '_picker_proxy_cls', self._picker_proxy_cls)
         setattr(cls, '_forward_tuning', self._forward_tuning)
+
         setattr(cls, '_make_potential_interaction', classmethod(self._make_potential_interaction))
         setattr(cls, 'potential_interactions', classmethod(self.potential_interactions))
 

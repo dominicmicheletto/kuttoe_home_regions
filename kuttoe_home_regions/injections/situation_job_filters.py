@@ -134,7 +134,7 @@ class TunableSettingValueVariant(TunableVariant):
 
 class SituationJobsFilter(
     HasTunableSingletonFactory, AutoFactoryInit, SnippetMixin,
-    snippet_name='situation_jobs_filter',
+    snippet_name='situation_jobs_filter', use_list_reference=True,
 ):
     """
     **prefix_list**: These are the list of "prefixes" that will be used to search for all SITUATION_JOBS tuning whose name
@@ -217,13 +217,13 @@ class SituationJobsFilter(
         global_list = self.blacklisted_situation_jobs.get(BypassListType.GLOBAL, set())
         blacklist = self.blacklisted_situation_jobs.get(BypassListType.NONE, set())
 
+        result = SituationFilterResult(soft_=soft_list, global_=global_list)
         if self.target_list is BypassListType.GLOBAL:
             # if High School is opened to everyone (we are disabled) then the whitelisted situations should be
             # added to the global bypass list and anything blacklisted should be added to the appropriate list further
             # if High School is restricted (we are enabled) then the whitelisted situations are ignored and only
             # blacklisted situations should be returned
 
-            result = SituationFilterResult(soft_=soft_list, global_=global_list)
             return (result.update(situations) if self else result).difference(blacklist)
 
         elif self.target_list is BypassListType.SOFT:
@@ -234,8 +234,7 @@ class SituationJobsFilter(
             # in the event the filter is enabled, in addition to blacklists against THOSE situations which will end up
             # in the designated list, or simply not be collected at all
 
-            results = SituationFilterResult(soft_=situations, global_=global_list)
-            return (results.update(soft_list, list_type=BypassListType.SOFT) if self else results).difference(blacklist)
+            return (result.update(situations, list_type=BypassListType.SOFT) if self else result).difference(blacklist)
 
         else:
             return SituationFilterResult()

@@ -205,10 +205,10 @@ def dump_bypassed_situation_jobs(_connection=None):
 
     situation_jobs_info = {
         "high_school_filter": Settings.high_school_toggle,
+        "spa_toggle": Settings.spa_toggle,
         "soft_filter": SituationJobModifications.soft_list,
-        "soft_filter_value": Settings.soft_filter_value,
         "bypassed_jobs": SituationJobModifications._BYPASSED_JOBS,
-        "high_school_situations": SituationJobModifications.high_school_situations,
+        "additional_situations": SituationJobModifications.additional_situations,
         "tourists_situations": SituationJobModifications.tourists_situations,
     }
 

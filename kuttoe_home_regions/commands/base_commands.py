@@ -179,7 +179,7 @@ def kuttoe_alter_street_weights(
     else:
         weights[street.dict_key] = weight
 
-    if all(almost_equal(weight, 0) for weight in weights.values()):
+    if all(almost_equal(weight, 0.0) for weight in weights.values()):
         output(f'There must be one street with a non-zero weight!')
         return Result(False, reason=AlterStreetWeightReasons.NEED_NON_ZERO_VALUE)
 

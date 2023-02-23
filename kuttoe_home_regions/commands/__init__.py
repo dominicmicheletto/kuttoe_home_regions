@@ -5,6 +5,7 @@ https://kuttoe.itch.io/keep-sims-in-home-region#download
 This file details console commands and helpful utility functions used to run them.
 """
 
+
 #######################################################################################################################
 # Imports                                                                                                             #
 #######################################################################################################################
@@ -201,7 +202,7 @@ def disallow_in_all_regions_by_sim_name(first_name: str, last_name: str = '', _c
 
 
 @Command('kuttoe.remove_assigned_world', command_type=CommandType.Live)
-def kuttoe_make_homeless(opt_sim: OptionalSimInfoParam = None, force: bool = True, _connection=None):
+def kuttoe_make_homeless(opt_sim: OptionalSimInfoParam = None, _connection=None):
     output = Output(_connection)
     sim_info = get_optional_target(opt_sim, target_type=OptionalSimInfoParam, _connection=_connection)
     household_data = get_sim_household_data(sim_info, _connection)

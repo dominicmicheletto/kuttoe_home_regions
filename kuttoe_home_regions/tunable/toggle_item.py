@@ -32,7 +32,7 @@ from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 class ToggleItemMapping(TunableMapping):
     def __init__(self, *args, **kwargs):
         tuple_args = dict()
-        tuple_args['icon'] = OptionalTunable(TunableIconVariant())
+        tuple_args['icon'] = OptionalTunable(TunableIconVariant(icon_pack_safe=True))
         tuple_args['item_text'] = TunableLocalizedStringFactory()
         tuple_args['item_tooltip'] = TunableLocalizedStringFactory()
 

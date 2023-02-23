@@ -41,15 +41,21 @@ EnumItem = namedtuple('EnumItem', ('enum_name', 'enum_value', 'enum_info'))
 #######################################################################################################################
 
 class DynamicFactoryEnumMixin:
+    _FALLBACK = object()
+
     @property
     def factory_value(self):
         return self._tuned_values_mapping[self.name]
 
     def __getattr__(self, name):
         try:
-            return getattr(self.factory_value, name)
+            return object.__getattribute__(self, name)
         except AttributeError:
-            raise AttributeError('{} does not have an attribute named {}'.format(self, name))
+            fallback = getattr(self.factory_value, name, self._FALLBACK)
+
+            if fallback is self._FALLBACK:
+                raise AttributeError('{} does not have an attribute named {}'.format(self, name))
+            return fallback
 
     def __repr__(self):
         return '<%s.%s: %s = %s>' % (type(self).__name__, self.name, super().__repr__(), self.factory_value)

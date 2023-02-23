@@ -34,7 +34,7 @@ from world.region import RegionType
 from kuttoe_home_regions.enum import DynamicFactoryEnumMetaclass, EnumItemFactory
 from kuttoe_home_regions.utils import *
 from kuttoe_home_regions.tunable.local_fixup import OptionalTunableLocalFixup, LocalFixup
-from kuttoe_home_regions.tunable.icon_definition import TunableIconMappingVariant, IconSize
+from kuttoe_home_regions.tunable.world_icon_definition import TunableWorldIconMappingVariant, WorldIconSize
 from kuttoe_home_regions.tunable.pack_resources import PackDefinition
 from kuttoe_home_regions.tunable.bit_value import TunableBitValueVariant
 from kuttoe_home_regions.tunable.street_selector import TunableStreetSelectorVariant
@@ -105,12 +105,12 @@ class RegionData:
     def is_available(self) -> bool: return is_available_pack(self.pack)
 
     @property
-    def icon_mapping(self) -> Dict[IconSize, Any]: return self._icon_mapping
+    def icon_mapping(self) -> Dict[WorldIconSize, Any]: return self._icon_mapping
 
     @property
     def pie_menu_icon(self): return self.get_icon()
 
-    def get_icon(self, icon_size=IconSize.SMALL): return self.icon_mapping.get(icon_size, None)
+    def get_icon(self, icon_size=WorldIconSize.SMALL): return self.icon_mapping.get(icon_size, None)
 
     @property
     def has_tourists(self): return self._has_tourists
@@ -169,7 +169,7 @@ class RegionDataFactory(EnumItemFactory):
         'region': TunablePackSafeReference(manager=get_instance_manager(Types.REGION)),
         'name': TunableLocalizedStringFactory(),
         'pack': PackDefinition(),
-        'icon_mapping': TunableIconMappingVariant(),
+        'icon_mapping': TunableWorldIconMappingVariant(),
         'street_for_creation': TunableStreetSelectorVariant(),
         'local_fixup': OptionalTunableLocalFixup(),
         'has_tourists': Tunable(tunable_type=bool, default=False),
@@ -268,4 +268,4 @@ class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=
 # Module Exports                                                                                                      #
 #######################################################################################################################
 
-__all__ = ('HomeWorldIds', 'IconSize', 'WorldType', )
+__all__ = ('HomeWorldIds', 'WorldIconSize', 'WorldType', )

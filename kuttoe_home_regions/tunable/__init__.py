@@ -44,6 +44,10 @@ class TunableInteractionName(Tunable):
         def _get_hash_for_home_world(cls, interaction_name_base: str, home_world):
             return cls._get_hash_for_name(interaction_name_base, home_world.pretty_name)
 
+        @classmethod
+        def _get_hash_for_neighbourhood_street(cls, interaction_name_base: str, neighbourhood_street):
+            return cls._get_hash_for_name(interaction_name_base, neighbourhood_street.hash_name)
+
         __slots__ = ('_interaction_name_base',)
 
         def __init__(self, interaction_name_base: str) -> None:
@@ -52,8 +56,18 @@ class TunableInteractionName(Tunable):
         def __bool__(self) -> bool:
             return self._interaction_name_base is not None
 
-        def __call__(self, home_world):
-            return self._get_hash_for_home_world(self.interaction_name_base, home_world)
+        def __call__(self, value):
+            from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
+            from kuttoe_home_regions.enum.neighbourhood_streets import NeighbourhoodStreets
+
+            if type(value) is HomeWorldIds:
+                func = self._get_hash_for_home_world
+            elif type(value) is NeighbourhoodStreets:
+                func = self._get_hash_for_neighbourhood_street
+            else:
+                func = self._get_hash_for_name
+
+            return func(self.interaction_name_base, value)
 
         def _get_hash_for_suffix(self, suffix: str):
             return self._get_hash_for_name(self.interaction_name_base, suffix)

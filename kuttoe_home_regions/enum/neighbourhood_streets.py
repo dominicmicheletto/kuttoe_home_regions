@@ -13,18 +13,16 @@ and provides important data, such as the name of the street and the ability to g
 
 # misc imports
 import enum
-from interactions.utils.tunable_icon import TunableIconVariant
+from world.street import Street
 
 # sims 4 imports
 from sims4.localization import TunableLocalizedStringFactory
-from sims4.tuning.tunable import OptionalTunable
 from sims4.utils import classproperty
-
-# world imports
-from world.street import Street
 
 # local imports
 from kuttoe_home_regions.enum import DynamicFactoryEnumMetaclass, EnumItemFactory
+from kuttoe_home_regions.tunable import TunableInteractionName
+from kuttoe_home_regions.tunable.neighbourhood_icon import TunableNeighbourhoodIconVariant, TunablePreMadeIconMapping
 from kuttoe_home_regions.utils import *
 
 
@@ -40,15 +38,12 @@ class NeighbourhoodStreetsData:
     @property
     def street_name(self) -> TunableLocalizedStringFactory._Wrapper: return self._street_name
 
-    @property
-    def icon(self): return self._icon
-
 
 @EnumItemFactory.ReprMixin()
 class NeighbourhoodStreetsDataFactory(EnumItemFactory):
     FACTORY_TUNABLES = {
         'street_name': TunableLocalizedStringFactory(),
-        'icon': OptionalTunable(TunableIconVariant()),
+        'icon': TunableNeighbourhoodIconVariant(),
     }
     FACTORY_TYPE = NeighbourhoodStreetsData
 
@@ -69,6 +64,8 @@ class NeighbourhoodStreetsDataFactory(EnumItemFactory):
 @enum_set_factory(default='DEFAULT', invalid=('DEFAULT', ), method_name='create_enum_set')
 class NeighbourhoodStreets(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=NeighbourhoodStreetsDataFactory):
     DEFAULT = 0
+    HASH_NAME_BASE = TunableInteractionName()
+    OTHER_ICONS_MAPPING = TunablePreMadeIconMapping()
 
     @property
     def street_tuning(self) -> Street:
@@ -90,7 +87,18 @@ class NeighbourhoodStreets(enum.Int, metaclass=DynamicFactoryEnumMetaclass, fact
         return self.name.replace('_', ' ').title()
 
     @property
+    def pretty_name(self) -> str:
+        return self.name.lower()
+
+    @property
+    def hash_name(self) -> str:
+        return self.name.replace('_', '')
+
+    @property
     def dict_key(self) -> str: return str(self.value)
+
+    @property
+    def icon(self): return TunableNeighbourhoodIconVariant.get_icon(self)
 
 
 #######################################################################################################################

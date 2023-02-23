@@ -128,7 +128,7 @@ class NotificationType(enum.Int):
 
 class TunableIconDefinitionVariant(TunableVariant):
     def __init__(self, *args, **kwargs):
-        kwargs['enabled'] = TunableIconVariant()
+        kwargs['enabled'] = TunableIconVariant(icon_pack_safe=True)
         kwargs['locked_args'] = dict(disabled=None, use_icon_from_interaction=True)
 
         super().__init__(*args, **kwargs)

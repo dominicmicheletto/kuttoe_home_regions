@@ -31,7 +31,7 @@ from ui.ui_dialog_picker import BasePickerRow, UiItemPicker
 # local imports
 from kuttoe_home_regions.enum.home_worlds import HomeWorldIds
 from kuttoe_home_regions.filters.statistics import UsesAllowedRegionsBitsetMixin
-from kuttoe_home_regions.tunable.icon_definition import IconSize
+from kuttoe_home_regions.tunable.world_icon_definition import WorldIconSize
 from kuttoe_home_regions.interactions.mixins import DisplayNotificationMixin, HomeWorldSortOrderMixin, HasHomeWorldMixin
 from kuttoe_home_regions.ui import InteractionType, NotificationType
 from kuttoe_home_regions.tunable.allowed_worlds_list import TunableAllowedWorldsList
@@ -129,7 +129,7 @@ class WorldExemptionSuperInteraction(
 
         args['is_enable'] = row_test_results.result
         args['name'] = home_world.region_name()
-        args['icon_info'] = home_world.get_icon(IconSize.LARGE)(resolver)
+        args['icon_info'] = home_world.get_icon(WorldIconSize.LARGE)(resolver)
         args['row_description'] = cls._get_row_description(resolver, home_world)
         args['row_tooltip'] = cls._get_row_tooltip(resolver, row_test_results, home_world)
         args['tag'] = home_world

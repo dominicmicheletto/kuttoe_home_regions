@@ -12,7 +12,7 @@ in or denied from a given world's soft filter, should that world already have a 
 #######################################################################################################################
 
 # sims4 imports
-from sims4.tuning.tunable import OptionalTunable
+from sims4.tuning.tunable import OptionalTunable, TunableMapping, Tunable
 from sims4.localization import TunableLocalizedStringFactory
 from sims4.tuning.instances import lock_instance_tunables
 from sims4.utils import flexmethod, classproperty
@@ -65,7 +65,7 @@ class _RegionExpansionWorldSelectorPickerMenuProxyInteraction(HasEllipsizedNamed
     def command_name(cls):
         from kuttoe_home_regions.settings import Settings
 
-        name = cls.alter_type.name.lower()
+        name = cls.COMMAND_NAME_MAPPING.get(cls.alter_type)
         base = getattr(Settings.COMMAND_NAME_BASES, name)
 
         return base(cls.home_world)[0]
@@ -147,6 +147,7 @@ class RegionExpansionWorldSelectorSuperInteraction(
     BIDIRECTIONAL_TOGGLE_TOKEN = TunableLocalizedStringFactory()
     ENABLED_TOKEN = TunableLocalizedStringFactory()
     DISABLED_TOKEN = TunableLocalizedStringFactory()
+    COMMAND_NAME_MAPPING = TunableMapping(key_type=AlterType.to_enum_entry(), value_type=Tunable(str, None))
 
     INSTANCE_TUNABLES = {
         'alter_type': AlterType.to_enum_entry(),

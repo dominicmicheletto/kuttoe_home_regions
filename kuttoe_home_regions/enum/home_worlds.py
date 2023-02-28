@@ -244,7 +244,7 @@ class HomeWorldIds(enum.Int, metaclass=DynamicFactoryEnumMetaclass, factory_cls=
     def settings_name_base(self):
         return self.desc.replace(' ', '')
 
-    @classproperty
+    @cached_classproperty
     def max_bit_value(self):
         bit_value = 0
         for world in self:

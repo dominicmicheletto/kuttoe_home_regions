@@ -25,7 +25,6 @@ from sims4.hash_util import hash64
 from interactions.utils.tunable_icon import TunableIconVariant, IconInfoData
 
 # local imports
-from kuttoe_home_regions.tunable import TunableInteractionName
 from kuttoe_home_regions.utils import enum_entry_factory
 
 

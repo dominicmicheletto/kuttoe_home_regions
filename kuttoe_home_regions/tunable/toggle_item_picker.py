@@ -30,7 +30,6 @@ class ToggleItemPicker:
 
     def __call__(self, **locked_args):
         locked_args.update(max_selectable=self.get_static_selectable())
-
         return self.tunable_factory(locked_args=locked_args)
 
 

@@ -95,7 +95,7 @@ def _alter_worlds_list_helper(
     from kuttoe_home_regions.settings import Settings, WorldSettingNames
     output = Output(_connection)
 
-    if target_world == source_world:
+    if target_world is source_world:
         words = {alter_type.ALLOW_VALUE: ('add', 'to'), alter_type.DISALLOW_VALUE: ('remove', 'from')}
         output('Cannot {} a World {} its own list'.format(*words[alter_type]))
 
@@ -172,14 +172,14 @@ def kuttoe_alter_street_weights(
         return Result(False, reason=AlterStreetWeightReasons.INVALID_VALUE)
 
     default_weight = world.street_for_creation.get_default_weight(street)
-    weights: Dict[str, float] = Settings.get_world_settings(world)[WorldSettingNames.STREET_WEIGHTS]
+    weights: Dict[str, float] = dict(Settings.get_world_settings(world)[WorldSettingNames.STREET_WEIGHTS])
 
     if almost_equal(default_weight, weight):
         weights.pop(street.dict_key)
     else:
         weights[street.dict_key] = weight
 
-    if all(almost_equal(weight, 0.0) for weight in weights.values()):
+    if len(weights) > 0 and all(almost_equal(weight, 0.0) for weight in weights.values()):
         output(f'There must be one street with a non-zero weight!')
         return Result(False, reason=AlterStreetWeightReasons.NEED_NON_ZERO_VALUE)
 
